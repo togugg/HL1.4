@@ -48,13 +48,13 @@ class StateList {
   }
 
   /**
-   * Get a state from the list using supplied keys. Form composite
-   * keys to retrieve state from world state. State data is deserialized
-   * into JSON object before being returned.
+   * Get all states from the list using partial composite key. 
+   * Calls helper function to process resulting data into array.
+   * Returns arrray of JSON objects.
    */
   async getAllStates(key) {
     let data = await this.ctx.stub.getStateByPartialCompositeKey(this.name, State.splitKey(key));
-    let results = await this.getAllResults(data, false);
+    let results = await this.getAllResults(data);
     //return Buffer.from(JSON.stringify(results));
     return results;
   }
@@ -76,35 +76,22 @@ class StateList {
     this.supportedClasses[stateClass.getClass()] = stateClass;
   }
 
-  async getAllResults(iterator, isHistory) {
+  /**
+ * Processes iterators. Returns arrray of JSON objects
+ */
+
+  async getAllResults(iterator) {
     let allResults = [];
     while (true) {
       let res = await iterator.next();
 
       if (res.value && res.value.value.toString()) {
-        let jsonRes = {};
-        //console.log(res.value.value.toString('utf8'));
-
-        if (isHistory && isHistory === true) {
-          jsonRes.TxId = res.value.tx_id;
-          jsonRes.Timestamp = res.value.timestamp;
-          jsonRes.IsDelete = res.value.is_delete.toString();
-          try {
-            jsonRes.Value = JSON.parse(res.value.value.toString('utf8'));
-          } catch (err) {
-            console.log(err);
-            jsonRes.Value = res.value.value.toString('utf8');
-          }
-        } else {
-          jsonRes.Key = await this.ctx.stub.splitCompositeKey(res.value.key);
-          //jsonRes.Key = res.value.key;
-          try {
-            jsonRes.Record = State.deserialize(res.value.value, this.supportedClasses);
-            console.log(jsonRes.Record)
-          } catch (err) {
-            console.log(err);
-            jsonRes.Record = res.value.value.toString('utf8');
-          }
+        let jsonRes = [];
+        try {
+          jsonRes = State.deserialize(res.value.value, this.supportedClasses);
+          console.log(jsonRes.Record)
+        } catch (err) {
+          console.log(err);
         }
         allResults.push(jsonRes);
       }
