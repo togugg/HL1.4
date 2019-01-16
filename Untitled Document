@@ -1,0 +1,9 @@
+fabric-ca-client enroll -u "http://admin:adminpw@localhost:7054"
+fabric-ca-client register -u "http://localhost:7054" --id.name "demoblockchain" --id.secret "demo" --id.type "client" --id.affiliation "org1.department1"
+fabric-ca-client enroll -u "http://demoblockchain:demo@localhost:7054"
+
+
+fabric-ca-client register -u "http://localhost:7054" --id.name "adanub" --id.secret "demo" --id.type "user" --id.affiliation "org1.department1" --id.attrs 'level=admin'
+fabric-ca-client enroll -u "http://adanub:demo@localhost:7054" --enrollment.attrs "level"
+
+sudo chown -R $(id -u):$(id -u) ./*

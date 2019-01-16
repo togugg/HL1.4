@@ -7,13 +7,6 @@ SPDX-License-Identifier: Apache-2.0
 // Utility class for ledger state
 const State = require('./../ledger-api/state.js');
 
-// Enumerate commercial paper state values
-const cpState = {
-    ISSUED: 1,
-    TRADING: 2,
-    REDEEMED: 3
-};
-
 /**
  * CommercialPaper class extends State class
  * Class will be used by application and smart contract to define a paper
@@ -21,54 +14,8 @@ const cpState = {
 class CommercialPaper extends State {
 
     constructor(obj) {
-        super(CommercialPaper.getClass(), [obj.issuer, obj.paperNumber]);
+        super(CommercialPaper.getClass(), [obj.matNr, obj.matDesc]);
         Object.assign(this, obj);
-    }
-
-    /**
-     * Basic getters and setters
-    */
-    getIssuer() {
-        return this.issuer;
-    }
-
-    setIssuer(newIssuer) {
-        this.issuer = newIssuer;
-    }
-
-    getOwner() {
-        return this.owner;
-    }
-
-    setOwner(newOwner) {
-        this.owner = newOwner;
-    }
-
-    /**
-     * Useful methods to encapsulate commercial paper states
-     */
-    setIssued() {
-        this.currentState = cpState.ISSUED;
-    }
-
-    setTrading() {
-        this.currentState = cpState.TRADING;
-    }
-
-    setRedeemed() {
-        this.currentState = cpState.REDEEMED;
-    }
-
-    isIssued() {
-        return this.currentState === cpState.ISSUED;
-    }
-
-    isTrading() {
-        return this.currentState === cpState.TRADING;
-    }
-
-    isRedeemed() {
-        return this.currentState === cpState.REDEEMED;
     }
 
     static fromBuffer(buffer) {
@@ -90,8 +37,8 @@ class CommercialPaper extends State {
     /**
      * Factory method to create a commercial paper object
      */
-    static createInstance(issuer, paperNumber, issueDateTime, maturityDateTime, faceValue) {
-        return new CommercialPaper({ issuer, paperNumber, issueDateTime, maturityDateTime, faceValue });
+    static createInstance(matNr, matDesc, min, max, stock, location) {
+        return new CommercialPaper({ matNr, matDesc, min, max, stock, location });
     }
 
     static getClass() {

@@ -27,10 +27,6 @@ class PaperList extends StateList {
     async updatePaper(paper) {
         return this.updateState(paper);
     }
-
-    async getAllPapers(paperKey) {
-        return this.getAllStates(paperKey);
-    }
 }
 
 

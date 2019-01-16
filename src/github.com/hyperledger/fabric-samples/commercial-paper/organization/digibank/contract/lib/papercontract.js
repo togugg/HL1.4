@@ -151,24 +151,6 @@ class CommercialPaperContract extends Contract {
         return paper.toBuffer();
     }
 
-    /**
-     * Get all commercial papers
-     *
-     * @param {Context} ctx the transaction context
-     * @param {String} issuer commercial paper issuer
-     * @param {Integer} paperNumber paper number for this issuer
-     * @param {String} redeemingOwner redeeming owner of paper
-     * @param {String} redeemDateTime time paper was redeemed
-    */
-    async getAll(ctx, issuer) {
-
-        let paperKey = CommercialPaper.makeKey([issuer]);
-
-        let papers = await ctx.paperList.getAllPapers(paperKey);
-
-        return paper.toBuffer();
-    }
-
 }
 
 module.exports = CommercialPaperContract;

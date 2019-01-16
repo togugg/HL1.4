@@ -47,17 +47,6 @@ class StateList {
     }
 
     /**
-     * Get a state from the list using supplied keys. Form composite
-     * keys to retrieve state from world state. State data is deserialized
-     * into JSON object before being returned.
-     */
-    async getAllStates(key) {
-        let data = await this.ctx.stub.getStateByPartialCompositeKey(this.name, State.splitKey(key));
-        let state = State.deserialize(data, this.supportedClasses);
-        return state;
-    }
-
-    /**
      * Update a state in the list. Puts the new state in world state with
      * appropriate composite key.  Note that state defines its own key.
      * A state is serialized before writing. Logic is very similar to

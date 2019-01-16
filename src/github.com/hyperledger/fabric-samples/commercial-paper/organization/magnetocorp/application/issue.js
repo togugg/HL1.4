@@ -65,14 +65,14 @@ async function main() {
     // issue commercial paper
     console.log('Submit commercial paper issue transaction.');
 
-    const issueResponse = await contract.submitTransaction('issue', 'MagnetoCorp', '20003', '2020-05-31', '2020-11-30', '5000000');
+    const issueResponse = await contract.submitTransaction('issue', '22', 'ha', '2', '3', '1', 'home');
 
     // process response
     console.log('Process issue transaction response.');
 
     let paper = CommercialPaper.fromBuffer(issueResponse);
-
-    console.log(`${paper.issuer} commercial paper : ${paper.paperNumber} successfully issued for value ${paper.faceValue}`);
+	console.log(paper)
+    //console.log(`${paper.issuer} commercial paper : ${paper.paperNumber} successfully issued for value ${paper.faceValue}`);
     console.log('Transaction complete.');
 
   } catch (error) {
