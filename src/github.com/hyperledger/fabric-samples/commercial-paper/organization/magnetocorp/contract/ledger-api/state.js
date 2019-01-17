@@ -17,7 +17,6 @@ class State {
     constructor(stateClass, keyParts) {
         this.class = stateClass;
         this.key = State.makeKey(keyParts);
-        this.currentState = null;
     }
 
     getClass() {
@@ -28,11 +27,11 @@ class State {
         return this.key;
     }
 
-    getSplitKey(){
+    getSplitKey() {
         return State.splitKey(this.key);
     }
 
-    getCurrentState(){
+    getCurrentState() {
         return this.currentState;
     }
 
@@ -59,7 +58,7 @@ class State {
      * @return {json} json with the data to store
      */
     static deserialize(data, supportedClasses) {
-        let json = JSON.parse(data.toString());
+        let json = JSON.parse(data.toString('utf8'));
         let objClass = supportedClasses[json.class];
         if (!objClass) {
             throw new Error(`Unknown class of ${json.class}`);
@@ -89,7 +88,7 @@ class State {
         return keyParts.map(part => JSON.stringify(part)).join(':');
     }
 
-    static splitKey(key){
+    static splitKey(key) {
         return key.split(':');
     }
 
