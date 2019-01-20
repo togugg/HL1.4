@@ -1,0 +1,24 @@
+{
+  "name": "file-writer",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/togugg/HL-KAFKA-SWARM.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/togugg/HL-KAFKA-SWARM/issues"
+  },
+  "homepage": "https://github.com/togugg/HL-KAFKA-SWARM#readme",
+  "dependencies": {
+    "fs": "0.0.1-security",
+    "http": "0.0.0",
+    "request": "^2.88.0"
+  }
+}

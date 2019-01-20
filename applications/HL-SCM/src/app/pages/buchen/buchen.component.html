@@ -1,0 +1,87 @@
+<div class = "container">
+  <div class="row">
+    <div class="benutzer col-md-3">
+      <div>
+      <mat-form-field>
+        <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Filter">
+      </mat-form-field>
+      </div>
+      <div class="example-container mat-elevation-z8">
+      <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
+
+        <!-- Position Column -->
+        <ng-container class="element"  matColumnDef="name">
+          <th class="element" mat-header-cell *matHeaderCellDef>Benutzername</th>
+          <td  class="element" mat-cell (click)="activeUser = element.name; getStand()" *matCellDef="let element"> {{element.name}} </td>
+        </ng-container>
+
+
+        <tr class="element" mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+        <tr class= "element" mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+      </table>
+      </div>
+    </div>
+    <div class="internal-container col-md-9">
+      <div class="drei row">
+        <div class="col-md-12">
+          <div class="row infos">
+            <div class="col-md-4">
+
+              <h2 class="bilanz"> Bilanz: {{bilanzOfActiveUser | number:'1.2'}} €</h2>
+            </div>
+            <div class="col-md-8 nutzer-name">
+
+                <h2 class="nutzer fett">{{activeUser}} </h2>
+            </div>
+          </div>
+          <div class="row infos">
+            <div class="col-md-5 neue-buchung">
+              <h1>+ {{neueBuchung | number:'1.2'}} €</h1>
+            </div>
+            <div class="col-md-7">
+              <div class="row buttons">
+                  <mat-icon *ngIf="(log != undefined)" (click)="showLog()" svgIcon="info"></mat-icon>
+
+                  <button [disabled]="!(activeUser != '' && neueBuchung > 0)" name="button"  color="primary" class="button fim-style-theme" mat-raised-button (click)="buySomething()"><div class="button-green">Bestätigen</div></button>
+
+
+                  <button [disabled]="!(activeUser != '' || neueBuchung > 0)" name="button"  color="accent" class="button" mat-raised-button (click)="reset()">Reset</button>
+
+
+                  <button [disabled]="!undoTransaction" name="button"  color="warn" class="button" mat-raised-button (click)="undoLastTransaction()">Undo</button>
+
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+        <div class="drei row">
+          <div class="col-md-6">
+            <mat-card (click)="addingToBuchung(0.10)">
+                <div class= "card-inhalt"> + 10 ct </div>
+            </mat-card>
+          </div>
+          <div class="col-md-6">
+            <mat-card (click)="addingToBuchung(0.20)">
+                <div class= "card-inhalt"> + 20 ct </div>
+              <p>Kaffee</p>
+            </mat-card>
+          </div>
+        </div>
+        <div class="drei row">
+          <div class="col-md-6">
+            <mat-card (click)="addingToBuchung(0.50)">
+              <div class= "card-inhalt"> + 50 ct </div>
+              <p>Alle Flaschengetränke</p>
+            </mat-card>
+          </div>
+          <div class="col-md-6">
+            <mat-card (click)="addingToBuchung(0.80)">
+                <div class= "card-inhalt"> + 80 ct </div>
+            </mat-card>
+          </div>
+        </div>
+    </div>
+  </div>
+</div>
+<p class="footer"> created by Matthias Babel </p>

@@ -13,7 +13,7 @@ SPDX-License-Identifier: Apache-2.0
 const fs = require('fs');
 const yaml = require('js-yaml');
 const { FileSystemWallet, Gateway } = require('fabric-network');
-const Material = require('../../contract/lib/material.js');
+const Material = require('../../contract/lib/stock');
 
 // A wallet stores a collection of identities for use
 //const wallet = new FileSystemWallet('../user/isabella/wallet');
@@ -55,7 +55,7 @@ async function main(userName, args) {
     // Get addressability to commercial paper contract
     console.log('Use org.materialnet.material smart contract.');
 
-    const contract = await network.getContract('materialcontract', 'org.materialnet.material');
+    const contract = await network.getContract('warehousecontract', 'org.warehousenet.warehouse');
 
     // issue commercial paper
     console.log('Submit commercial paper issue transaction.');
@@ -65,14 +65,18 @@ async function main(userName, args) {
     // process response
     console.log('Process issue transaction response.');
     let buffer = Buffer.from(JSON.parse(issueResponse))
-    console.log(JSON.parse(buffer.toString()))
-
+    let jsonResponse = JSON.parse(buffer.toString())
+    console.log(jsonResponse)
     console.log('Transaction complete.');
+
+    return jsonResponse
+
 
   } catch (error) {
 
     console.log(`Error processing transaction. ${error}`);
     console.log(error.stack);
+    return(error.message)
 
   } finally {
 
