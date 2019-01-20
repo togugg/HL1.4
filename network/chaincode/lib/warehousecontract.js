@@ -155,21 +155,23 @@ class WarehouseContract extends Contract {
         return stock.toBuffer()
     }
 
+    async getInvoice(ctx, invoiceNr) {
+        let invoiceKey = Invoice.makeKey([invoiceNr]);
+        let invoice = await ctx.invoiceList.getInvoice('invoiceCollection', invoiceKey);
+        return invoice.toBuffer()
+    }
+
     async getStocksByQuery(ctx, queryString) {
         let stocks = await ctx.stockList.getStocksByQuery(queryString);
         return Buffer.from(JSON.stringify(stocks));
     }
 
     async createShipping(ctx, matNr, supplier, quantity) {
-
         let shippingNr = ctx.stub.getSignedProposal().proposal.header.channel_header.timestamp.nanos
-
         // create an instance of the paper
         let shipping = Shipping.createInstance(shippingNr, matNr, supplier, quantity);
-
         // Add the paper to the list of all similar commercial papers in the ledger world state
         await ctx.shippingList.addShipping(shipping)
-
         // Must return a serialized paper to caller of smart contract
         return shipping.toBuffer();
     }

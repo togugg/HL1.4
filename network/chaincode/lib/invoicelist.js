@@ -17,11 +17,11 @@ class InvoiceList extends StateList {
     }
 
     async addInvoice(invoice) {
-        return this.addPrivateState(invoice);
+        return this.addPrivateData(invoice);
     }
 
-    async getInvoice(invoiceKey) {
-        return this.getState(invoiceKey);
+    async getInvoice(collection, invoiceKey) {
+        return this.getPrivateData(collection, invoiceKey);
     }
 
     async updateInvoice(invoice) {

@@ -33,31 +33,37 @@ app.use("/api", router);
 router.get("/stock/:stock_key", function (req, res) {
   let request = req.params.stock_key.split(':')
   const args = ['getStock', request[0], request[1]]
-  connector.main(userName, args).then(result => { res.json(result) }).catch(err => { res.send(err) })
+  connector.query(userName, args).then(result => { res.json(result) }).catch(err => { res.send(err) })
 });
 
-router.get("/stock/byquery/:queryString", function (req, res) {
-  let request = req.params.queryString
+router.get("/stock/byquery/:query_string", function (req, res) {
+  let request = req.params.query_string
   const args = ['getStocksByQuery', request]
-  connector.main(userName, args).then(result => { res.json(result) }).catch(err => { res.send(err) })
+  connector.query(userName, args).then(result => { res.json(result) }).catch(err => { res.send(err) })
 });
 
 router.post("/stock", function (req, res) {
   let request = req.body
   const args = ['createStock', request.matNr, request.supplier, request.matDesc, request.min, request.max, request.quantity, request.location]
-  connector.main(userName, args).then(result => { res.json(result) }).catch(err => { res.send(err) })
+  connector.submit(userName, args).then(result => { res.json(result) }).catch(err => { res.send(err) })
 });
 
 router.get("/shipping/:shipping_key", function (req, res) {
   let request = req.params.shipping_key.split(':')
   const args = ['getShipping', request[0]]
-  connector.main(userName , args).then(result => { res.json(result) }).catch(err => { res.send(err) })
+  connector.query(userName , args).then(result => { res.json(result) }).catch(err => { res.send(err) })
 });
 
 router.post("/shipping", function (req, res) {
   let request = req.body
   const args = ['createShipping', request.matNr, request.supplier, request.quantity]
-  connector.main(userName, args).then(result => { res.json(result) }).catch(err => { res.send(err) })
+  connector.submit(userName, args).then(result => { res.json(result) }).catch(err => { res.send(err) })
+});
+
+router.get("/invoice/:invoice_key", function (req, res) {
+  let request = req.params.invoice_key.split(':')
+  const args = ['getInvoice', request[0]]
+  connector.query(userName, args).then(result => { res.json(result) }).catch(err => { res.send(err) })
 });
 
 /* router.put("/update", function(req, res) {

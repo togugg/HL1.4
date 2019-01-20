@@ -19,7 +19,7 @@ const { FileSystemWallet, Gateway } = require('fabric-network');
 const wallet = new FileSystemWallet('./wallet');
 
 // Main program function
-async function main(userName, args) {
+async function main(userName, args, method) {
 
   // A gateway defines the peers used to access Fabric networks
   const gateway = new Gateway();
@@ -63,7 +63,13 @@ async function main(userName, args) {
     // issue commercial paper
     console.log('Submit commercial paper issue transaction.');
 
-    const issueResponse = await contract.submitTransaction.apply(contract, args);
+    if (method == "submit") {
+      var issueResponse = await contract.submitTransaction.apply(contract, args);
+    }
+    else if (method == "query") {
+      var issueResponse = await contract.evaluateTransaction.apply(contract, args)
+    }
+    
 
     // process response
     console.log('Process issue transaction response.');
@@ -103,6 +109,16 @@ async function main(userName, args) {
 
 }); */
 
+async function query(userName, args) {
+  return main(userName, args, 'query')
+}
+
+async function submit(userName, args) {
+  return main(userName, args, 'sumbit')
+}
+
+
 module.exports = {
-  main: main
+  query: query,
+  submit: submit
 };

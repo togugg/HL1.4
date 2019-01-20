@@ -15,7 +15,7 @@ const args = ['getMaterialsByQuery', JSON.stringify(query)] */
 //const args = ['getMaterial', '2', '2']
 
 //const args = ['createShipping', '2', '2', '500']
-//const args = ['sendShipping', '239000000', "ganz viel data"]
+//const args = ['sendShipping', '897000000', "ganz viel data"]
 //const args = ['receiveShipping', '0']
 
 //const args = ['getIdentity']

@@ -33,7 +33,7 @@ class StateList {
     await this.ctx.stub.putState(key, data);
   }
 
-  async addPrivateState(state) {
+  async addPrivateData(state) {
     let key = this.ctx.stub.createCompositeKey(this.name, state.getSplitKey());
     let data = State.serialize(state);
     await this.ctx.stub.putPrivateData(state.collection, key, data);
@@ -49,6 +49,15 @@ class StateList {
     console.log(ledgerKey)
     let data = await this.ctx.stub.getState(ledgerKey);
     console.log(data)
+    let state = State.deserialize(data, this.supportedClasses);
+    return state;
+  }
+
+  async getPrivateData(collection, key) {
+    let ledgerKey = this.ctx.stub.createCompositeKey(this.name, State.splitKey(key));
+    console.log(ledgerKey)
+    let data = await this.ctx.stub.getPrivateData(collection, ledgerKey);
+    console.log(data.toString('utf8'))
     let state = State.deserialize(data, this.supportedClasses);
     return state;
   }
