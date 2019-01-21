@@ -41,8 +41,8 @@ class Stock extends State {
     /**
      * Factory method to create a commercial paper object
      */
-    static createInstance(matNr, supplier, matDesc, min, max, quantity, location) {
-        return new Stock({ matNr, supplier, matDesc, min, max, quantity, location });
+    static createInstance(assetData) {
+        return new Stock(assetData);
     }
 
     static getClass() {

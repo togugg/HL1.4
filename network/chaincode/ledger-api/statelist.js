@@ -45,12 +45,28 @@ class StateList {
    * into JSON object before being returned.
    */
   async getState(key) {
+    try {
+      let ledgerKey = this.ctx.stub.createCompositeKey(this.name, State.splitKey(key));
+      let data = await this.ctx.stub.getState(ledgerKey);
+      let state = State.deserialize(data, this.supportedClasses);
+      return state;
+    }
+    catch (err) {
+      return "Can't find asset!"
+    }
+  }
+
+  /**
+ * Delete a state in the list.
+ */
+  async deleteState(key) {
+    console.log(key)
+    let result = await this.getState(key);
+    console.log(result)
     let ledgerKey = this.ctx.stub.createCompositeKey(this.name, State.splitKey(key));
     console.log(ledgerKey)
-    let data = await this.ctx.stub.getState(ledgerKey);
-    console.log(data)
-    let state = State.deserialize(data, this.supportedClasses);
-    return state;
+    await this.ctx.stub.deleteState(ledgerKey);
+    return result
   }
 
   async getPrivateData(collection, key) {
@@ -90,15 +106,7 @@ class StateList {
     } */
 
 
-  /**
-   * Delete a state in the list.
-   */
-  async deleteState(key) {
-    let result = this.getState(key);
-    let ledgerKey = this.ctx.stub.createCompositeKey(this.name, State.splitKey(key));
-    await this.ctx.stub.deleteState(ledgerKey);
-    return result
-  }
+
 
   /**
    * Update a state in the list. Puts the new state in world state with

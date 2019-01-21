@@ -68,8 +68,9 @@ async function main(userName, args, method) {
     }
     else if (method == "query") {
       var issueResponse = await contract.evaluateTransaction.apply(contract, args)
+      //var issueResponse = await contract.evaluateTransaction.apply(contract, args)
     }
-    
+
 
     // process response
     console.log('Process issue transaction response.');
@@ -85,7 +86,7 @@ async function main(userName, args, method) {
 
     console.log(`Error processing transaction. ${error}`);
     console.log(error.stack);
-    return(error.message)
+    return (error.message)
 
   } finally {
 
@@ -114,7 +115,7 @@ async function query(userName, args) {
 }
 
 async function submit(userName, args) {
-  return main(userName, args, 'sumbit')
+  return main(userName, args, 'submit')
 }
 
 

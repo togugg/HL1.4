@@ -53,8 +53,8 @@ class Shipping extends State {
     /**
      * Factory method to create a commercial paper object
      */
-    static createInstance(shippingNr, matNr, supplier, stock) {;
-        return new Shipping({ shippingNr, matNr, supplier, stock });
+    static createInstance(assetData) {
+        return new Shipping(assetData);
     }
 
     static getClass() {

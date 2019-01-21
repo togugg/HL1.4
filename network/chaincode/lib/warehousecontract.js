@@ -12,9 +12,8 @@ const { Contract, Context } = require('fabric-contract-api');
 
 // SupplyNet specifc classes
 const Stock = require('./stock.js');
-const StockList = require('./stocklist.js');
 const Shipping = require('./shipping.js');
-const ShippingList = require('./shippinglist.js');
+const AssetList = require('./assetlist.js');
 const Invoice = require('./invoice.js');
 const InvoiceList = require('./invoicelist.js');
 
@@ -25,8 +24,7 @@ class WarehouseContext extends Context {
     constructor() {
         super();
         // All papers are held in a list of papers
-        this.stockList = new StockList(this);
-        this.shippingList = new ShippingList(this)
+        this.assetList = new AssetList(this);
         this.invoiceList = new InvoiceList(this)
     }
 }
@@ -61,27 +59,27 @@ class WarehouseContract extends Contract {
 
     async sendShipping(ctx, shippingNr, invoiceData) {
         let shippingKey = Shipping.makeKey([shippingNr]);
-        let shipping = await ctx.shippingList.getShipping(shippingKey);
+        let shipping = await ctx.assetList.getAsset(shippingKey);
         let now = ctx.stub.getSignedProposal().proposal.header.channel_header.timestamp.nanos;
 
         let invoice = Invoice.createInstance(now, shipping.shippingNr, invoiceData, 'invoiceCollection')
         await ctx.invoiceList.addInvoice(invoice);
 
         shipping.setSent(now, invoice.invoiceNr);
-        await ctx.shippingList.updateShipping(shipping);
+        await ctx.assetList.updateAsset(shipping);
 
         return shipping.toBuffer();
     }
 
     async receiveShipping(ctx, shippingNr) {
         let shippingKey = Shipping.makeKey([shippingNr]);
-        let shipping = await ctx.shippingList.getShipping(shippingKey);
+        let shipping = await ctx.assetList.getAsset(shippingKey);
         shipping.setReceived()
-        await ctx.shippingList.updateShipping(shipping)
+        await ctx.assetList.updateAsset(shipping)
         let stockKey = Stock.makeKey([shipping.matNr, shipping.supplier]);
-        let stock = await ctx.stockList.getStock(stockKey);
+        let stock = await ctx.assetList.getAsset(stockKey);
         stock.addQuantity(shipping.stock)
-        await ctx.stockList.updateStock(stock);
+        await ctx.assetList.updateAsset(stock);
         return shipping.toBuffer()
     }
 
@@ -97,6 +95,18 @@ class WarehouseContract extends Contract {
 
     /** Standard seters and geters */
 
+    async assetClassHandler(assetData) {
+        switch (assetData.class) {
+            case 'org.warehousenet.stock': {
+                return Stock.createInstance(assetData);
+            };
+            case 'org.warehousenet.shipping': {
+                return Shipping.createInstance(assetData);
+            }
+        }
+
+    }
+
     /**
      * Issue commercial paper
      *
@@ -107,84 +117,53 @@ class WarehouseContract extends Contract {
      * @param {String} maturityDateTime paper maturity date
      * @param {Integer} faceValue face value of paper
     */
-    async createStock(ctx, matNr, supplier, matDesc, min, max, quantity, location) {
-
-        // create an instance of the paper
-        let stock = Stock.createInstance(matNr, supplier, matDesc, min, max, quantity, location);
-
+    async createAsset(ctx, assetData) {
+        let asset = await this.assetClassHandler(JSON.parse(assetData))
         // Add the paper to the list of all similar commercial papers in the ledger world state
-        await ctx.stockList.addStock(stock);
-
+        await ctx.assetList.addAsset(asset);
         // Must return a serialized paper to caller of smart contract
-        return stock.toBuffer();
+        if (asset.toBuffer) {
+            return asset.toBuffer();
+        }
+        else {
+            return Buffer.from(asset, 'utf8')
+        }
     }
 
-    async updateStock(ctx, matNr, supplier, matDesc, min, max, stock, location) {
+    async getAsset(ctx, assetKey) {
+        let asset = await ctx.assetList.getAsset(assetKey);
+        return asset.toBuffer()
+    }
 
-        // create an instance of the stock
-        let stock = Stock.createInstance(matNr, supplier, matDesc, min, max, stock, location);
+    async updateAsset(ctx, assetData) {
+        let asset = await this.assetClassHandler(JSON.parse(assetData))
+        // Add the paper to the list of all similar commercial papers in the ledger world state
+        await ctx.assetList.updateAsset(asset);
+        // Must return a serialized paper to caller of smart contract
+        return asset.toBuffer();
+    }
 
+    async deleteAsset(ctx, assetKey) {
         // Updates the stock in the ledger world state
-        await ctx.stockList.updateStock(stock);
-
+        let asset = await ctx.assetList.deleteAsset(assetKey);
         // Must return a serialized stock to caller of smart contract
-        return stock.toBuffer();
+        return asset.toBuffer();
     }
 
-    async deleteStock(ctx, matNr, supplier) {
-
-        // create an instance of the stock
-        let stockKey = Stock.makeKey([matNr, supplier]);
-
-        // Updates the stock in the ledger world state
-        let stock = await ctx.stockList.deleteStock(stockKey);
-
-        // Must return a serialized stock to caller of smart contract
-        return stock.toBuffer();
+    async getAssetByQuery(ctx, queryString) {
+        let asset = await ctx.assetList.getAssetByQuery(queryString);
+        return Buffer.from(JSON.stringify(asset));
     }
 
-    async getStockHistory(ctx, matNr, supplier) {
-        let stockKey = Stock.makeKey([matNr, supplier]);
-        let stocks = await ctx.stockList.getStockHistory(stockKey);
-        return Buffer.from(JSON.stringify(stocks));
-    }
-
-    async getStock(ctx, matNr, supplier) {
-        let stockKey = Stock.makeKey([matNr, supplier]);
-        let stock = await ctx.stockList.getStock(stockKey);
-        return stock.toBuffer()
+    async getAssetHistory(ctx, assetKey) {
+        let asset = await ctx.assetList.getAssetHistory(assetKey);
+        return Buffer.from(JSON.stringify(asset));
     }
 
     async getInvoice(ctx, invoiceNr) {
         let invoiceKey = Invoice.makeKey([invoiceNr]);
         let invoice = await ctx.invoiceList.getInvoice('invoiceCollection', invoiceKey);
         return invoice.toBuffer()
-    }
-
-    async getStocksByQuery(ctx, queryString) {
-        let stocks = await ctx.stockList.getStocksByQuery(queryString);
-        return Buffer.from(JSON.stringify(stocks));
-    }
-
-    async createShipping(ctx, matNr, supplier, quantity) {
-        let shippingNr = ctx.stub.getSignedProposal().proposal.header.channel_header.timestamp.nanos
-        // create an instance of the paper
-        let shipping = Shipping.createInstance(shippingNr, matNr, supplier, quantity);
-        // Add the paper to the list of all similar commercial papers in the ledger world state
-        await ctx.shippingList.addShipping(shipping)
-        // Must return a serialized paper to caller of smart contract
-        return shipping.toBuffer();
-    }
-
-    async getShipping(ctx, shippingKey) {
-        let shippingKey = Shipping.makeKey([shippingKey]);
-        let shipping = await ctx.shippingList.getShipping(shippingKey);
-        return shipping.toBuffer()
-    }
-
-    async getShippingByQuery(ctx, queryString) {
-        let shipping = await ctx.shippingList.getShippingByQuery(queryString);
-        return Buffer.from(JSON.stringify(shipping));
     }
 
 }
