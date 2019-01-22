@@ -4,16 +4,16 @@ const userName = 'User1@org1.example.com';
 
  asset = {
   "class":"org.warehousenet.shipping",
-  "shippingNr":"homes",
+  "shippingId":"homes",
   "matDesc":"this is a material",
-  "matNr":"223",
+  "matId":"223",
   "max":"10",
   "min":"5",
   "quantity":"7",
   "supplier":"2"
   }
 
-const args = ['updateAsset', JSON.stringify(asset)]
+const args = ['updateAsset', JSON.stringify(asset)] 
 
 //const args = ['getAsset', 'org.warehousenet.shipping', 'home']
 

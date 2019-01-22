@@ -57,26 +57,26 @@ class WarehouseContract extends Contract {
         console.log('Instantiate the contract');
     }
 
-    async sendShipping(ctx, shippingNr, invoiceData) {
-        let shippingKey = Shipping.makeKey([shippingNr]);
+    async sendShipping(ctx, shippingId, invoiceData) {
+        let shippingKey = Shipping.makeKey([shippingId]);
         let shipping = await ctx.assetList.getAsset("org.warehousenet.shipping", shippingKey);
         let now = ctx.stub.getSignedProposal().proposal.header.channel_header.timestamp.nanos;
 
-        let invoice = Invoice.createInstance(now, shipping.shippingNr, invoiceData, 'invoiceCollection')
+        let invoice = Invoice.createInstance(now, shipping.shippingId, invoiceData, 'invoiceCollection')
         await ctx.invoiceList.addInvoice(invoice);
 
-        shipping.setSent(now, invoice.invoiceNr);
+        shipping.setSent(now, invoice.invoiceId);
         await ctx.assetList.updateAsset(shipping);
 
         return shipping.toBuffer();
     }
 
-    async receiveShipping(ctx, shippingNr) {
-        let shippingKey = Shipping.makeKey([shippingNr]);
+    async receiveShipping(ctx, shippingId) {
+        let shippingKey = Shipping.makeKey([shippingId]);
         let shipping = await ctx.assetList.getAsset('org.warehousenet.shipping', shippingKey);
         shipping.setReceived()
         await ctx.assetList.updateAsset(shipping)
-        let stockKey = Stock.makeKey([shipping.matNr, shipping.supplier]);
+        let stockKey = Stock.makeKey([shipping.matId, shipping.supplier]);
         let stock = await ctx.assetList.getAsset('org.warehousenet.stock', stockKey);
         stock.addQuantity(shipping.quantity)
         await ctx.assetList.updateAsset(stock);
@@ -123,7 +123,6 @@ class WarehouseContract extends Contract {
         await ctx.assetList.addAsset(asset);
         // Must return a serialized paper to caller of smart contract
         return asset.toBuffer();
-
     }
 
     async getAsset(ctx, assetClass, assetKey) {
@@ -156,8 +155,8 @@ class WarehouseContract extends Contract {
         return Buffer.from(JSON.stringify(asset));
     }
 
-    async getInvoice(ctx, assetClass, invoiceNr) {
-        let invoiceKey = Invoice.makeKey([invoiceNr]);
+    async getInvoice(ctx, assetClass, invoiceId) {
+        let invoiceKey = Invoice.makeKey([invoiceId]);
         let invoice = await ctx.invoiceList.getInvoice('invoiceCollection', assetClass, invoiceKey);
         return invoice.toBuffer()
     }

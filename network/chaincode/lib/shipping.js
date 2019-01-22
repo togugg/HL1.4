@@ -19,7 +19,7 @@ const State = require('./../ledger-api/state.js');
 class Shipping extends State {
 
     constructor(obj) {
-        super(Shipping.getClass(), [obj.shippingNr]);
+        super(Shipping.getClass(), [obj.shippingId]);
         Object.assign(this, obj);
     }
 
@@ -34,20 +34,8 @@ class Shipping extends State {
         this.receivedDate = now;
     }
 
-    static fromBuffer(buffer) {
-        return Shipping.deserialize(Buffer.from(JSON.parse(buffer)));
-    }
-
     toBuffer() {
         return Buffer.from(JSON.stringify(this));
-    }
-
-    /**
-     * Deserialize a state data to commercial paper
-     * @param {Buffer} data to form back into the object
-     */
-    static deserialize(data) {
-        return State.deserializeClass(data, Shipping);
     }
 
     /**

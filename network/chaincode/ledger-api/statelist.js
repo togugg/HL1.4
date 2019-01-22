@@ -28,6 +28,7 @@ class StateList {
    * State object is serialized before writing.
    */
   async addState(state) {
+    console.log(state.getClass())
     let key = this.ctx.stub.createCompositeKey(state.getClass(), state.getSplitKey());
     let data = State.serialize(state);
     await this.ctx.stub.putState(key, data);
@@ -115,7 +116,7 @@ class StateList {
    * addState() but kept separate becuase it is semantically distinct.
    */
   async updateState(state) {
-    let key = this.ctx.stub.createCompositeKey(this.name, state.getSplitKey());
+    let key = this.ctx.stub.createCompositeKey(state.getClass(), state.getSplitKey());
     let data = State.serialize(state);
     await this.ctx.stub.putState(key, data);
   }

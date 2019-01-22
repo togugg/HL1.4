@@ -80,14 +80,6 @@ class State {
         return object;
     }
 
-    static fromBuffer(buffer) {
-        return this.deserialize(Buffer.from(JSON.parse(buffer)));
-    }
-
-    toBuffer() {
-        return Buffer.from(JSON.stringify(this));
-    }
-
     /**
      * Join the keyParts to make a unififed string
      * @param (String[]) keyParts

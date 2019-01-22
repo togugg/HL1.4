@@ -14,7 +14,7 @@ const State = require('./../ledger-api/state.js');
 class Stock extends State {
 
     constructor(obj) {
-        super(Stock.getClass(), [obj.matNr, obj.supplier]);
+        super(Stock.getClass(), [obj.matId, obj.supplierId]);
         Object.assign(this, obj);
     }
 
@@ -22,20 +22,8 @@ class Stock extends State {
         this.stock = ((+this.quantity) + (+newQuantity)).toString();
     }
 
-    static fromBuffer(buffer) {
-        return Stock.deserialize(Buffer.from(JSON.parse(buffer)));
-    }
-
     toBuffer() {
         return Buffer.from(JSON.stringify(this));
-    }
-
-    /**
-     * Deserialize a state data to commercial paper
-     * @param {Buffer} data to form back into the object
-     */
-    static deserialize(data) {
-        return State.deserializeClass(data, Stock);
     }
 
     /**
