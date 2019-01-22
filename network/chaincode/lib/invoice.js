@@ -14,7 +14,7 @@ const State = require('./../ledger-api/state.js');
 class Invoice extends State {
 
     constructor(obj) {
-        super(Invoice.getClass(), [obj.invoiceNr]);
+        super(Invoice.getClass(), [obj.invoiceId]);
         Object.assign(this, obj);
     }
 
@@ -37,8 +37,8 @@ class Invoice extends State {
     /**
      * Factory method to create a commercial paper object
      */
-    static createInstance(invoiceNr, shippingNr, data, collection) {
-        return new Invoice({ invoiceNr, shippingNr, data, collection });
+    static createInstance( invoiceData ) {
+        return new Invoice( invoiceData );
     }
 
     static getClass() {

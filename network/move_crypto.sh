@@ -14,6 +14,5 @@ git checkout release-1.4
 cd -
 cp -R crypto-config /var/mynetwork/certs/
 cp -R config /var/mynetwork/certs/
-cp -R ../chaincodes/* /var/mynetwork/chaincode/
 cp -R bin/* /var/mynetwork/bin/
 

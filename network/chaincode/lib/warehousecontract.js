@@ -130,6 +130,11 @@ class WarehouseContract extends Contract {
         return asset.toBuffer()
     }
 
+    async getAllAssetsByClass(ctx, assetClass) {
+        let assets = await ctx.assetList.getAllAssetsByClass(assetClass);
+        return Buffer.from(JSON.stringify(assets));
+    }
+
     async updateAsset(ctx, assetData) {
         let asset = await this.assetClassHandler(JSON.parse(assetData))
         // Add the paper to the list of all similar commercial papers in the ledger world state
@@ -145,9 +150,9 @@ class WarehouseContract extends Contract {
         return asset.toBuffer();
     }
 
-    async getAssetByQuery(ctx, queryString) {
-        let asset = await ctx.assetList.getAssetByQuery(queryString);
-        return Buffer.from(JSON.stringify(asset));
+    async getAssetsByQuery(ctx, queryString) {
+        let assets = await ctx.assetList.getAssetsByQuery(queryString);
+        return Buffer.from(JSON.stringify(assets));
     }
 
     async getAssetHistory(ctx, assetClass, assetKey) {
@@ -158,6 +163,13 @@ class WarehouseContract extends Contract {
     async getInvoice(ctx, assetClass, invoiceId) {
         let invoiceKey = Invoice.makeKey([invoiceId]);
         let invoice = await ctx.invoiceList.getInvoice('invoiceCollection', assetClass, invoiceKey);
+        return invoice.toBuffer()
+    }
+
+    //invoiceCollection
+    async createInvoice(ctx, invoiceData) {
+        let invoice = Invoice.createInstance(JSON.parse(invoiceData))
+        await ctx.invoiceList.addInvoice(invoice);
         return invoice.toBuffer()
     }
 

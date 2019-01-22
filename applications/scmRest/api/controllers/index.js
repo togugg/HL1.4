@@ -8,7 +8,12 @@ module.exports = {
   getShippingById: getAssetById,
   getStockById: getAssetById,
   createShipping: createAsset,
-  createStock: createAsset
+  createStock: createAsset,
+  updateShipping: updateAsset,
+  updateStock: updateAsset,
+  getAllShippings: getAllAssetsByClass,
+  getAllStocks: getAllAssetsByClass,
+  createInvoice: createInvoice
 };
 
 
@@ -22,6 +27,30 @@ function getAssetById(req, res) {
 function createAsset(req, res) {
 	let assetData = req.swagger.params.asset.value
 	const args = ['createAsset', JSON.stringify(assetData)] 
+	connector.submit(userName, args).then(result => { res.status(201).json(result) }).catch(err => { res.send(err) })
+}
+
+function updateAsset(req, res) {
+	let assetData = req.swagger.params.asset.value
+	const args = ['updateAsset', JSON.stringify(assetData)] 
+	connector.submit(userName, args).then(result => { res.status(201).json(result) }).catch(err => { res.send(err) })
+}
+
+function updateAsset(req, res) {
+	let assetData = req.swagger.params.asset.value
+	const args = ['updateAsset', JSON.stringify(assetData)] 
+	connector.submit(userName, args).then(result => { res.status(201).json(result) }).catch(err => { res.send(err) })
+}
+
+function getAllAssetsByClass(req, res) {
+	let assetClass = req.swagger.params.assetClass.value
+	const args = ['getAllAssetsByClass', assetClass] 
+	connector.query(userName, args).then(result => { res.status(201).json(result) }).catch(err => { res.send(err) })
+}
+
+function createInvoice(req, res) {
+	let assetData = req.swagger.params.asset.value
+	const args = ['createInvoice', JSON.stringify(assetData)] 
 	connector.submit(userName, args).then(result => { res.status(201).json(result) }).catch(err => { res.send(err) })
 }
 

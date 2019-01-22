@@ -16,8 +16,8 @@ class InvoiceList extends StateList {
         this.use(Invoice);
     }
 
-    async addInvoice(invoice) {
-        return this.addPrivateData(invoice);
+    async addInvoice(invoiceData) {
+        return this.addPrivateData(invoiceData);
     }
 
     async getInvoice(assetClass, collection, invoiceKey) {

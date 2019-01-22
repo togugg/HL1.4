@@ -159,7 +159,7 @@ paths:
         "201":
           description: Success
           schema:
-            $ref: "#/definitions/Response"
+            $ref: "#/definitions/Stock"
         default:
           description: Error
           schema:
@@ -234,6 +234,28 @@ paths:
           schema:
             $ref: "#/definitions/ErrorResponse"
             
+  /invoices:
+      x-swagger-router-controller: index
+      post:
+        description: Add a new invoice to the list
+        operationId: createInvoice
+        parameters:
+          - name: asset
+            description: stock properties
+            in: body
+            required: true
+            schema:
+              $ref: "#/definitions/Invoice"
+        responses:
+          "201":
+            description: Success
+            schema:
+              $ref: "#/definitions/Invoice"
+          default:
+            description: Error
+            schema:
+              $ref: "#/definitions/ErrorResponse"
+            
   /swagger:
     x-swagger-pipe: swagger_raw
 
@@ -243,6 +265,7 @@ definitions:
       class:
         type: string
         description: Unique identifier representing a shipping
+        example: org.warehousenet.shipping
       shippingId:
         type: string
         description: Unique identifier representing a shipping
@@ -270,6 +293,10 @@ definitions:
 
   Stock:
     properties:
+      class:
+        type: string
+        description: Unique identifier representing a shipping
+        example: org.warehousenet.stock
       stockId:
         type: string
         description: Unique identifier representing a stock
@@ -296,6 +323,34 @@ definitions:
     type: array
     items:
       $ref: '#/definitions/Stocks'
+      
+  Invoice:
+      properties:
+        class:
+          type: string
+          description: Unique identifier representing a shipping
+          example: org.warehousenet.invoice
+        collection:
+          type: string
+          description: collection to use
+          example: invoiceCollection
+        invoiceId:
+          type: string
+          description: Unique identifier representing a invoice
+        shippingId:
+          type: string
+          description: Unique identifier representing a shipping
+        supplierId:
+          type: string
+          description: Unique identifier representing a supplier
+        data:
+          type: string
+          description: Current quantity of the stock
+      required:
+        - invoiceId
+        - shippingId
+        - supplierId
+        - data
 
   Response:
     type: object

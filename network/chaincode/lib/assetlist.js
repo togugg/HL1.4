@@ -34,12 +34,16 @@ class AssetList extends StateList {
         return this.deleteState(assetClass, assetKey);
     }
 
-    async getAssetByQuery(queryString) {
+    async getAssetsByQuery(queryString) {
         return this.getStatesByQuery(queryString);
     }
 
     async getAssetHistory(assetClass, assetKey) {
         return this.getStateHistory(assetClass, assetKey);
+    }
+
+    async getAllAssetsByClass(assetClass) {
+        return this.getAllStatesByClass(assetClass);
     }
 }
 

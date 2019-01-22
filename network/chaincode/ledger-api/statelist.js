@@ -57,6 +57,13 @@ class StateList {
     }
   }
 
+  async getAllStatesByClass(assetClass) {
+    let queryString = {"selector": {"class": {"$eq": assetClass}}};
+    let data = await this.ctx.stub.getQueryResult(JSON.stringify(queryString));
+    let results = await this.getAllResults(data);
+    return results;
+  }
+
   /**
  * Delete a state in the list.
  */
