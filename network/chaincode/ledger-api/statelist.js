@@ -28,13 +28,13 @@ class StateList {
    * State object is serialized before writing.
    */
   async addState(state) {
-    let key = this.ctx.stub.createCompositeKey(this.name, state.getSplitKey());
+    let key = this.ctx.stub.createCompositeKey(state.getClass(), state.getSplitKey());
     let data = State.serialize(state);
     await this.ctx.stub.putState(key, data);
   }
 
   async addPrivateData(state) {
-    let key = this.ctx.stub.createCompositeKey(this.name, state.getSplitKey());
+    let key = this.ctx.stub.createCompositeKey(state.getClass(), state.getSplitKey());
     let data = State.serialize(state);
     await this.ctx.stub.putPrivateData(state.collection, key, data);
   }
@@ -44,9 +44,9 @@ class StateList {
    * keys to retrieve state from world state. State data is deserialized
    * into JSON object before being returned.
    */
-  async getState(key) {
+  async getState(assetClass, key) {
     try {
-      let ledgerKey = this.ctx.stub.createCompositeKey(this.name, State.splitKey(key));
+      let ledgerKey = this.ctx.stub.createCompositeKey(assetClass, State.splitKey(key));
       let data = await this.ctx.stub.getState(ledgerKey);
       let state = State.deserialize(data, this.supportedClasses);
       return state;
@@ -59,18 +59,18 @@ class StateList {
   /**
  * Delete a state in the list.
  */
-  async deleteState(key) {
+  async deleteState(assetClass, key) {
     console.log(key)
     let result = await this.getState(key);
     console.log(result)
-    let ledgerKey = this.ctx.stub.createCompositeKey(this.name, State.splitKey(key));
+    let ledgerKey = this.ctx.stub.createCompositeKey(assetClass, State.splitKey(key));
     console.log(ledgerKey)
     await this.ctx.stub.deleteState(ledgerKey);
     return result
   }
 
-  async getPrivateData(collection, key) {
-    let ledgerKey = this.ctx.stub.createCompositeKey(this.name, State.splitKey(key));
+  async getPrivateData(assetClass, collection, key) {
+    let ledgerKey = this.ctx.stub.createCompositeKey(assetClass, State.splitKey(key));
     console.log(ledgerKey)
     let data = await this.ctx.stub.getPrivateData(collection, ledgerKey);
     console.log(data.toString('utf8'))
@@ -79,8 +79,8 @@ class StateList {
   }
 
 
-  async getStateHistory(key) {
-    let ledgerKey = this.ctx.stub.createCompositeKey(this.name, State.splitKey(key));
+  async getStateHistory(assetClass, key) {
+    let ledgerKey = this.ctx.stub.createCompositeKey(assetClass, State.splitKey(key));
     let data = await this.ctx.stub.getHistoryForKey(ledgerKey);
     let results = await this.getAllResults(data, true);
     return results;

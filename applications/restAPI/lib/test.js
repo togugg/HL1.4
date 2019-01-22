@@ -1,4 +1,4 @@
-var State = require('../../../network/chaincode/lib/stock.js')
+var State = require('../../../network/chaincode/lib/asset.js')
 
 stock = {
     "class":"org.warehousenet.stock",
@@ -13,6 +13,7 @@ stock = {
     }
 
 newStock = State.createInstance(stock)
+newStockBuffer = newStock.toBuffer()
+console.log(newStockBuffer)
 
-
-console.log(newStock.class)
+console.log(JSON.parse(newStockBuffer))

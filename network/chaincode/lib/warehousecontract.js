@@ -59,7 +59,7 @@ class WarehouseContract extends Contract {
 
     async sendShipping(ctx, shippingNr, invoiceData) {
         let shippingKey = Shipping.makeKey([shippingNr]);
-        let shipping = await ctx.assetList.getAsset(shippingKey);
+        let shipping = await ctx.assetList.getAsset("org.warehousenet.shipping", shippingKey);
         let now = ctx.stub.getSignedProposal().proposal.header.channel_header.timestamp.nanos;
 
         let invoice = Invoice.createInstance(now, shipping.shippingNr, invoiceData, 'invoiceCollection')
@@ -73,12 +73,12 @@ class WarehouseContract extends Contract {
 
     async receiveShipping(ctx, shippingNr) {
         let shippingKey = Shipping.makeKey([shippingNr]);
-        let shipping = await ctx.assetList.getAsset(shippingKey);
+        let shipping = await ctx.assetList.getAsset('org.warehousenet.shipping', shippingKey);
         shipping.setReceived()
         await ctx.assetList.updateAsset(shipping)
         let stockKey = Stock.makeKey([shipping.matNr, shipping.supplier]);
-        let stock = await ctx.assetList.getAsset(stockKey);
-        stock.addQuantity(shipping.stock)
+        let stock = await ctx.assetList.getAsset('org.warehousenet.stock', stockKey);
+        stock.addQuantity(shipping.quantity)
         await ctx.assetList.updateAsset(stock);
         return shipping.toBuffer()
     }
@@ -122,16 +122,12 @@ class WarehouseContract extends Contract {
         // Add the paper to the list of all similar commercial papers in the ledger world state
         await ctx.assetList.addAsset(asset);
         // Must return a serialized paper to caller of smart contract
-        if (asset.toBuffer) {
-            return asset.toBuffer();
-        }
-        else {
-            return Buffer.from(asset, 'utf8')
-        }
+        return asset.toBuffer();
+
     }
 
-    async getAsset(ctx, assetKey) {
-        let asset = await ctx.assetList.getAsset(assetKey);
+    async getAsset(ctx, assetClass, assetKey) {
+        let asset = await ctx.assetList.getAsset(assetClass, assetKey);
         return asset.toBuffer()
     }
 
@@ -143,9 +139,9 @@ class WarehouseContract extends Contract {
         return asset.toBuffer();
     }
 
-    async deleteAsset(ctx, assetKey) {
+    async deleteAsset(ctx, assetClass, assetKey) {
         // Updates the stock in the ledger world state
-        let asset = await ctx.assetList.deleteAsset(assetKey);
+        let asset = await ctx.assetList.deleteAsset(assetClass, assetKey);
         // Must return a serialized stock to caller of smart contract
         return asset.toBuffer();
     }
@@ -155,14 +151,14 @@ class WarehouseContract extends Contract {
         return Buffer.from(JSON.stringify(asset));
     }
 
-    async getAssetHistory(ctx, assetKey) {
-        let asset = await ctx.assetList.getAssetHistory(assetKey);
+    async getAssetHistory(ctx, assetClass, assetKey) {
+        let asset = await ctx.assetList.getAssetHistory(assetClass, assetKey);
         return Buffer.from(JSON.stringify(asset));
     }
 
-    async getInvoice(ctx, invoiceNr) {
+    async getInvoice(ctx, assetClass, invoiceNr) {
         let invoiceKey = Invoice.makeKey([invoiceNr]);
-        let invoice = await ctx.invoiceList.getInvoice('invoiceCollection', invoiceKey);
+        let invoice = await ctx.invoiceList.getInvoice('invoiceCollection', assetClass, invoiceKey);
         return invoice.toBuffer()
     }
 

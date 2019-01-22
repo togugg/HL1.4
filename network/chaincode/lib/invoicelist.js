@@ -20,8 +20,8 @@ class InvoiceList extends StateList {
         return this.addPrivateData(invoice);
     }
 
-    async getInvoice(collection, invoiceKey) {
-        return this.getPrivateData(collection, invoiceKey);
+    async getInvoice(assetClass, collection, invoiceKey) {
+        return this.getPrivateData(assetClass, collection, invoiceKey);
     }
 
     async updateInvoice(invoice) {

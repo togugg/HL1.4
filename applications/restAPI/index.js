@@ -2,9 +2,9 @@ const connector = require('./lib/connector.js');
 
 const userName = 'User1@org1.example.com';
 
-/*  asset = {
+ asset = {
   "class":"org.warehousenet.shipping",
-  "shippingNr":"home",
+  "shippingNr":"homes",
   "matDesc":"this is a material",
   "matNr":"223",
   "max":"10",
@@ -13,9 +13,9 @@ const userName = 'User1@org1.example.com';
   "supplier":"2"
   }
 
-const args = ['createAsset', JSON.stringify(asset)] */
+const args = ['updateAsset', JSON.stringify(asset)]
 
-const args = ['getAsset', 'homes']
+//const args = ['getAsset', 'org.warehousenet.shipping', 'home']
 
 //const args = ['deleteAsset', 'home']
 

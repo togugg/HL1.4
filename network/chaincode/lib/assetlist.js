@@ -22,24 +22,24 @@ class AssetList extends StateList {
         return this.addState(asset);
     }
 
-    async getAsset(assetKey) {
-        return this.getState(assetKey);
+    async getAsset(assetClass, assetKey) {
+        return this.getState(assetClass, assetKey);
     }
 
     async updateAsset(asset) {
-        return this.updateAsset(asset);
+        return this.updateState(asset);
     }
 
-    async deleteAsset(assetKey) {
-        return this.deleteState(assetKey);
+    async deleteAsset(assetClass, assetKey) {
+        return this.deleteState(assetClass, assetKey);
     }
 
     async getAssetByQuery(queryString) {
         return this.getStatesByQuery(queryString);
     }
 
-    async getAssetHistory(assetKey) {
-        return this.getStateHistory(assetKey);
+    async getAssetHistory(assetClass, assetKey) {
+        return this.getStateHistory(assetClass, assetKey);
     }
 }
 
