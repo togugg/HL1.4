@@ -68,11 +68,8 @@ class StateList {
  * Delete a state in the list.
  */
   async deleteState(assetClass, key) {
-    console.log(key)
-    let result = await this.getState(key);
-    console.log(result)
+    let result = await this.getState(assetClass, key);
     let ledgerKey = this.ctx.stub.createCompositeKey(assetClass, State.splitKey(key));
-    console.log(ledgerKey)
     await this.ctx.stub.deleteState(ledgerKey);
     return result
   }

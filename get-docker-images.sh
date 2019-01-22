@@ -8,7 +8,7 @@
 # set the default Docker namespace and tag
 DOCKER_NS=hyperledger
 VERSION=latest
-THIRDPARTY_IMAGE_VERSION=0.4.14 # Kafka & Zookeeper
+THIRDPARTY_IMAGE_VERSION=latest # Kafka & Zookeeper
 
 # set of Hyperledger Fabric images
 FABRIC_IMAGES=(fabric-peer fabric-orderer fabric-ccenv fabric-tools fabric-ca)

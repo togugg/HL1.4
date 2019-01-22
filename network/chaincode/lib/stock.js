@@ -14,7 +14,7 @@ const State = require('./../ledger-api/state.js');
 class Stock extends State {
 
     constructor(obj) {
-        super(Stock.getClass(), [obj.matId, obj.supplierId]);
+        super(Stock.getClass(), [obj.stockId]);
         Object.assign(this, obj);
     }
 

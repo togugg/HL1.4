@@ -33,9 +33,9 @@ SwaggerExpress.create(config, function(err, swaggerExpress) {
   var port = process.env.PORT || 8080;
   app.listen(port);
 
-  if (swaggerExpress.runner.swagger.paths['/hello']) {
-    console.log('try this:\ncurl http://127.0.0.1:' + port + '/hello?name=Scott');
-  }
+  
+    console.log('open API GUI at:\n  http://127.0.0.1:' + port + '/api-docs');
+  
 });
 
 

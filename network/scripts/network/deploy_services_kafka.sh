@@ -6,6 +6,6 @@ set -ev
 
 # KAFKA & ZOOKEEPER
 docker stack deploy -c "$ZK_COMPOSE_PATH" hlf_zk
-#sleep 3
+sleep 3
 docker stack deploy -c "$KAFKA_COMPOSE_PATH" hlf_kafka
-#sleep 3
+sleep 3

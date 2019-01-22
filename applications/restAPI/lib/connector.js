@@ -61,7 +61,7 @@ async function main(userName, args, method) {
     const contract = await network.getContract('warehousecontract', 'org.warehousenet.warehouse');
 
     // issue commercial paper
-    console.log('Submit commercial paper issue transaction.');
+    console.log('Submit ${args[0]} paper issue transaction.');
 
     if (method == "submit") {
       var issueResponse = await contract.submitTransaction.apply(contract, args);

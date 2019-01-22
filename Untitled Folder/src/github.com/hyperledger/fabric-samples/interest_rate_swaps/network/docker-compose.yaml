@@ -124,7 +124,7 @@ services:
       - CORE_PEER_ADDRESS=irs-rrprovider:7051
       - CORE_PEER_GOSSIP_EXTERNALENDPOINT=irs-rrprovider:7051
       - CORE_PEER_LOCALMSPID=rrprovider
-      - CORE_LOGGING_LEVEL=DEBUG
+      - FABRIC_LOGGING_SPEC=DEBUG
     volumes:
         - ./crypto-config/peerOrganizations/rrprovider.example.com/peers/peer0.rrprovider.example.com/msp:/etc/hyperledger/fabric/msp
         - peer0.rrprovider.example.com:/var/hyperledger/production

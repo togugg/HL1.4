@@ -12,30 +12,12 @@ consumes:
 produces:
   - application/json
 paths:
-
   /shippings:
     x-swagger-router-controller: index
-    get:
-      parameters:
-        - name: assetClass
-          in: query
-          description: assetClass
-          required: false
-          type: string
-          default: org.warehousenet.shipping
-      description: Returns a list of all shippings
-      operationId: getAllShippings
-      responses:
-        "200":
-          description: Success
-          schema:
-            $ref: "#/definitions/Shippings"
-        default:
-          description: Error
-          schema:
-            $ref: "#/definitions/ErrorResponse"
     post:
       description: Add a new shipping to the list
+      tags:
+        - Shippings
       operationId: createShipping
       parameters:
         - name: asset
@@ -53,8 +35,31 @@ paths:
           description: Error
           schema:
             $ref: "#/definitions/ErrorResponse"
+    get:
+      description: Returns a list of all shippings
+      tags:
+        - Shippings
+      operationId: getAllShippings
+      parameters:
+        - name: assetClass
+          in: query
+          description: assetClass
+          required: false
+          type: string
+          default: org.warehousenet.shipping
+      responses:
+        "200":
+          description: Success
+          schema:
+            $ref: "#/definitions/Shippings"
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
     put:
       description: Update a shipping
+      tags:
+        - Shippings
       operationId: updateShipping
       parameters:
         - name: shipping
@@ -76,6 +81,10 @@ paths:
   /shippings/{Id}:    
     x-swagger-router-controller: index
     get:
+      description: Returns a specific shipping
+      tags:
+        - Shippings
+      operationId: getShippingById
       parameters:
         - in: path
           name: Id
@@ -88,8 +97,6 @@ paths:
           required: false
           type: string
           default: org.warehousenet.shipping
-      description: Returns a specific shipping
-      operationId: getShippingById
       responses:
         "200":
           description: Success
@@ -100,6 +107,10 @@ paths:
           schema:
             $ref: "#/definitions/ErrorResponse"
     delete:
+      description: Returns a specific shipping
+      tags:
+        - Shippings
+      operationId: deleteShippingbyId
       parameters:
         - in: path
           name: Id
@@ -112,13 +123,11 @@ paths:
           required: false
           type: string
           default: org.warehousenet.shipping
-      description: Returns a specific shipping
-      operationId: deleteShippingbyId
       responses:
         "200":
           description: Success
           schema:
-            $ref: "#/definitions/Shippings"
+            $ref: "#/definitions/Shipping"
         default:
           description: Error
           schema:
@@ -126,27 +135,10 @@ paths:
 
   /stocks:
     x-swagger-router-controller: index
-    get:
-      parameters:
-        - name: assetClass
-          in: query
-          description: assetClass
-          required: false
-          type: string
-          default: org.warehousenet.stock
-      description: Returns a list of all stocks
-      operationId: getAllStocks
-      responses:
-        "200":
-          description: Success
-          schema:
-            $ref: "#/definitions/Stocks"
-        default:
-          description: Error
-          schema:
-            $ref: "#/definitions/ErrorResponse"
     post:
       description: Add a new stock to the list
+      tags:
+        - Stocks
       operationId: createStock
       parameters:
         - name: asset
@@ -166,6 +158,8 @@ paths:
             $ref: "#/definitions/ErrorResponse"
     put:
       description: Update a stock
+      tags:
+        - Stocks
       operationId: updateStock
       parameters:
         - name: stock
@@ -183,9 +177,34 @@ paths:
           description: Error
           schema:
             $ref: "#/definitions/ErrorResponse"
+    get:
+      description: Returns a list of all stocks
+      tags:
+        - Stocks
+      operationId: getAllStocks
+      parameters:
+        - name: assetClass
+          in: query
+          description: assetClass
+          required: false
+          type: string
+          default: org.warehousenet.stock
+      responses:
+        "200":
+          description: Success
+          schema:
+            $ref: "#/definitions/Stocks"
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
   /stocks/{Id}:    
     x-swagger-router-controller: index
     get:
+      description: Returns a specific stock
+      tags:
+        - Stocks
+      operationId: getStockById
       parameters:
         - in: path
           name: Id
@@ -198,8 +217,6 @@ paths:
           required: false
           type: string
           default: org.warehousenet.stock
-      description: Returns a specific stock
-      operationId: getStockById
       responses:
         "200":
           description: Success
@@ -210,6 +227,10 @@ paths:
           schema:
             $ref: "#/definitions/ErrorResponse"
     delete:
+      description: Returns a specific stock
+      operationId: deketeStockById
+      tags:
+        - Stocks
       parameters:
         - in: path
           name: Id
@@ -222,13 +243,11 @@ paths:
           required: false
           type: string
           default: org.warehousenet.stock
-      description: Returns a specific stock
-      operationId: deketeStockById
       responses:
         "200":
           description: Success
           schema:
-            $ref: "#/definitions/Stocks"
+            $ref: "#/definitions/Stock"
         default:
           description: Error
           schema:
@@ -238,6 +257,8 @@ paths:
       x-swagger-router-controller: index
       post:
         description: Add a new invoice to the list
+        tags:
+          - Invoices
         operationId: createInvoice
         parameters:
           - name: asset
@@ -322,7 +343,7 @@ definitions:
   Stocks:
     type: array
     items:
-      $ref: '#/definitions/Stocks'
+      $ref: '#/definitions/Stock'
       
   Invoice:
       properties:
