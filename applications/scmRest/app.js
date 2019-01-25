@@ -2,6 +2,7 @@
 
 var SwaggerExpress = require('swagger-express-mw');
 var app = require('express')();
+var session = require('express-session');
 var https = require('https');
 var fs = require('fs');
 const yaml = require('js-yaml');
@@ -9,7 +10,7 @@ let swaggerDocument = yaml.safeLoad(fs.readFileSync(__dirname+'/api/swagger/swag
 
 module.exports = app; // for testing
 const swaggerUi = require('swagger-ui-express');
-
+  
   app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 
@@ -29,13 +30,10 @@ SwaggerExpress.create(config, function(err, swaggerExpress) {
 
   // install middleware
   swaggerExpress.register(app);
-
   var port = process.env.PORT || 8080;
+  
   app.listen(port);
-
-  
-    console.log('open API GUI at:\n  http://127.0.0.1:' + port + '/api-docs');
-  
+    console.log('open API GUI at:\n  http://localhost:' + port + '/api-docs');
 });
 
 

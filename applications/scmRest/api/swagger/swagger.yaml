@@ -35,27 +35,6 @@ paths:
           description: Error
           schema:
             $ref: "#/definitions/ErrorResponse"
-    get:
-      description: Returns a list of all shippings
-      tags:
-        - Shippings
-      operationId: getAllShippings
-      parameters:
-        - name: assetClass
-          in: query
-          description: assetClass
-          required: false
-          type: string
-          default: org.warehousenet.shipping
-      responses:
-        "200":
-          description: Success
-          schema:
-            $ref: "#/definitions/Shippings"
-        default:
-          description: Error
-          schema:
-            $ref: "#/definitions/ErrorResponse"
     put:
       description: Update a shipping
       tags:
@@ -73,6 +52,27 @@ paths:
           description: Success
           schema:
             $ref: "#/definitions/Response"
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+    get:
+      description: Returns a list of all shippings
+      tags:
+        - Shippings
+      operationId: getAllShippings
+      parameters:
+        - name: assetClass
+          in: query
+          description: assetClass
+          required: false
+          type: string
+          default: org.warehousenet.shipping
+      responses:
+        "200":
+          description: Success
+          schema:
+            $ref: "#/definitions/Shippings"
         default:
           description: Error
           schema:
@@ -128,6 +128,34 @@ paths:
           description: Success
           schema:
             $ref: "#/definitions/Shipping"
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+  /shippings/history/{Id}:    
+    x-swagger-router-controller: index
+    get:
+      description: Returns history of a shipping
+      tags:
+        - Shippings
+      operationId: getShippingHistory
+      parameters:
+        - in: path
+          name: Id
+          description: shippingId
+          type: string
+          required: true
+        - name: assetClass
+          in: query
+          description: assetClass
+          required: false
+          type: string
+          default: org.warehousenet.shipping
+      responses:
+        "200":
+          description: Success
+          schema:
+            $ref: "#/definitions/Shippings"
         default:
           description: Error
           schema:
@@ -252,6 +280,182 @@ paths:
           description: Error
           schema:
             $ref: "#/definitions/ErrorResponse"
+  /stocks/history/{Id}:    
+    x-swagger-router-controller: index
+    get:
+      description: Returns history of a stock
+      tags:
+        - Stocks
+      operationId: getStockHistory
+      parameters:
+        - in: path
+          name: Id
+          description: stockId
+          type: string
+          required: true
+        - name: assetClass
+          in: query
+          description: assetClass
+          required: false
+          type: string
+          default: org.warehousenet.stock
+      responses:
+        "200":
+          description: Success
+          schema:
+            $ref: "#/definitions/Shippings"
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+
+  /forecast:
+      x-swagger-router-controller: index
+      post:
+        description: Add a new forecast to the list
+        tags:
+          - Forecast
+        operationId: createForecast
+        parameters:
+          - name: asset
+            description: forecast properties
+            in: body
+            required: true
+            schema:
+              $ref: "#/definitions/Forecast"
+        responses:
+          "201":
+            description: Success
+            schema:
+              $ref: "#/definitions/Forecast"
+          default:
+            description: Error
+            schema:
+              $ref: "#/definitions/ErrorResponse"
+      put:
+        description: Update a forecast
+        tags:
+          - Forecast
+        operationId: updateForecast
+        parameters:
+          - name: asset
+            description: forecast properties
+            in: body
+            required: true
+            schema:
+              $ref: "#/definitions/Forecast"
+        responses:
+          "201":
+            description: Success
+            schema:
+              $ref: "#/definitions/Forecast"
+          default:
+            description: Error
+            schema:
+              $ref: "#/definitions/ErrorResponse"
+      get:
+        description: Returns a list of all stocks
+        tags:
+          - Forecast
+        operationId: getAllForecasts
+        parameters:
+          - name: assetClass
+            in: query
+            description: assetClass
+            required: false
+            type: string
+            default: org.warehousenet.forecast
+        responses:
+          "200":
+            description: Success
+            schema:
+              $ref: "#/definitions/Forecasts"
+          default:
+            description: Error
+            schema:
+              $ref: "#/definitions/ErrorResponse"
+  /forecasts/{Id}:    
+    x-swagger-router-controller: index
+    get:
+      description: Returns a specific forecast
+      tags:
+        - Forecast
+      operationId: getforecastById
+      parameters:
+        - in: path
+          name: Id
+          description: forecastId
+          type: string
+          required: true
+        - name: assetClass
+          in: query
+          description: assetClass
+          required: false
+          type: string
+          default: org.warehousenet.forecast
+      responses:
+        "200":
+          description: Success
+          schema:
+            $ref: "#/definitions/Forecast"
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+    delete:
+      description: Returns a specific forecast
+      operationId: deketeforecastById
+      tags:
+        - Forecast
+      parameters:
+        - in: path
+          name: Id
+          description: forecastId
+          type: string
+          required: true
+        - name: assetClass
+          in: query
+          description: assetClass
+          required: false
+          type: string
+          default: org.warehousenet.forecast
+      responses:
+        "200":
+          description: Success
+          schema:
+            $ref: "#/definitions/Forecast"
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+  /forecasts/history/{Id}:    
+    x-swagger-router-controller: index
+    get:
+      description: Returns history of a forecast
+      tags:
+        - Forecast
+      operationId: getForecastHistory
+      parameters:
+        - in: path
+          name: Id
+          description: forecastId
+          type: string
+          required: true
+        - name: assetClass
+          in: query
+          description: assetClass
+          required: false
+          type: string
+          default: org.warehousenet.forecast
+      responses:
+        "200":
+          description: Success
+          schema:
+            $ref: "#/definitions/Forecasts"
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
             
   /invoices:
       x-swagger-router-controller: index
@@ -279,6 +483,45 @@ paths:
             
   /swagger:
     x-swagger-pipe: swagger_raw
+  /signin:    
+    x-swagger-router-controller: index
+    get:
+      description: Get user Token
+      tags:
+        - User
+      operationId: signIn
+      parameters:
+        - name: userName
+          in: query
+          description: userName
+          required: true
+          type: string
+          default: User1@org1.example.com
+      responses:
+        "200":
+          description: Success
+          schema:
+            $ref: "#/definitions/Response"
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+  /signout:    
+    x-swagger-router-controller: index
+    get:
+      description: Returns a specific stock
+      tags:
+        - User
+      operationId: signOut
+      responses:
+        "200":
+          description: Success
+          schema:
+            $ref: "#/definitions/Response"
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
 
 definitions:
   Shipping:
@@ -344,6 +587,51 @@ definitions:
     type: array
     items:
       $ref: '#/definitions/Stock'
+
+  Forecast:
+    properties:
+      class:
+        type: string
+        description: Class representing forecasts
+        example: org.warehousenet.forecast
+      forecastId:
+        type: string
+        description: Unique identifier representing a forecast
+      materialId:
+        type: string
+        description: Unique identifier representing a material
+      supplierId:
+        type: string
+        description: Unique identifier representing a supplier
+      location:
+        type: string
+        description: Current quantity of the stock
+      monthlyForecast:
+        $ref: '#/definitions/monthlyForecastArray'
+    required:
+      - forecastId
+      - materialId
+      - supplierId
+  Forecasts:
+    type: array
+    items:
+      $ref: '#/definitions/Forecast'
+      
+  monthlyForecast:
+    properties:
+      month:
+        type: string
+        description: Unique identifier representing a shipping
+      demand:
+        type: string
+        description: Unique identifier representing a forecast
+      me:
+        type: string
+        description: Unique identifier representing a material
+  monthlyForecastArray:
+    type: array
+    items:
+      $ref: '#/definitions/monthlyForecast'
       
   Invoice:
       properties:

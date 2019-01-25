@@ -13,6 +13,7 @@ const { Contract, Context } = require('fabric-contract-api');
 // SupplyNet specifc classes
 const Stock = require('./stock.js');
 const Shipping = require('./shipping.js');
+const Forecast = require('./forecast.js');
 const AssetList = require('./assetlist.js');
 const Invoice = require('./invoice.js');
 const InvoiceList = require('./invoicelist.js');
@@ -67,7 +68,7 @@ class WarehouseContract extends Contract {
 
         shipping.setSent(now, invoice.invoiceId);
         await ctx.assetList.updateAsset(shipping);
-
+        ctx.stub.setEvent('shippingEvent', shipping.toBuffer())
         return shipping.toBuffer();
     }
 
@@ -82,7 +83,6 @@ class WarehouseContract extends Contract {
         await ctx.assetList.updateAsset(stock);
         return shipping.toBuffer()
     }
-
 
     async getIdentity(ctx) {
         let cid = new ClientIdentity(ctx.stub);
@@ -102,7 +102,10 @@ class WarehouseContract extends Contract {
             };
             case 'org.warehousenet.shipping': {
                 return Shipping.createInstance(assetData);
-            }
+            };
+            case 'org.warehousenet.forecast': {
+                return Forecast.createInstance(assetData);
+            };
         }
 
     }
@@ -122,6 +125,7 @@ class WarehouseContract extends Contract {
         // Add the paper to the list of all similar commercial papers in the ledger world state
         await ctx.assetList.addAsset(asset);
         // Must return a serialized paper to caller of smart contract
+        ctx.stub.setEvent('shippingEvent', asset.toBuffer())
         return asset.toBuffer();
     }
 
