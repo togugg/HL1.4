@@ -314,7 +314,7 @@ paths:
       post:
         description: Add a new forecast to the list
         tags:
-          - Forecast
+          - Forecasts
         operationId: createForecast
         parameters:
           - name: asset
@@ -335,7 +335,7 @@ paths:
       put:
         description: Update a forecast
         tags:
-          - Forecast
+          - Forecasts
         operationId: updateForecast
         parameters:
           - name: asset
@@ -356,7 +356,7 @@ paths:
       get:
         description: Returns a list of all stocks
         tags:
-          - Forecast
+          - Forecasts
         operationId: getAllForecasts
         parameters:
           - name: assetClass
@@ -379,7 +379,7 @@ paths:
     get:
       description: Returns a specific forecast
       tags:
-        - Forecast
+        - Forecasts
       operationId: getforecastById
       parameters:
         - in: path
@@ -406,7 +406,7 @@ paths:
       description: Returns a specific forecast
       operationId: deketeforecastById
       tags:
-        - Forecast
+        - Forecasts
       parameters:
         - in: path
           name: Id
@@ -433,7 +433,7 @@ paths:
     get:
       description: Returns history of a forecast
       tags:
-        - Forecast
+        - Forecasts
       operationId: getForecastHistory
       parameters:
         - in: path
@@ -480,6 +480,44 @@ paths:
             description: Error
             schema:
               $ref: "#/definitions/ErrorResponse"
+              
+  /sendShipping:    
+    x-swagger-router-controller: index
+    put:
+      description: txData
+      tags:
+        - Transactions
+      operationId: sendShipping
+      parameters:
+        - name: txData
+          description: transaction data
+          in: body
+          required: true
+          schema:
+            properties:
+              shippingId:
+                type: string
+                description: Unique identifier representing a shippin
+              invoiceId:
+                type: string
+                description: Unique identifier representing a invoice
+              invoiceData: 
+                type: string
+                description: Unique identifier representing a stock
+              collection:
+                type: string
+                description: collection for private data
+                example: invoiceCollection
+                
+      responses:
+        "200":
+          description: Success
+          schema:
+            $ref: "#/definitions/Shipping"
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
             
   /swagger:
     x-swagger-pipe: swagger_raw

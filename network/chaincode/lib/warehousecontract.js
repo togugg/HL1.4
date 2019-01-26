@@ -4,6 +4,9 @@ SPDX-License-Identifier: Apache-2.0
 
 'use strict';
 
+// Helper libraries
+const crypto = require('crypto');
+
 // Fabric client identity class
 const ClientIdentity = require('fabric-shim').ClientIdentity;
 
@@ -58,14 +61,16 @@ class WarehouseContract extends Contract {
         console.log('Instantiate the contract');
     }
 
-    async sendShipping(ctx, shippingId, invoiceData) {
-        let shippingKey = Shipping.makeKey([shippingId]);
+    async sendShipping(ctx, invoiceData) {
+        invoiceData = JSON.parse(invoiceData);
+        let shippingKey = Shipping.makeKey([invoiceData.shippingId]);
         let shipping = await ctx.assetList.getAsset("org.warehousenet.shipping", shippingKey);
         let now = ctx.stub.getSignedProposal().proposal.header.channel_header.timestamp.nanos;
 
-        let invoice = Invoice.createInstance(now, shipping.shippingId, invoiceData, 'invoiceCollection')
-        await ctx.invoiceList.addInvoice(invoice);
+        //let invoiceId = crypto.createHash('md5').update(invoiceData).digest('hex');
 
+        let invoice = Invoice.createInstance(invoiceData);
+        await ctx.invoiceList.addInvoice(invoice);
         shipping.setSent(now, invoice.invoiceId);
         await ctx.assetList.updateAsset(shipping);
         ctx.stub.setEvent('shippingEvent', shipping.toBuffer())

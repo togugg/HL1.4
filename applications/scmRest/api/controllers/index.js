@@ -31,7 +31,9 @@ module.exports = {
 
 	createInvoice: createInvoice,
 	signIn: signIn,
-	signOut: signOut
+	signOut: signOut,
+
+	sendShipping: sendShipping,
 };
 
 
@@ -105,7 +107,11 @@ function signOut(req, res) {
 	res.status(200).send(x)
 }
 
-
+function sendShipping(req, res) {
+	let data = req.swagger.params.txData.value;
+	const args = ['sendShipping',  JSON.stringify(data)];
+	connector.submit(getUserName(req), args).then(result => { res.status(200).json(result) }).catch(err => { res.send(err) })
+}
 
 function getUserName(req) {
 	let cookie = req.headers.cookie.match(new RegExp('(^| )' + 'userName' + '=([^;]+)'));
