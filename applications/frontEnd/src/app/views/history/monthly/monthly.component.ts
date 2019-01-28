@@ -12,6 +12,36 @@ export class MonthlyComponent implements OnInit {
   ngOnInit() {
   }
 
+  shippings = [{
+    "shippingId": "23123123",
+    "materialId": "3255234234",
+    "supplierId": "97234223",
+    "customerId": "923023",
+    "quantity": "250",
+    "sentDate": "2019-01-08",
+    "receivedDate": "",
+    "status": "Sent"
+  }, {
+    "shippingId": "23123123",
+    "materialId": "3255234234",
+    "supplierId": "97234223",
+    "customerId": "923023",
+    "quantity": "250",
+    "sentDate": "",
+    "receivedDate": "",
+    "status": "Not Sent"
+  },
+  {
+    "shippingId": "23123123",
+    "materialId": "3255234234",
+    "supplierId": "97234223",
+    "customerId": "923023",
+    "quantity": "250",
+    "sentDate": "",
+    "receivedDate": "",
+    "status": "Not Sent"
+  }]
+
 
 
   // lineChart

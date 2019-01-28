@@ -7,8 +7,7 @@
           <h4>Material: 23123123123</h4>
         </div>
         <div class="card-body">
-          Location: xxx
-          Supplier: xxx
+          Location: xxx Supplier: xxx
         </div>
 
       </div>
@@ -30,9 +29,8 @@
         </div>
         <div class="card-body">
           <div class="chart-wrapper">
-            <canvas baseChart class="chart" [datasets]="lineChartData" [labels]="lineChartLabels" [options]="lineChartOptions"
-              [colors]="lineChartColours" [legend]="lineChartLegend" [chartType]="lineChartType" (chartHover)="chartHovered($event)"
-              (chartClick)="chartClicked($event)"></canvas>
+            <canvas baseChart class="chart" [datasets]="lineChartData" [labels]="lineChartLabels" [options]="lineChartOptions" [colors]="lineChartColours"
+              [legend]="lineChartLegend" [chartType]="lineChartType" (chartHover)="chartHovered($event)" (chartClick)="chartClicked($event)"></canvas>
           </div>
         </div>
         <!--  </div> -->
@@ -107,68 +105,33 @@
 
 
       <div class="card">
-          <div class="card-header">
-            Shipping Information
-          </div>
-          <div class="card-body">
-  
-            <h4>Stock Information </h4>
-            <div class=row>
-              <div class="col">
-                Max.:
-              </div>
-              <div class="col">
-                555 Units
-              </div>
-            </div>
-  
-            <div class=row>
-              <div class="col">
-                Current Stock
-              </div>
-              <div class="col">
-                232 Units
-              </div>
-            </div>
-  
-            <div class=row>
-              <div class="col">
-                Min.:
-              </div>
-              <div class="col">
-                200 Units
-              </div>
-            </div>
-            <br>
-            <h4>Stock Information </h4>
-            <div class=row>
-              <div class="col">
-                Max.:
-              </div>
-              <div class="col">
-                555 Units
-              </div>
-            </div>
-  
-            <div class=row>
-              <div class="col">
-                Current Stock
-              </div>
-              <div class="col">
-                232 Units
-              </div>
-            </div>
-  
-            <div class=row>
-              <div class="col">
-                Min.:
-              </div>
-              <div class="col">
-                200 Units
-              </div>
-            </div>
-          </div>
+        <div class="card-header">
+          Shippings in transit
         </div>
+        <div class="card-body">
+          <table class="table table-sm table-striped">
+            <thead>
+              <tr>
+                <th>ShippingId</th>
+                <th>Quantity</th>
+                <th>Sent on</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let shipping of shippings; let i = index" (click)="console.log(i)" class="clickable">
+                <td>{{shipping.shippingId}}</td>
+                <td>{{shipping.quantity}}</td>
+                <td>
+                  <span *ngIf="shipping.sentDate; else notSent">{{shipping.sentDate}}</span>
+                  <ng-template #notSent>
+                    <span class="badge badge-warning">Not Sent</span>
+                  </ng-template>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
     </div>
 
   </div>

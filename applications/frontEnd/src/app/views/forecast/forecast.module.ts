@@ -5,10 +5,14 @@ import { YearlyComponent } from './yearly/yearly.component';
 
 import { ForecastRoutingModule } from './forecast-routing.module';
 
+import { ModalModule } from 'ngx-bootstrap/modal';
+
+
 @NgModule({
   imports: [
     CommonModule,
-    ForecastRoutingModule
+    ForecastRoutingModule,
+    ModalModule.forRoot()
   ],
   declarations: [
     ForecastComponent,
