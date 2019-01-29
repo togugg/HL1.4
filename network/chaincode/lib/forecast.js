@@ -23,13 +23,14 @@ class Forecast extends State {
         Object.assign(this, obj);
     }
 
-    setApproved(now) {
-        this.currentState = cpState.APPROVED;
-        this.approvedDate = now;
+    approveMonth(month) {
+        let i = this.monthlyForecast.indexOf(month);
+        this.monthlyForecast[i] = cpState.APPROVED;
     }
 
     addMonthlyForecast(monthlyForecastData) {
-        this.monthlyForecast.push(monthlyForecastData)
+        monthlyForecastData.state = cpState.NOT_APPROVED; 
+        this.monthlyForecast.push(monthlyForecastData);
     }
 
     toBuffer() {
@@ -40,11 +41,7 @@ class Forecast extends State {
      * Factory method to create a commercial paper object
      */
     static createInstance(assetData) {
-        assetData.currentState = cpState.NOT_APPROVED;
-        if (!assetData.monthlyForecast) {
-            console.log('add forecast array')
-            assetData["monthlyForecast"] = []
-        }
+        assetData["monthlyForecast"] = []
         return new Forecast(assetData);
     }
 

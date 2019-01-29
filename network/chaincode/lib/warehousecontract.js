@@ -66,9 +66,6 @@ class WarehouseContract extends Contract {
         let shippingKey = Shipping.makeKey([invoiceData.shippingId]);
         let shipping = await ctx.assetList.getAsset("org.warehousenet.shipping", shippingKey);
         let now = ctx.stub.getSignedProposal().proposal.header.channel_header.timestamp.nanos;
-
-        //let invoiceId = crypto.createHash('md5').update(invoiceData).digest('hex');
-
         let invoice = Invoice.createInstance(invoiceData);
         await ctx.invoiceList.addInvoice(invoice);
         shipping.setSent(now, invoice.invoiceId);
@@ -87,6 +84,14 @@ class WarehouseContract extends Contract {
         stock.addQuantity(shipping.quantity)
         await ctx.assetList.updateAsset(stock);
         return shipping.toBuffer()
+    }
+
+    async addMonthlyForecast(ctx, monthlyForecast) {
+        monthlyForecast = JSON.parse(monthlyForecast);
+        let forecast = await ctx.assetList.getAsset('org.warehousenet.forecast', monthlyForecast.forecastId.);
+        forecast.addMonthlyForecast(monthlyForecast.data);
+        await ctx.assetList.updateAsset(forecast);
+        return forecast.toBuffer();
     }
 
     async getIdentity(ctx) {
@@ -112,7 +117,6 @@ class WarehouseContract extends Contract {
                 return Forecast.createInstance(assetData);
             };
         }
-
     }
 
     /**
@@ -169,16 +173,18 @@ class WarehouseContract extends Contract {
         return Buffer.from(JSON.stringify(asset));
     }
 
-    async getInvoice(ctx, assetClass, invoiceId) {
-        let invoiceKey = Invoice.makeKey([invoiceId]);
-        let invoice = await ctx.invoiceList.getInvoice('invoiceCollection', assetClass, invoiceKey);
-        return invoice.toBuffer()
-    }
+
 
     //invoiceCollection
     async createInvoice(ctx, invoiceData) {
         let invoice = Invoice.createInstance(JSON.parse(invoiceData))
         await ctx.invoiceList.addInvoice(invoice);
+        return invoice.toBuffer()
+    }
+
+    async getInvoice(ctx, assetClass, invoiceId) {
+        let invoiceKey = Invoice.makeKey([invoiceId]);
+        let invoice = await ctx.invoiceList.getInvoice('invoiceCollection', assetClass, invoiceKey);
         return invoice.toBuffer()
     }
 

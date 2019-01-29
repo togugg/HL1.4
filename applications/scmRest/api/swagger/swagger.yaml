@@ -508,7 +508,36 @@ paths:
                 type: string
                 description: collection for private data
                 example: invoiceCollection
-                
+      responses:
+        "200":
+          description: Success
+          schema:
+            $ref: "#/definitions/Shipping"
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+            
+  /addMonthlyData:    
+    x-swagger-router-controller: index
+    put:
+      description: txData
+      tags:
+        - Transactions
+      operationId: addMonthlyData
+      parameters:
+        - name: txData
+          description: transaction data
+          in: body
+          required: true
+          schema:
+            properties:
+              forecastId:
+                type: string
+                description: Unique identifier representing a forecast
+              data:
+                $ref: '#/definitions/MonthlyForecast'
+
       responses:
         "200":
           description: Success
@@ -644,8 +673,6 @@ definitions:
       location:
         type: string
         description: Current quantity of the stock
-      monthlyForecast:
-        $ref: '#/definitions/monthlyForecastArray'
     required:
       - forecastId
       - materialId
@@ -655,21 +682,19 @@ definitions:
     items:
       $ref: '#/definitions/Forecast'
       
-  monthlyForecast:
+  MonthlyForecast:
     properties:
       month:
         type: string
-        description: Unique identifier representing a shipping
+        description: Unique identifier representing a forecast
       demand:
         type: string
         description: Unique identifier representing a forecast
-      me:
-        type: string
-        description: Unique identifier representing a material
+
   monthlyForecastArray:
     type: array
     items:
-      $ref: '#/definitions/monthlyForecast'
+      $ref: '#/definitions/MonthlyForecast'
       
   Invoice:
       properties:

@@ -34,6 +34,7 @@ module.exports = {
 	signOut: signOut,
 
 	sendShipping: sendShipping,
+	addMonthlyData: addMonthlyData
 };
 
 
@@ -110,6 +111,12 @@ function signOut(req, res) {
 function sendShipping(req, res) {
 	let data = req.swagger.params.txData.value;
 	const args = ['sendShipping',  JSON.stringify(data)];
+	connector.submit(getUserName(req), args).then(result => { res.status(200).json(result) }).catch(err => { res.send(err) })
+}
+
+function addMonthlyData(req, res) {
+	let data = req.swagger.params.txData.value;
+	const args = ['addMonthlyData',  JSON.stringify(data)];
 	connector.submit(getUserName(req), args).then(result => { res.status(200).json(result) }).catch(err => { res.send(err) })
 }
 
