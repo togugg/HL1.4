@@ -23,9 +23,16 @@ class Forecast extends State {
         Object.assign(this, obj);
     }
 
-    approveMonth(month) {
-        let i = this.monthlyForecast.indexOf(month);
-        this.monthlyForecast[i] = cpState.APPROVED;
+    approveMonthlyForecast(data) {
+        let i = this.monthlyForecast.indexOf(data.month);
+        this.monthlyForecast[i].state = cpState.APPROVED;
+        this.monthlyForecast[i].note = data.note;
+    }
+
+    declineMonthlyForecast(data) {
+        let i = this.monthlyForecast.indexOf(data.month);
+        this.monthlyForecast[i].state = cpState.NOT_APPROVED;
+        this.monthlyForecast[i].note = data.note;
     }
 
     addMonthlyForecast(monthlyForecastData) {

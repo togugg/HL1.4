@@ -79,7 +79,7 @@ class WarehouseContract extends Contract {
         let shipping = await ctx.assetList.getAsset('org.warehousenet.shipping', shippingKey);
         shipping.setReceived()
         await ctx.assetList.updateAsset(shipping)
-        let stockKey = Stock.makeKey([shipping.matId, shipping.supplier]);
+        let stockKey = Stock.makeKey([shipping.materialId, shipping.supplierId]);
         let stock = await ctx.assetList.getAsset('org.warehousenet.stock', stockKey);
         stock.addQuantity(shipping.quantity)
         await ctx.assetList.updateAsset(stock);
@@ -88,8 +88,24 @@ class WarehouseContract extends Contract {
 
     async addMonthlyForecast(ctx, monthlyForecast) {
         monthlyForecast = JSON.parse(monthlyForecast);
-        let forecast = await ctx.assetList.getAsset('org.warehousenet.forecast', monthlyForecast.forecastId.);
+        let forecast = await ctx.assetList.getAsset('org.warehousenet.forecast', monthlyForecast.forecastId);
         forecast.addMonthlyForecast(monthlyForecast.data);
+        await ctx.assetList.updateAsset(forecast);
+        return forecast.toBuffer();
+    }
+
+    async approveMonthlyForecast(ctx, data) {
+        data = JSON.parse(data);
+        let forecast = await ctx.assetList.getAsset('org.warehousenet.forecast', data.forecastId);
+        forecast.approveMonthlyForecast(data);
+        await ctx.assetList.updateAsset(forecast);
+        return forecast.toBuffer();
+    }
+
+    async declineMonthlyForecast(ctx, data) {
+        data = JSON.parse(data);
+        let forecast = await ctx.assetList.getAsset('org.warehousenet.forecast', data.forecastId);
+        forecast.declineMonthlyForecast(data);
         await ctx.assetList.updateAsset(forecast);
         return forecast.toBuffer();
     }

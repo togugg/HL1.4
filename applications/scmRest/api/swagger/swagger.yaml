@@ -518,13 +518,40 @@ paths:
           schema:
             $ref: "#/definitions/ErrorResponse"
             
-  /addMonthlyData:    
+  /receiveShipping:    
     x-swagger-router-controller: index
     put:
       description: txData
       tags:
         - Transactions
-      operationId: addMonthlyData
+      operationId: receiveShipping
+      parameters:
+        - name: txData
+          description: transaction data
+          in: body
+          required: true
+          schema:
+            properties:
+              shippingId:
+                type: string
+                description: Unique identifier representing a shippin
+      responses:
+        "200":
+          description: Success
+          schema:
+            $ref: "#/definitions/Shipping"
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+            
+  /addMonthlyForecast:    
+    x-swagger-router-controller: index
+    put:
+      description: txData
+      tags:
+        - Transactions
+      operationId: addMonthlyForecast
       parameters:
         - name: txData
           description: transaction data
@@ -537,12 +564,44 @@ paths:
                 description: Unique identifier representing a forecast
               data:
                 $ref: '#/definitions/MonthlyForecast'
-
       responses:
         "200":
           description: Success
           schema:
-            $ref: "#/definitions/Shipping"
+            $ref: "#/definitions/Forecast"
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+              
+  /approveMonthlyForecast:
+    x-swagger-router-controller: index
+    put:
+      description: txData
+      tags:
+        - Transactions
+      operationId: acceptMonthlyForecast
+      parameters:
+        - name: txData
+          description: transaction data
+          in: body
+          required: true
+          schema:
+            properties:
+              forecastId:
+                type: string
+                description: Unique identifier representing a forecast
+              month:
+                type: string
+                description: month to approve
+              note:
+                type: string
+                description: note to attach
+      responses:
+        "200":
+          description: Success
+          schema:
+            $ref: "#/definitions/MonthlyForecast"
         default:
           description: Error
           schema:
@@ -628,9 +687,6 @@ definitions:
         type: string
         description: Unique identifier representing a shipping
         example: org.warehousenet.stock
-      stockId:
-        type: string
-        description: Unique identifier representing a stock
       materialId:
         type: string
         description: Unique identifier representing a material
@@ -647,7 +703,6 @@ definitions:
         type: string
         description: Maximal target quantity
     required:
-      - stockId
       - materialId
       - supplierId
   Stocks:

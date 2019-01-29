@@ -34,7 +34,9 @@ module.exports = {
 	signOut: signOut,
 
 	sendShipping: sendShipping,
-	addMonthlyData: addMonthlyData
+	addMonthlyForecast: addMonthlyForecast,
+	approveMonthlyForecast: approveMonthlyForecast,
+	receiveShipping: receiveShipping
 };
 
 
@@ -114,9 +116,21 @@ function sendShipping(req, res) {
 	connector.submit(getUserName(req), args).then(result => { res.status(200).json(result) }).catch(err => { res.send(err) })
 }
 
-function addMonthlyData(req, res) {
+function receiveShipping(req, res) {
 	let data = req.swagger.params.txData.value;
-	const args = ['addMonthlyData',  JSON.stringify(data)];
+	const args = ['receiveShipping',  JSON.stringify(data)];
+	connector.submit(getUserName(req), args).then(result => { res.status(200).json(result) }).catch(err => { res.send(err) })
+}
+
+function addMonthlyForecast(req, res) {
+	let data = req.swagger.params.txData.value;
+	const args = ['addMonthlyForecast',  JSON.stringify(data)];
+	connector.submit(getUserName(req), args).then(result => { res.status(200).json(result) }).catch(err => { res.send(err) })
+}
+
+function approveMonthlyForecast(req, res) {
+	let data = req.swagger.params.txData.value;
+	const args = ['approveMonthlyForecast',  JSON.stringify(data)];
 	connector.submit(getUserName(req), args).then(result => { res.status(200).json(result) }).catch(err => { res.send(err) })
 }
 
