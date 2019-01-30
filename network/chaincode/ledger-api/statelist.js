@@ -46,15 +46,10 @@ class StateList {
    * into JSON object before being returned.
    */
   async getState(assetClass, key) {
-    try {
       let ledgerKey = this.ctx.stub.createCompositeKey(assetClass, State.splitKey(key));
       let data = await this.ctx.stub.getState(ledgerKey);
       let state = State.deserialize(data, this.supportedClasses);
       return state;
-    }
-    catch (err) {
-      return "Can't find asset!"
-    }
   }
 
   async getAllStatesByClass(assetClass) {
@@ -145,7 +140,7 @@ class StateList {
         if (isHistory && isHistory === true) {
           jsonRes.TxId = res.value.tx_id;
           console.log(res.value.timestamp)
-          jsonRes.Timestamp = JSON.stringify(res.value.timestamp);
+          jsonRes.Timestamp = res.value.timestamp;
           jsonRes.IsDelete = res.value.is_delete.toString();
           try {
             jsonRes.Value = State.deserialize(res.value.value, this.supportedClasses);

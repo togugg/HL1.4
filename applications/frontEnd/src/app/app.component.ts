@@ -16,5 +16,10 @@ export class AppComponent implements OnInit {
       }
       window.scrollTo(0, 0);
     });
+    
+    if(!document.cookie.match(new RegExp('(^| )' + 'userName' + '=([^;]+)'))) {
+      console.warn('no login token found')
+      this.router.navigate(['/login'])
+    }
   }
 }

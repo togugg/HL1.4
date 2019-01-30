@@ -8,7 +8,9 @@ SPDX-License-Identifier: Apache-2.0
 const StateList = require('./../ledger-api/statelist.js');
 
 const Shipping = require('./shipping.js');
-const Stock = require('./stock.js')
+const Stock = require('./stock.js');
+const Forecast = require('./forecast.js')
+
 
 class AssetList extends StateList {
 
@@ -16,6 +18,7 @@ class AssetList extends StateList {
         super(ctx, 'org.warehousenet.assetlist');
         this.use(Shipping);
         this.use(Stock);
+        this.use(Forecast);
     }
 
     async addAsset(asset) {

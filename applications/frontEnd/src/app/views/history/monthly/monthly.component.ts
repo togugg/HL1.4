@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { HttpService } from '../../../services/http.service'
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-monthly',
@@ -7,10 +9,37 @@ import { Component, OnInit } from '@angular/core';
 })
 export class MonthlyComponent implements OnInit {
 
-  constructor() { }
+  constructor(
+    private httpService: HttpService,
+    private route: ActivatedRoute
+  ) { }
 
   ngOnInit() {
+
+    this.route.params.subscribe(params => {
+      let id = params['id']; // (+) converts string 'id' to a number
+      this.httpService.getStockHistory(id).subscribe((res) => {
+        this.data = res;
+        console.log(res)
+        res.forEach(element => {
+          var dt = new Date(element.Timestamp.seconds.low * 1000);
+          this.lineChartLabels.push(dt);
+          this.lineChartData[0].data.push(element.Value.quantity);
+          this.lineChartData[1].data.push(element.Value.min);
+          this.lineChartData[2].data.push(element.Value.max);
+        });
+        console.log(this.lineChartLabels)
+      });
+    });
   }
+
+  data: Array<any>;
+  public lineChartLabels = [];
+  public lineChartData: Array<any> = [
+    { data: [], label: 'Stock' },
+    { data: [], label: 'Min Stock' },
+    { data: [], label: 'Max Stock' },
+  ]
 
   shippings = [{
     "shippingId": "23123123",
@@ -40,17 +69,28 @@ export class MonthlyComponent implements OnInit {
     "sentDate": "",
     "receivedDate": "",
     "status": "Not Sent"
+  },
+  {
+    "shippingId": "23123123",
+    "materialId": "3255234234",
+    "supplierId": "97234223",
+    "customerId": "923023",
+    "quantity": "250",
+    "sentDate": "",
+    "receivedDate": "",
+    "status": "Not Sent"
   }]
 
 
 
-  // lineChart
-  public lineChartData: Array<any> = [
-    { data: [28, 48, 40, 19, 86, 27, 90], label: 'Stock' },
-    { data: [28, 28, 28, 28, 28, 28, 28], label: 'Min Stock' },
-    { data: [90, 90, 90, 90, 90, 90, 90], label: 'Max Stock' },
-  ];
-  public lineChartLabels: Array<any> = ['January', 'February', 'March', 'April', 'May', 'June', 'July'];
+    // lineChart
+    
+    /* public lineChartData: Array<any> = [
+      { data: [28, 48, 40, 19, 86, 27, 90], label: 'Stock' },
+      { data: [22, 28, 28, 28, 28, 28, 28], label: 'Min Stock' },
+      { data: [90, 90, 90, 90, 90, 90, 90], label: 'Max Stock' },
+    ];/* 
+    public lineChartLabels: Array<any> = ['January', 'February', 'March', 'April', 'May', 'June', 'July']; */
   public lineChartOptions: any = {
     animation: false,
     responsive: true

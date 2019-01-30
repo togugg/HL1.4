@@ -41,7 +41,7 @@ paths:
         - Shippings
       operationId: updateShipping
       parameters:
-        - name: shipping
+        - name: asset
           description: shipping properties
           in: body
           required: true
@@ -190,7 +190,7 @@ paths:
         - Stocks
       operationId: updateStock
       parameters:
-        - name: stock
+        - name: asset
           description: stock properties
           in: body
           required: true
@@ -309,7 +309,7 @@ paths:
           schema:
             $ref: "#/definitions/ErrorResponse"
 
-  /forecast:
+  /forecasts:
       x-swagger-router-controller: index
       post:
         description: Add a new forecast to the list
@@ -380,7 +380,7 @@ paths:
       description: Returns a specific forecast
       tags:
         - Forecasts
-      operationId: getforecastById
+      operationId: getForecastById
       parameters:
         - in: path
           name: Id

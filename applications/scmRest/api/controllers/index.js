@@ -26,7 +26,7 @@ module.exports = {
 	getAllForecasts: getAllAssetsByClass,
 
 	getShippingHistory: getAssetHistory,
-	getStocksHistory: getAssetHistory,
+	getStockHistory: getAssetHistory,
 	getForecastHistory: getAssetHistory,
 
 	createInvoice: createInvoice,
@@ -40,7 +40,7 @@ module.exports = {
 };
 
 
-function getAssetById(req) {
+function getAssetById(req, res) {
 	let Id = req.swagger.params.Id.value
 	let assetClass = req.swagger.params.assetClass.value
 	const args = ['getAsset', assetClass, Id]
@@ -73,6 +73,7 @@ function getAllAssetsByClass(req, res) {
 }
 
 function getAssetHistory(req, res) {
+	console.log(req.swagger.params.Id.value)
 	let Id = req.swagger.params.Id.value
 	let assetClass = req.swagger.params.assetClass.value
 	const args = ['getAssetHistory', assetClass, Id]
@@ -88,11 +89,7 @@ function createInvoice(req, res) {
 
 function signIn(req, res) {
 	let user = req.swagger.params.userName.value
-	res.header('Access-Control-Allow-Origin', '*');
-	//res.header('Access-Control-Allow-Headers','*');
-	//res.header('Access-Control-Allow-Credentials', true);
-	//res.header('Access-Control-Allow-Headers', 'Content-Type');
-	//res.header('Access-Control-Request-Headers', 'X-Requested-With, accept, content-type');
+	console.log(user)
 	res.cookie('userName', user, { maxAge: 900000000, httpOnly: false })
 	let x = {
 		"success": 0,
@@ -118,7 +115,7 @@ function sendShipping(req, res) {
 
 function receiveShipping(req, res) {
 	let data = req.swagger.params.txData.value;
-	const args = ['receiveShipping',  JSON.stringify(data)];
+	const args = ['receiveShipping',  data.shippingId];
 	connector.submit(getUserName(req), args).then(result => { res.status(200).json(result) }).catch(err => { res.send(err) })
 }
 

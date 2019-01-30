@@ -75,12 +75,16 @@ class WarehouseContract extends Contract {
     }
 
     async receiveShipping(ctx, shippingId) {
-        let shippingKey = Shipping.makeKey([shippingId]);
-        let shipping = await ctx.assetList.getAsset('org.warehousenet.shipping', shippingKey);
+        console.log(shippingId)
+        let shipping = await ctx.assetList.getAsset('org.warehousenet.shipping', shippingId);
         shipping.setReceived()
+        console.log(shipping)
         await ctx.assetList.updateAsset(shipping)
+        console.log(shipping)
         let stockKey = Stock.makeKey([shipping.materialId, shipping.supplierId]);
+        console.log(stockKey)
         let stock = await ctx.assetList.getAsset('org.warehousenet.stock', stockKey);
+        console.log(stock)
         stock.addQuantity(shipping.quantity)
         await ctx.assetList.updateAsset(stock);
         return shipping.toBuffer()
