@@ -404,7 +404,7 @@ paths:
             $ref: "#/definitions/ErrorResponse"
     delete:
       description: Returns a specific forecast
-      operationId: deketeforecastById
+      operationId: deleteForecastById
       tags:
         - Forecasts
       parameters:
@@ -452,6 +452,27 @@ paths:
           description: Success
           schema:
             $ref: "#/definitions/Forecasts"
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+            
+  /assets/byquery/{queryString}:    
+    x-swagger-router-controller: index
+    get:
+      description: Returns history of a forecast
+      tags:
+        - Assets
+      operationId: getAssetsByQuery
+      parameters:
+        - in: path
+          name: queryString
+          description: queryString
+          type: string
+          required: true
+      responses:
+        "200":
+          description: Success
         default:
           description: Error
           schema:
@@ -573,14 +594,43 @@ paths:
           description: Error
           schema:
             $ref: "#/definitions/ErrorResponse"
-              
-  /approveMonthlyForecast:
+            
+  /updateMonthlyForecast:    
     x-swagger-router-controller: index
     put:
       description: txData
       tags:
         - Transactions
-      operationId: acceptMonthlyForecast
+      operationId: updateMonthlyForecast
+      parameters:
+        - name: txData
+          description: transaction data
+          in: body
+          required: true
+          schema:
+            properties:
+              forecastId:
+                type: string
+                description: Unique identifier representing a forecast
+              data:
+                $ref: '#/definitions/MonthlyForecast'
+      responses:
+        "200":
+          description: Success
+          schema:
+            $ref: "#/definitions/Forecast"
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+
+  /deleteMonthlyForecast:
+    x-swagger-router-controller: index
+    delete:
+      description: txData
+      tags:
+        - Transactions
+      operationId: deleteMonthlyForecast
       parameters:
         - name: txData
           description: transaction data
@@ -593,10 +643,76 @@ paths:
                 description: Unique identifier representing a forecast
               month:
                 type: string
-                description: month to approve
-              note:
+                description: Unique identifier representing a forecast
+              reason:
                 type: string
-                description: note to attach
+                description: Unique identifier representing a forecast
+      responses:
+        "200":
+          description: Success
+          schema:
+            $ref: "#/definitions/MonthlyForecast"
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+              
+  /approveMonthlyForecast:
+    x-swagger-router-controller: index
+    put:
+      description: txData
+      tags:
+        - Transactions
+      operationId: approveMonthlyForecast
+      parameters:
+        - name: txData
+          description: transaction data
+          in: body
+          required: true
+          schema:
+            properties:
+              forecastId:
+                type: string
+                description: Unique identifier representing a forecast
+              month:
+                type: string
+                description: Unique identifier representing a forecast
+              reason:
+                type: string
+                description: Unique identifier representing a forecast
+      responses:
+        "200":
+          description: Success
+          schema:
+            $ref: "#/definitions/MonthlyForecast"
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+            
+  /declineMonthlyForecast:
+    x-swagger-router-controller: index
+    put:
+      description: txData
+      tags:
+        - Transactions
+      operationId: declineMonthlyForecast
+      parameters:
+        - name: txData
+          description: transaction data
+          in: body
+          required: true
+          schema:
+            properties:
+              forecastId:
+                type: string
+                description: Unique identifier representing a forecast
+              month:
+                type: string
+                description: Unique identifier representing a forecast
+              reason:
+                type: string
+                description: Unique identifier representing a forecast
       responses:
         "200":
           description: Success
@@ -668,9 +784,6 @@ definitions:
       quantity:
         type: string
         description: Supply quantity of the shipping
-      status:
-        type: string
-        description: Status of the shipping (e.g. sent)
     required:
       - class
       - shippingId
@@ -745,6 +858,9 @@ definitions:
       demand:
         type: string
         description: Unique identifier representing a forecast
+      note:
+        type: string
+        description: Unique identifier representing a forecast
 
   monthlyForecastArray:
     type: array
@@ -778,7 +894,7 @@ definitions:
         - shippingId
         - supplierId
         - data
-
+        
   Response:
     type: object
     properties:

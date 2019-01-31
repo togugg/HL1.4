@@ -23,6 +23,15 @@ export class HttpService {
   }
 
   getStockHistory(id): Observable<any> {
-    return this.http.get(this.apiServer + '/stocks/history/' + id, {headers: {'accept':'text'}, withCredentials: true})
+    return this.http.get(this.apiServer + '/stocks/history/' + id, { headers: { 'accept': 'text' }, withCredentials: true })
   }
+
+  getAssetsByQuery(queryString): Observable<any> {
+    return this.http.get(this.apiServer + '/assets/byquery/' + queryString, { headers: { 'accept': 'text' }, withCredentials: true })
+  }
+
+  getForecast(id): Observable<any> {
+    return this.http.get(this.apiServer + '/forecasts/' + id, { headers: { 'accept': 'text' }, withCredentials: true })
+  }
+
 }

@@ -98,6 +98,22 @@ class WarehouseContract extends Contract {
         return forecast.toBuffer();
     }
 
+    async updateMonthlyForecast(ctx, monthlyForecast) {
+        monthlyForecast = JSON.parse(monthlyForecast);
+        let forecast = await ctx.assetList.getAsset('org.warehousenet.forecast', monthlyForecast.forecastId);
+        forecast.updateMonthlyForecast(monthlyForecast.data);
+        await ctx.assetList.updateAsset(forecast);
+        return forecast.toBuffer();
+    }
+
+    async deleteMonthlyForecast(ctx, data) {
+        data = JSON.parse(data);
+        let forecast = await ctx.assetList.getAsset('org.warehousenet.forecast', data.forecastId);
+        forecast.deleteMonthlyForecast(data);
+        await ctx.assetList.updateAsset(forecast);
+        return forecast.toBuffer();
+    }
+
     async approveMonthlyForecast(ctx, data) {
         data = JSON.parse(data);
         let forecast = await ctx.assetList.getAsset('org.warehousenet.forecast', data.forecastId);

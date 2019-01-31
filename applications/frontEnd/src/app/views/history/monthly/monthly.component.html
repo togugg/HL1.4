@@ -1,4 +1,4 @@
-<div class="animated fadeIn">
+<div class="animated fadeIn" *ngIf='dataLoaded'>
 
   <div class="row">
     <div class="col-sm-6 col-md-12">
@@ -51,7 +51,7 @@
               Max.:
             </div>
             <div class="col">
-              555 Units
+              {{currentStock.max}} Units
             </div>
           </div>
 
@@ -60,7 +60,7 @@
               Current Stock
             </div>
             <div class="col">
-              232 Units
+              {{currentStock.quantity}} Units
             </div>
           </div>
 
@@ -69,7 +69,7 @@
               Min.:
             </div>
             <div class="col">
-              200 Units
+              {{currentStock.min}} Units
             </div>
           </div>
           <br>

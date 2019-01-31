@@ -18,79 +18,74 @@ export class MonthlyComponent implements OnInit {
 
     this.route.params.subscribe(params => {
       let id = params['id']; // (+) converts string 'id' to a number
-      this.httpService.getStockHistory(id).subscribe((res) => {
-        this.data = res;
-        console.log(res)
-        res.forEach(element => {
-          var dt = new Date(element.Timestamp.seconds.low * 1000);
-          this.lineChartLabels.push(dt);
-          this.lineChartData[0].data.push(element.Value.quantity);
-          this.lineChartData[1].data.push(element.Value.min);
-          this.lineChartData[2].data.push(element.Value.max);
-        });
-        console.log(this.lineChartLabels)
-      });
+      let materialId = id.split(':')[0];
+      let supplierId = id.split(':')[1];
+      this.getStockHistory(id).then(() => {
+        this.getStockShippings(materialId, supplierId).then(() => {
+          this.dataLoaded = true;
+        })
+
+      })
     });
+
   }
 
   data: Array<any>;
-  public lineChartLabels = [];
-  public lineChartData: Array<any> = [
+  lineChartLabels = [];
+  lineChartData: Array<any> = [
     { data: [], label: 'Stock' },
     { data: [], label: 'Min Stock' },
     { data: [], label: 'Max Stock' },
   ]
+  dataLoaded = false;
+  currentStock;
+  shippings = []
 
-  shippings = [{
-    "shippingId": "23123123",
-    "materialId": "3255234234",
-    "supplierId": "97234223",
-    "customerId": "923023",
-    "quantity": "250",
-    "sentDate": "2019-01-08",
-    "receivedDate": "",
-    "status": "Sent"
-  }, {
-    "shippingId": "23123123",
-    "materialId": "3255234234",
-    "supplierId": "97234223",
-    "customerId": "923023",
-    "quantity": "250",
-    "sentDate": "",
-    "receivedDate": "",
-    "status": "Not Sent"
-  },
-  {
-    "shippingId": "23123123",
-    "materialId": "3255234234",
-    "supplierId": "97234223",
-    "customerId": "923023",
-    "quantity": "250",
-    "sentDate": "",
-    "receivedDate": "",
-    "status": "Not Sent"
-  },
-  {
-    "shippingId": "23123123",
-    "materialId": "3255234234",
-    "supplierId": "97234223",
-    "customerId": "923023",
-    "quantity": "250",
-    "sentDate": "",
-    "receivedDate": "",
-    "status": "Not Sent"
-  }]
+  shippingQuery = {
+    "selector": {
+      "class": {
+        "$eq": "org.warehousenet.shipping"
+      },
+      "supplierId": {
+        "$eq": ""
+      },
+      "materialId": {
+        "$eq": ""
+      }
+    }
+  }
 
+  getStockShippings(materialId, supplierId) {
+    this.shippingQuery.selector.materialId = materialId;
+    this.shippingQuery.selector.supplierId = supplierId;
+    return new Promise((resolve, reject) => {
+      this.httpService.getAssetsByQuery(JSON.stringify(this.shippingQuery)).subscribe((res) => {
+        res.forEach(element => {
+          this.shippings.push(element.Record)
+        });
+        resolve(res)
+      })
+    })
+  }
 
+  getStockHistory(id) {
+    return new Promise((resolve, reject) => {
+      this.httpService.getStockHistory(id).subscribe((res) => {
+        this.data = res;
+        console.log(res);
+        this.currentStock = res[res.length -1].Value;
+        res.forEach(element => {
+          var dt = new Date(element.Timestamp.seconds.low * 1000);
+          this.lineChartLabels.push(dt.getDate());
+          this.lineChartData[0].data.push(element.Value.quantity);
+          this.lineChartData[1].data.push(element.Value.min);
+          this.lineChartData[2].data.push(element.Value.max);
+        });
+        resolve(true)
+      });
+    })
+  }
 
-    // lineChart
-    
-    /* public lineChartData: Array<any> = [
-      { data: [28, 48, 40, 19, 86, 27, 90], label: 'Stock' },
-      { data: [22, 28, 28, 28, 28, 28, 28], label: 'Min Stock' },
-      { data: [90, 90, 90, 90, 90, 90, 90], label: 'Max Stock' },
-    ];/* 
-    public lineChartLabels: Array<any> = ['January', 'February', 'March', 'April', 'May', 'June', 'July']; */
   public lineChartOptions: any = {
     animation: false,
     responsive: true

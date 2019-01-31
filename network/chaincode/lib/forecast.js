@@ -6,7 +6,8 @@ SPDX-License-Identifier: Apache-2.0
 
 const cpState = {
     NOT_APPROVED: 1,
-    APPROVED: 2
+    APPROVED: 2,
+    DECLINED: 3
 };
 
 // Utility class for ledger state
@@ -24,20 +25,33 @@ class Forecast extends State {
     }
 
     approveMonthlyForecast(data) {
-        let i = this.monthlyForecast.indexOf(data.month);
+        let i = this.monthlyForecast.findIndex(obj => obj.month == data.month);
         this.monthlyForecast[i].state = cpState.APPROVED;
-        this.monthlyForecast[i].note = data.note;
+        this.monthlyForecast[i].reason = data.reason;
     }
 
     declineMonthlyForecast(data) {
-        let i = this.monthlyForecast.indexOf(data.month);
-        this.monthlyForecast[i].state = cpState.NOT_APPROVED;
-        this.monthlyForecast[i].note = data.note;
+        let i = this.monthlyForecast.findIndex(obj => obj.month == data.month);
+        this.monthlyForecast[i].state = cpState.DECLINED;
+        this.monthlyForecast[i].reason = data.reason;
     }
 
     addMonthlyForecast(monthlyForecastData) {
         monthlyForecastData.state = cpState.NOT_APPROVED; 
         this.monthlyForecast.push(monthlyForecastData);
+    }
+
+    updateMonthlyForecast(monthlyForecastData) {
+        let i = this.monthlyForecast.findIndex(obj => obj.month == monthlyForecastData.month);
+        this.monthlyForecast[i] = monthlyForecastData;
+        this.monthlyForecast[i].state = cpState.NOT_APPROVED;
+    }
+
+    deleteMonthlyForecast(data) {
+        let i = this.monthlyForecast.findIndex(obj => obj.month == data.month);
+        console.log(i);
+        this.monthlyForecast.splice(i,1);
+        console.log(this.monthlyForecast)
     }
 
     toBuffer() {

@@ -29,13 +29,18 @@ module.exports = {
 	getStockHistory: getAssetHistory,
 	getForecastHistory: getAssetHistory,
 
+	getAssetsByQuery: getAssetsByQuery,
+
 	createInvoice: createInvoice,
 	signIn: signIn,
 	signOut: signOut,
 
 	sendShipping: sendShipping,
 	addMonthlyForecast: addMonthlyForecast,
+	updateMonthlyForecast: updateMonthlyForecast,
+	deleteMonthlyForecast: deleteMonthlyForecast,
 	approveMonthlyForecast: approveMonthlyForecast,
+	declineMonthlyForecast: declineMonthlyForecast,
 	receiveShipping: receiveShipping
 };
 
@@ -69,6 +74,12 @@ function deleteAsset(req, res) {
 function getAllAssetsByClass(req, res) {
 	let assetClass = req.swagger.params.assetClass.value
 	const args = ['getAllAssetsByClass', assetClass]
+	connector.query(getUserName(req), args).then(result => { res.status(201).json(result) }).catch(err => { res.send(err) })
+}
+
+function getAssetsByQuery(req, res) {
+	let queryString = req.swagger.params.queryString.value
+	const args = ['getAssetsByQuery', queryString]
 	connector.query(getUserName(req), args).then(result => { res.status(201).json(result) }).catch(err => { res.send(err) })
 }
 
@@ -125,9 +136,27 @@ function addMonthlyForecast(req, res) {
 	connector.submit(getUserName(req), args).then(result => { res.status(200).json(result) }).catch(err => { res.send(err) })
 }
 
+function updateMonthlyForecast(req, res) {
+	let data = req.swagger.params.txData.value;
+	const args = ['updateMonthlyForecast',  JSON.stringify(data)];
+	connector.submit(getUserName(req), args).then(result => { res.status(200).json(result) }).catch(err => { res.send(err) })
+}
+
 function approveMonthlyForecast(req, res) {
 	let data = req.swagger.params.txData.value;
 	const args = ['approveMonthlyForecast',  JSON.stringify(data)];
+	connector.submit(getUserName(req), args).then(result => { res.status(200).json(result) }).catch(err => { res.send(err) })
+}
+
+function deleteMonthlyForecast(req, res) {
+	let data = req.swagger.params.txData.value;
+	const args = ['deleteMonthlyForecast',  JSON.stringify(data)];
+	connector.submit(getUserName(req), args).then(result => { res.status(200).json(result) }).catch(err => { res.send(err) })
+}
+
+function declineMonthlyForecast(req, res) {
+	let data = req.swagger.params.txData.value;
+	const args = ['declineMonthlyForecast',  JSON.stringify(data)];
 	connector.submit(getUserName(req), args).then(result => { res.status(200).json(result) }).catch(err => { res.send(err) })
 }
 

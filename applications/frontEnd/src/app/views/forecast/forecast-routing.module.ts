@@ -15,7 +15,7 @@ const routes: Routes = [
         redirectTo: 'yearly'
       },
       {
-        path: 'yearly',
+        path: 'yearly/:id',
         component: YearlyComponent,
         data: {
           title: 'Yearly'
