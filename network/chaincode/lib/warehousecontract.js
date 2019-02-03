@@ -64,7 +64,8 @@ class WarehouseContract extends Contract {
     async sendShipping(ctx, invoiceData) {
         invoiceData = JSON.parse(invoiceData);
         let shippingKey = Shipping.makeKey([invoiceData.shippingId]);
-        let shipping = await ctx.assetList.getAsset("org.warehousenet.shipping", shippingKey);
+        try { var shipping = await ctx.assetList.getAsset("org.warehousenet.shipping", shippingKey) }
+        catch (err) { throw new Error('could not find shippingId') }
         let now = ctx.stub.getSignedProposal().proposal.header.channel_header.timestamp.nanos;
         let invoice = Invoice.createInstance(invoiceData);
         await ctx.invoiceList.addInvoice(invoice);
@@ -75,24 +76,25 @@ class WarehouseContract extends Contract {
     }
 
     async receiveShipping(ctx, shippingId) {
-        console.log(shippingId)
-        let shipping = await ctx.assetList.getAsset('org.warehousenet.shipping', shippingId);
-        shipping.setReceived()
-        console.log(shipping)
-        await ctx.assetList.updateAsset(shipping)
-        console.log(shipping)
+        try { var shipping = await ctx.assetList.getAsset('org.warehousenet.shipping', shippingId) }
+        catch (err) { throw new Error('could not find shippingId') };
+        let now = ctx.stub.getSignedProposal().proposal.header.channel_header.timestamp.nanos;
+        shipping.setReceived(now);
+        await ctx.assetList.updateAsset(shipping);
         let stockKey = Stock.makeKey([shipping.materialId, shipping.supplierId]);
-        console.log(stockKey)
         let stock = await ctx.assetList.getAsset('org.warehousenet.stock', stockKey);
         console.log(stock)
-        stock.addQuantity(shipping.quantity)
+        console.log(shipping.quantity)
+        stock.addQuantity(shipping.quantity);
+        console.log(stock)
         await ctx.assetList.updateAsset(stock);
-        return shipping.toBuffer()
+        return shipping.toBuffer();
     }
 
     async addMonthlyForecast(ctx, monthlyForecast) {
         monthlyForecast = JSON.parse(monthlyForecast);
-        let forecast = await ctx.assetList.getAsset('org.warehousenet.forecast', monthlyForecast.forecastId);
+        try { var forecast = await ctx.assetList.getAsset('org.warehousenet.forecast', monthlyForecast.forecastId) }
+        catch (err) { throw new Error('could not find forecastId') }
         forecast.addMonthlyForecast(monthlyForecast.data);
         await ctx.assetList.updateAsset(forecast);
         return forecast.toBuffer();

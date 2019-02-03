@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { HttpService } from '../../../services/http.service'
 import { ActivatedRoute } from '@angular/router';
 
+
 @Component({
   selector: 'app-monthly',
   templateUrl: './monthly.component.html',
@@ -30,6 +31,7 @@ export class MonthlyComponent implements OnInit {
 
   }
 
+  public largeModal;
   data: Array<any>;
   lineChartLabels = [];
   lineChartData: Array<any> = [
@@ -39,7 +41,8 @@ export class MonthlyComponent implements OnInit {
   ]
   dataLoaded = false;
   currentStock;
-  shippings = []
+  shippings = [];
+  modalData;
 
   shippingQuery = {
     "selector": {
@@ -55,13 +58,15 @@ export class MonthlyComponent implements OnInit {
     }
   }
 
-  getStockShippings(materialId, supplierId) {
+   getStockShippings(materialId, supplierId) {
     this.shippingQuery.selector.materialId = materialId;
     this.shippingQuery.selector.supplierId = supplierId;
     return new Promise((resolve, reject) => {
       this.httpService.getAssetsByQuery(JSON.stringify(this.shippingQuery)).subscribe((res) => {
         res.forEach(element => {
-          this.shippings.push(element.Record)
+          if (element.state != 2) {
+            this.shippings.push(element.Record)
+          }
         });
         resolve(res)
       })
@@ -73,7 +78,7 @@ export class MonthlyComponent implements OnInit {
       this.httpService.getStockHistory(id).subscribe((res) => {
         this.data = res;
         console.log(res);
-        this.currentStock = res[res.length -1].Value;
+        this.currentStock = res[res.length - 1].Value;
         res.forEach(element => {
           var dt = new Date(element.Timestamp.seconds.low * 1000);
           this.lineChartLabels.push(dt.getDate());
@@ -84,6 +89,11 @@ export class MonthlyComponent implements OnInit {
         resolve(true)
       });
     })
+  }
+
+  setModalData(i) {
+    this.modalData = this.shippings[i];
+    console.log(this.modalData)
   }
 
   public lineChartOptions: any = {

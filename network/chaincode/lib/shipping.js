@@ -24,13 +24,13 @@ class Shipping extends State {
     }
 
     setSent(now, invoiceNr) {
-        this.currentState = cpState.SENT;
+        this.state = cpState.SENT;
         this.sentDate = now;
         this.invoiceNr = invoiceNr;
     }
 
     setReceived(now) {
-        this.currentState = cpState.RECEIVED;
+        this.state = cpState.RECEIVED;
         this.receivedDate = now;
     }
 

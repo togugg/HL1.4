@@ -30,6 +30,10 @@ export class HttpService {
     return this.http.get(this.apiServer + '/assets/byquery/' + queryString, { headers: { 'accept': 'text' }, withCredentials: true })
   }
 
+  getShippings(): Observable<any> {
+    return this.http.get(this.apiServer + '/shippings/', { headers: { 'accept': 'text' }, withCredentials: true })
+  }
+
   getForecast(id): Observable<any> {
     return this.http.get(this.apiServer + '/forecasts/' + id, { headers: { 'accept': 'text' }, withCredentials: true })
   }

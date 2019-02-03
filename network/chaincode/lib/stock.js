@@ -19,7 +19,7 @@ class Stock extends State {
     }
 
     addQuantity(newQuantity) {
-        this.stock = ((+this.quantity) + (+newQuantity)).toString();
+        this.quantity = ((+this.quantity) + (+newQuantity)).toString();
     }
 
     toBuffer() {

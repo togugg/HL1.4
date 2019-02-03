@@ -99,14 +99,13 @@ function createInvoice(req, res) {
 }
 
 function signIn(req, res) {
-	let user = req.swagger.params.userName.value
-	console.log(user)
-	res.cookie('userName', user, { maxAge: 900000000, httpOnly: false })
+	let user = req.swagger.params.userName.value;
+	res.cookie('userName', user, { maxAge: 900000000, httpOnly: false });
 	let x = {
 		"success": 0,
 		"description": "Signed in as " + user
-	}
-	res.status(200).send(x)
+	};
+	res.status(200).send(x);
 }
 
 function signOut(req, res) {
