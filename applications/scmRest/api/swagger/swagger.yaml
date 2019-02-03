@@ -308,6 +308,31 @@ paths:
           description: Error
           schema:
             $ref: "#/definitions/ErrorResponse"
+  /stocks/materials/{supplierId}:    
+    x-swagger-router-controller: index
+    get:
+      description: Returns history of a stock
+      tags:
+        - Stocks
+      operationId: getAllMaterials
+      parameters:
+        - in: path
+          name: supplierId
+          description: supplierId
+          type: string
+          required: true
+      responses:
+        "200":
+          description: Success
+          schema:
+            type: array
+            items:
+              type: string 
+            
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
 
   /forecasts:
       x-swagger-router-controller: index

@@ -6,17 +6,24 @@ var http = require('http');
 const yaml = require('js-yaml');
 var fs = require('fs');
 const swaggerUi = require('swagger-ui-express');
+var cors = require('cors');
 
 var swaggerObject = yaml.safeLoad(fs.readFileSync(__dirname + '/api/swagger/swagger.yaml', 'utf8'));
 
 var app = express();
 
 swagger.initializeMiddleware(swaggerObject, function (middleware) {
+  
   app.use(function(req, res, next) {
     res.header('Access-Control-Allow-Origin', 'http://localhost:4200');
     res.header('Access-Control-Allow-Credentials', true);
     next();
   });
+
+  app.use(cors({
+    "origin": "http://localhost:4200"
+  }));
+
   app.use(middleware.swaggerMetadata());
   //app.use(middleware.swaggerValidator());
   app.use(middleware.swaggerRouter({ useStubs: true, controllers: './api/controllers' }));

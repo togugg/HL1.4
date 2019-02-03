@@ -41,7 +41,9 @@ module.exports = {
 	deleteMonthlyForecast: deleteMonthlyForecast,
 	approveMonthlyForecast: approveMonthlyForecast,
 	declineMonthlyForecast: declineMonthlyForecast,
-	receiveShipping: receiveShipping
+	receiveShipping: receiveShipping,
+
+	getAllMaterials:getAllMaterials
 };
 
 
@@ -162,5 +164,18 @@ function declineMonthlyForecast(req, res) {
 function getUserName(req) {
 	let cookie = req.headers.cookie.match(new RegExp('(^| )' + 'userName' + '=([^;]+)'));
 	if (cookie) { return decodeURIComponent(cookie[2]) };
+}
+
+function getAllMaterials(req, res){
+	let supplierId = req.swagger.params.supplierId.value;
+	let queryString = {"selector": {"class": {"$eq": "org.warehousenet.stock"},"supplierId": {"$eq": supplierId}}};
+	const args = ['getAssetsByQuery', JSON.stringify(queryString)];
+	let materials = [];
+	connector.query(getUserName(req), args).then(result => { 
+		result.forEach(element => {
+			materials.push(element.Record.materialId);
+		});
+		res.status(200).send(materials);
+	 }).catch(err => { res.send(err) });
 }
 

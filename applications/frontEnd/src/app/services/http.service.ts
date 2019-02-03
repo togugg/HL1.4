@@ -34,8 +34,16 @@ export class HttpService {
     return this.http.get(this.apiServer + '/shippings/', { headers: { 'accept': 'text' }, withCredentials: true })
   }
 
+  createShipping(data): Observable<any> {
+    return this.http.post(this.apiServer + '/shippings/', data, { withCredentials: true })
+  }
+
   getForecast(id): Observable<any> {
     return this.http.get(this.apiServer + '/forecasts/' + id, { headers: { 'accept': 'text' }, withCredentials: true })
+  }
+
+  getMaterialIds(supplierId): Observable<any> {
+    return this.http.get(this.apiServer + '/stocks/materials/' + supplierId, { headers: { 'accept': 'text' }, withCredentials: true })
   }
 
 }
