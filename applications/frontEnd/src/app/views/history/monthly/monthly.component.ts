@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { HttpService } from '../../../services/http.service'
 import { ActivatedRoute } from '@angular/router';
+import { Router } from '@angular/router';
 
 
 @Component({
@@ -12,7 +13,8 @@ export class MonthlyComponent implements OnInit {
 
   constructor(
     private httpService: HttpService,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private router: Router
   ) { }
 
   ngOnInit() {
@@ -56,14 +58,14 @@ export class MonthlyComponent implements OnInit {
     }
   }
 
-   getStockShippings(materialId, supplierId) {
+  getStockShippings(materialId, supplierId) {
     this.shippingQuery.selector.materialId = materialId;
     this.shippingQuery.selector.supplierId = supplierId;
     return new Promise((resolve, reject) => {
       this.httpService.getAssetsByQuery(JSON.stringify(this.shippingQuery)).subscribe((res) => {
         res.forEach(element => {
           if (element.Record.state != 2) {
-               this.shippings.push(element.Record)
+            this.shippings.push(element.Record)
           }
         });
         resolve(res)
@@ -74,17 +76,21 @@ export class MonthlyComponent implements OnInit {
   getStockHistory(id) {
     return new Promise((resolve, reject) => {
       this.httpService.getStockHistory(id).subscribe((res) => {
-        this.data = res;
-        console.log(res);
-        this.currentStock = res[res.length - 1].Value;
-        res.forEach(element => {
-          var dt = new Date(element.Timestamp.seconds.low * 1000);
-          this.lineChartLabels.push(dt.getDate());
-          this.lineChartData[0].data.push(element.Value.quantity);
-          this.lineChartData[1].data.push(element.Value.min);
-          this.lineChartData[2].data.push(element.Value.max);
-        });
-        resolve(true);
+        try {
+          this.data = res;
+          this.currentStock = res[res.length - 1].Value;
+          res.forEach(element => {
+            var dt = new Date(element.Timestamp.seconds.low * 1000);
+            this.lineChartLabels.push(dt.getDate());
+            this.lineChartData[0].data.push(element.Value.quantity);
+            this.lineChartData[1].data.push(element.Value.min);
+            this.lineChartData[2].data.push(element.Value.max);
+          });
+          resolve(true);
+        }
+        catch (err) {
+          this.router.navigate(['/history'])
+        }
       });
     })
   }
@@ -95,9 +101,9 @@ export class MonthlyComponent implements OnInit {
   }
 
   downloadInvoice() {
-    this.httpService.getInvoice(this.modalData.invoiceId).subscribe((res)=>{
+    this.httpService.getInvoice(this.modalData.invoiceId).subscribe((res) => {
       console.log(res.invoiceData)
-      window.open(res.invoiceData)
+      window.open()
     })
   }
 
