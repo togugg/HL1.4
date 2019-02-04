@@ -17,8 +17,10 @@ const { Contract, Context } = require('fabric-contract-api');
 const Stock = require('./stock.js');
 const Shipping = require('./shipping.js');
 const Forecast = require('./forecast.js');
-const AssetList = require('./assetlist.js');
 const Invoice = require('./invoice.js');
+
+const AssetList = require('./assetlist.js');
+const PrivateAssetList = require('./privateassetlist.js');
 const InvoiceList = require('./invoicelist.js');
 
 /**
@@ -29,7 +31,8 @@ class WarehouseContext extends Context {
         super();
         // All papers are held in a list of papers
         this.assetList = new AssetList(this);
-        this.invoiceList = new InvoiceList(this)
+        this.invoiceList = new InvoiceList(this);
+        this.privateAssetList = new PrivateAssetList(this);
     }
 }
 
@@ -218,6 +221,17 @@ class WarehouseContract extends Contract {
         let invoice = Invoice.createInstance(JSON.parse(invoiceData))
         await ctx.invoiceList.addInvoice(invoice);
         return invoice.toBuffer()
+    }
+
+    async createPrivateAsset(ctx, assetData) {
+        let invoice = Invoice.createInstance(JSON.parse(assetData))
+        await ctx.privateAssetList.addAsset(invoice);
+        return invoice.toBuffer()
+    }
+
+    async getPrivateAsset(ctx, assetClass, assetKey, collection) {
+        let privateAsset = await ctx.privateAssetList.getAsset(assetClass, assetKey, collection);
+        return privateAsset.toBuffer()
     }
 
     async getInvoice(ctx, assetClass, invoiceId) {

@@ -68,6 +68,7 @@
                     <button class="badge badge-success" *ngIf="!shipping.state" (click)="setSendModal(i); sendModal.show()">
                       Send Shipping
                     </button>
+                    <span class="badge badge-primary" *ngIf="shipping.state">No action required</span>
                   </td>
                 </tr>
               </tbody>
@@ -171,7 +172,7 @@
             </div>
             <div class="modal-footer">
               <button type="button" class="btn btn-secondary" (click)="createModal.hide()">Close</button>
-              <button type="button" class="btn btn-primary" (click)="submitShippingData()">Save changes</button>
+              <button type="button" class="btn btn-primary" (click)="submitCreateshippingData(); createModal.hide()">Save changes</button>
             </div>
           </div>
         </div>
@@ -179,12 +180,6 @@
     </div>
   </div>
 </div>
-
-
-<button (click)="sendModal.show()">asdfasdf</button>
-
-
-
 
 
 <div bsModal #sendModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
@@ -208,7 +203,15 @@
               </div>
               <div class="card-body">
                 <div class="card-body">
-                  <form action="" method="post" enctype="multipart/form-data" class="form-horizontal" [formGroup]="sendForm">
+                  <form action="" method="post" enctype="multipart/form-data" class="form-horizontal" [formGroup]="sendShippingForm">
+                    <div class="form-group row">
+                      <label class="col-md-3 col-form-label">Invoice ID</label>
+                      <div class="col-md-9">
+                        <input type="text" id="text-input" name="text-input" class="form-control" placeholder="Enter Invoice ID"
+                          formControlName="invoiceId">
+                        <span class="help-block">Unique identifier of invoice</span>
+                      </div>
+                    </div>
                      <div class="form-group row">
                       <label class="col-md-3 col-form-label">Collection</label>
                       <div class="col-md-9">
@@ -227,7 +230,7 @@
                     <div class="form-group row">
                         <label class="col-md-3 col-form-label" for="file-input">Invoice Attachement</label>
                         <div class="col-md-9">
-                          <input type="file" id="file-input" name="file-input" formControlName="invoiceData">
+                          <input type="file" id="file-input" name="file-input"  (change)="onFileChange($event)">
                         </div>
                       </div>
                   </form>
@@ -236,7 +239,7 @@
             </div>
             <div class="modal-footer">
               <button type="button" class="btn btn-secondary" (click)="sendModal.hide()">Close</button>
-              <button type="button" class="btn btn-primary" (click)="submitSendData()">Save changes</button>
+              <button type="button" class="btn btn-primary" (click)="submitSendShippingData(); sendModal.hide()">Save changes</button>
             </div>
           </div>
         </div>

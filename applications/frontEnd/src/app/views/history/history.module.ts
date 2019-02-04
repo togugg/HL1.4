@@ -7,6 +7,7 @@ import { ModalModule } from 'ngx-bootstrap/modal';
 
 import { HistoryRoutingModule } from './history-routing.module';
 import { MonthlyComponent } from './monthly/monthly.component';
+import { HistoryComponent } from './history.component';
 
 
 // Angular
@@ -20,6 +21,7 @@ import { MonthlyComponent } from './monthly/monthly.component';
     ModalModule.forRoot()
   ],
   declarations: [
-  MonthlyComponent]
+  MonthlyComponent,
+  HistoryComponent]
 })
 export class HistoryModule { }

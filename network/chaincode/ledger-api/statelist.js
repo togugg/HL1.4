@@ -69,8 +69,8 @@ class StateList {
     return result
   }
 
-  async getPrivateData(assetClass, collection, key) {
-    let ledgerKey = this.ctx.stub.createCompositeKey(assetClass, State.splitKey(key));
+  async getPrivateData(assetClass, assetKey, collection) {
+    let ledgerKey = this.ctx.stub.createCompositeKey(assetClass, State.splitKey(assetKey));
     console.log(ledgerKey)
     let data = await this.ctx.stub.getPrivateData(collection, ledgerKey);
     console.log(data.toString('utf8'))

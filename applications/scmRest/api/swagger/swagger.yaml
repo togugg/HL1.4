@@ -527,6 +527,63 @@ paths:
             schema:
               $ref: "#/definitions/ErrorResponse"
               
+      get:
+        description: Add a new invoice to the list
+        tags:
+          - Invoices
+        operationId: getAllInvoices
+        parameters:
+          - name: asset
+            description: stock properties
+            in: body
+            required: true
+            schema:
+              $ref: "#/definitions/Invoices"
+        responses:
+          "201":
+            description: Success
+            schema:
+              $ref: "#/definitions/Invoices"
+          default:
+            description: Error
+            schema:
+              $ref: "#/definitions/ErrorResponse"
+              
+  /invoices/{Id}:    
+    x-swagger-router-controller: index
+    get:
+      description: Returns a specific invoice
+      tags:
+        - Invoices
+      operationId: getInvoiceById
+      parameters:
+        - in: path
+          name: Id
+          description: stockId
+          type: string
+          required: true
+        - name: assetClass
+          in: query
+          description: assetClass
+          required: false
+          type: string
+          default: org.warehousenet.invoice
+        - name: collection
+          in: query
+          description: collection for private data
+          required: false
+          type: string
+          default: invoiceCollection
+      responses:
+        "200":
+          description: Success
+          schema:
+            $ref: "#/definitions/Invoice"
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+              
   /sendShipping:    
     x-swagger-router-controller: index
     put:
@@ -809,6 +866,9 @@ definitions:
       quantity:
         type: string
         description: Supply quantity of the shipping
+      note:
+        type: string
+        description: Just a small note
     required:
       - class
       - shippingId
@@ -887,7 +947,7 @@ definitions:
         type: string
         description: Unique identifier representing a forecast
 
-  monthlyForecastArray:
+  MonthlyForecastArray:
     type: array
     items:
       $ref: '#/definitions/MonthlyForecast'
@@ -901,6 +961,7 @@ definitions:
         collection:
           type: string
           description: collection to use
+          default: invoiceCollection
           example: invoiceCollection
         invoiceId:
           type: string
@@ -911,14 +972,18 @@ definitions:
         supplierId:
           type: string
           description: Unique identifier representing a supplier
-        data:
+        invoiceData:
           type: string
           description: Current quantity of the stock
       required:
         - invoiceId
         - shippingId
         - supplierId
-        - data
+        - invoiceData
+  Invoices:
+    type: array
+    items:
+      $ref: '#/definitions/Invoice'
         
   Response:
     type: object

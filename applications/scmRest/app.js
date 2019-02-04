@@ -13,16 +13,24 @@ var swaggerObject = yaml.safeLoad(fs.readFileSync(__dirname + '/api/swagger/swag
 var app = express();
 
 swagger.initializeMiddleware(swaggerObject, function (middleware) {
+
   
-  app.use(function(req, res, next) {
+  /* app.use(function(req, res, next) {
     res.header('Access-Control-Allow-Origin', 'http://localhost:4200');
     res.header('Access-Control-Allow-Credentials', true);
+    
     next();
-  });
+  }); */
+
+  app.use(express.json({limit: '50mb'}));
+  app.use(express.urlencoded({limit: '50mb'}));
 
   app.use(cors({
-    "origin": "http://localhost:4200"
+    "origin": "http://localhost:4200",
+    "credentials": true
   }));
+
+
 
   app.use(middleware.swaggerMetadata());
   //app.use(middleware.swaggerValidator());

@@ -31,7 +31,10 @@ module.exports = {
 
 	getAssetsByQuery: getAssetsByQuery,
 
-	createInvoice: createInvoice,
+	createInvoice: createPrivateAsset,
+	getInvoiceById: getPrivateAssetById,
+
+
 	signIn: signIn,
 	signOut: signOut,
 
@@ -93,11 +96,20 @@ function getAssetHistory(req, res) {
 	connector.query(getUserName(req), args).then(result => { res.status(201).json(result) }).catch(err => { res.send(err) })
 }
 
-function createInvoice(req, res) {
+function createPrivateAsset(req, res) {
 	console.log(req.headers.cookie)
 	let assetData = req.swagger.params.asset.value
-	const args = ['createInvoice', JSON.stringify(assetData)]
+	const args = ['createPrivateAsset', JSON.stringify(assetData)]
 	connector.submit(getUserName(req), args).then(result => { res.status(201).json(result) }).catch(err => { res.send(err) })
+}
+
+function getPrivateAssetById(req, res) {
+	let Id = req.swagger.params.Id.value
+	let assetClass = req.swagger.params.assetClass.value
+	let collection = req.swagger.params.collection.value
+	const args = ['getPrivateAsset', assetClass, Id, collection]
+	console.log(args)
+	connector.query(getUserName(req), args).then(result => { res.status(200).json(result) }).catch(err => { res.send(err) })
 }
 
 function signIn(req, res) {

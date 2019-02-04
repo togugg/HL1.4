@@ -20,12 +20,12 @@ export class ShippingComponent implements OnInit {
 
   ngOnInit() {
     this.instantiateForm()
-/*     this.getSupplierId();
+    this.getSupplierId();
     this.getMaterialIds().then(() => {
       this.instantiateForm()
       this.dataLoaded = true
     });
-    this.getShippings().then(() => { }); */
+    this.getShippings().then(() => { });
   }
 
   supplierId;
@@ -79,7 +79,7 @@ export class ShippingComponent implements OnInit {
   shippings = [];
   materials = [];
   shippingForm;
-  sendForm;
+  sendShippingForm;
 
   instantiateForm() {
     this.shippingForm = new FormGroup({
@@ -90,7 +90,7 @@ export class ShippingComponent implements OnInit {
       note: new FormControl(),
     });
 
-    this.sendForm = new FormGroup({
+    this.sendShippingForm = new FormGroup({
       shippingId: new FormControl(),
       invoiceId: new FormControl(),
       invoiceData: new FormControl(),
@@ -100,8 +100,8 @@ export class ShippingComponent implements OnInit {
   }
 
   setSendModal(i) {
-    this.sendForm = new FormGroup({
-      shippingId: new FormControl(),
+    this.sendShippingForm = new FormGroup({
+      shippingId: new FormControl(this.shippings[i].shippingId),
       invoiceId: new FormControl(),
       invoiceData: new FormControl(),
       collection: new FormControl("invoiceCollection"),
@@ -109,9 +109,30 @@ export class ShippingComponent implements OnInit {
     });
   }
 
-  submitShippingData() {
-    this.shippingForm.value.class = "org.warehousenet.shipping"
-    this.httpService.createShipping(this.shippingForm.value).subscribe(console.log, console.log)
+  submitCreateshippingData() {
+    this.shippingForm.value.class = "org.warehousenet.shipping";
+    this.httpService.createShipping(this.shippingForm.value).subscribe(console.log, console.log);
+  }
+
+  submitSendShippingData() {
+    console.log(this.sendShippingForm.value);
+    this.httpService.sendShipping(this.sendShippingForm.value).subscribe(console.log, console.log);
+  }
+
+  onFileChange(event) {
+    let reader = new FileReader();
+    console.log(reader)
+   
+    if(event.target.files && event.target.files.length) {
+      const [file] = event.target.files;
+      reader.readAsDataURL(file);
+    
+      reader.onload = () => {
+        this.sendShippingForm.patchValue({
+          invoiceData: reader.result
+        });
+      };
+    }
   }
 
 }

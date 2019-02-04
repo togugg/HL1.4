@@ -25,10 +25,8 @@ export class MonthlyComponent implements OnInit {
         this.getStockShippings(materialId, supplierId).then(() => {
           this.dataLoaded = true;
         })
-
       })
     });
-
   }
 
   public largeModal;
@@ -64,8 +62,8 @@ export class MonthlyComponent implements OnInit {
     return new Promise((resolve, reject) => {
       this.httpService.getAssetsByQuery(JSON.stringify(this.shippingQuery)).subscribe((res) => {
         res.forEach(element => {
-          if (element.state != 2) {
-            this.shippings.push(element.Record)
+          if (element.Record.state != 2) {
+               this.shippings.push(element.Record)
           }
         });
         resolve(res)
@@ -86,7 +84,7 @@ export class MonthlyComponent implements OnInit {
           this.lineChartData[1].data.push(element.Value.min);
           this.lineChartData[2].data.push(element.Value.max);
         });
-        resolve(true)
+        resolve(true);
       });
     })
   }
@@ -94,6 +92,13 @@ export class MonthlyComponent implements OnInit {
   setModalData(i) {
     this.modalData = this.shippings[i];
     console.log(this.modalData)
+  }
+
+  downloadInvoice() {
+    this.httpService.getInvoice(this.modalData.invoiceId).subscribe((res)=>{
+      console.log(res.invoiceData)
+      window.open(res.invoiceData)
+    })
   }
 
   public lineChartOptions: any = {

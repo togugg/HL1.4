@@ -1,7 +1,8 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 
-import { MonthlyComponent } from './monthly/monthly.component'
+import { MonthlyComponent } from './monthly/monthly.component';
+import { HistoryComponent } from './history.component'
 
 const routes: Routes = [
   {
@@ -12,7 +13,14 @@ const routes: Routes = [
     children: [
       {
         path: '',
-        redirectTo: 'monthly'
+        redirectTo: 'overview'
+      },
+      {
+        path: 'overview',
+        component: HistoryComponent,
+        data: {
+          title: 'Overview'
+        }
       },
       {
         path: 'monthly/:id',
@@ -21,6 +29,7 @@ const routes: Routes = [
           title: 'Monthly'
         }
       }
+      
     ]
   }
 ];
