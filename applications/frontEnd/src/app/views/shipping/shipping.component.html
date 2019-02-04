@@ -1,4 +1,4 @@
-<div class="animated fadeIn" *ngIf="dataLoaded">
+<div class="animated fadeIn">
 
   <div class="row">
     <div class="col-sm-12 col-md-12">
@@ -31,7 +31,7 @@
         <div class="card-header">
           Shipping Overview Table
           <div class="card-header-actions">
-            <button type="submit" (click)="largeModal.show()" class="btn btn-sm btn-primary">
+            <button type="submit" (click)="createModal.show()" class="btn btn-sm btn-primary">
               <i class="fa fa-dot-circle-o"></i> Create Shipping</button>
           </div>
         </div>
@@ -65,11 +65,8 @@
                     <span class="badge badge-warning" *ngIf="shipping.state">{{shipping.state}}</span>
                   </td>
                   <td>
-                    <button class="badge badge-success" *ngIf="!shipping.state">
+                    <button class="badge badge-success" *ngIf="!shipping.state" (click)="setSendModal(i); sendModal.show()">
                       Send Shipping
-                    </button>
-                    <button class="badge badge-primary" *ngIf="shipping.state == 'Sent'" data-toggle="modal" (click)="myModal.show()">
-                      Receive Shipping
                     </button>
                   </td>
                 </tr>
@@ -102,116 +99,148 @@
       </div>
     </div>
   </div>
+</div>
 
 
 
-
-  <div bsModal #largeModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
-    aria-hidden="true">
-    <div class="modal-dialog modal-lg" role="document">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h4 class="modal-title">Create New Shipping</h4>
-          <button type="button" class="close" (click)="largeModal.hide()" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-          </button>
-        </div>
-        <div class="modal-body">
-
-
-
-          <div class="row">
-            <div class="col-sm-12 col-md-12">
-              <!-- <div class="card-columns cols-2"> -->
-              <div class="card">
-                <div class="card-header">
-                  Shipping
-                  <div class="card-header-actions">
-                  </div>
-                </div>
-                <div class="card-body">
-                  <div class="card-body">
-                    <form action="" method="post" enctype="multipart/form-data" class="form-horizontal" [formGroup]="shippingForm">
-                      <div class="form-group row">
-                        <label class="col-md-3 col-form-label">Shipping ID</label>
-                        <div class="col-md-9">
-                          <input type="text" id="text-input" name="text-input" class="form-control" placeholder="Enter Shipping ID"
-                            formControlName="shippingId">
-                          <span class="help-block">Please enter the unique identifier of your shipping</span>
-                        </div>
-                      </div>
-                      <div class="form-group row">
-                        <label class="col-md-3 col-form-label" for="disabled-input">Supplier ID</label>
-                        <div class="col-md-9">
-                          <input type="text" id="disabled-input" name="disabled-input" class="form-control"
-                            formControlName="supplierId">
-                          <span class="help-block">The ID of the supplier sending the material</span>
-                        </div>
-                      </div>
-                      <div class="form-group row">
-                        <label class="col-md-3 col-form-label" for="select1">Material ID</label>
-                        <div class="col-md-9">
-                          <select id="select1" name="select1" class="form-control" formControlName="materialId">
-                            <option *ngFor="let material of materials;let dataIndex=index" [ngValue]="material">{{materials}}
-                            </option>
-                          </select>
-                        </div>
-                      </div>
-                      <div class="form-group row">
-                        <label class="col-md-3 col-form-label">Quantity</label>
-                        <div class="col-md-9">
-                          <input type="number" id="email-input" name="email-input" class="form-control" placeholder="Enter Quantity"
-                            formControlName="quantity">
-                          <span class="help-block">Please enter the quantity of the material you ship</span>
-                        </div>
-                      </div>
-                      <div class="form-group row">
-                        <label class="col-md-3 col-form-label" for="textarea-input">Note</label>
-                        <div class="col-md-9">
-                          <textarea id="textarea-input" name="textarea-input" rows="9" class="form-control" placeholder="You can add some notes..." formControlName="note"></textarea>
-                        </div>
-                      </div>
-                    </form>
-                  </div>
-
-                </div>
-              </div>
-              <!--  </div> -->
-
-
-              <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" (click)="largeModal.hide()">Close</button>
-                <button type="button" class="btn btn-primary" (click)="submitData()">Save changes</button>
-              </div>
-            </div><!-- /.modal-content -->
-          </div><!-- /.modal-dialog -->
-        </div><!-- /.modal -->
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+<div bsModal #createModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+  aria-hidden="true">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">Create New Shipping</h4>
+        <button type="button" class="close" (click)="createModal.hide()" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
       </div>
+      <div class="modal-body">
+        <div class="row">
+          <div class="col-sm-12 col-md-12">
+            <div class="card">
+              <div class="card-header">
+                Shipping
+                <div class="card-header-actions">
+                </div>
+              </div>
+              <div class="card-body">
+                <div class="card-body">
+                  <form action="" method="post" enctype="multipart/form-data" class="form-horizontal" [formGroup]="shippingForm">
+                    <div class="form-group row">
+                      <label class="col-md-3 col-form-label">Shipping ID</label>
+                      <div class="col-md-9">
+                        <input type="text" id="text-input" name="text-input" class="form-control" placeholder="Enter Shipping ID"
+                          formControlName="shippingId">
+                        <span class="help-block">Please enter the unique identifier of your shipping</span>
+                      </div>
+                    </div>
+                    <div class="form-group row">
+                      <label class="col-md-3 col-form-label" for="disabled-input">Supplier ID</label>
+                      <div class="col-md-9">
+                        <input type="text" id="disabled-input" name="disabled-input" class="form-control"
+                          formControlName="supplierId">
+                        <span class="help-block">The ID of the supplier sending the material</span>
+                      </div>
+                    </div>
+                    <div class="form-group row">
+                      <label class="col-md-3 col-form-label" for="select1">Material ID</label>
+                      <div class="col-md-9">
+                        <select id="select1" name="select1" class="form-control" formControlName="materialId">
+                          <option *ngFor="let material of materials;let dataIndex=index" [ngValue]="material">{{materials}}
+                          </option>
+                        </select>
+                      </div>
+                    </div>
+                    <div class="form-group row">
+                      <label class="col-md-3 col-form-label">Quantity</label>
+                      <div class="col-md-9">
+                        <input type="number" id="email-input" name="email-input" class="form-control" placeholder="Enter Quantity"
+                          formControlName="quantity">
+                        <span class="help-block">Please enter the quantity of the material you ship</span>
+                      </div>
+                    </div>
+                    <div class="form-group row">
+                      <label class="col-md-3 col-form-label" for="textarea-input">Note</label>
+                      <div class="col-md-9">
+                        <textarea id="textarea-input" name="textarea-input" rows="9" class="form-control" placeholder="You can add some notes..."
+                          formControlName="note"></textarea>
+                      </div>
+                    </div>
+                  </form>
+                </div>
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" (click)="createModal.hide()">Close</button>
+              <button type="button" class="btn btn-primary" (click)="submitShippingData()">Save changes</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
 
+
+<button (click)="sendModal.show()">asdfasdf</button>
+
+
+
+
+
+<div bsModal #sendModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+  aria-hidden="true">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">Send Shipping</h4>
+        <button type="button" class="close" (click)="sendModal.hide()" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="row">
+          <div class="col-sm-12 col-md-12">
+            <div class="card">
+              <div class="card-header">
+                Shipping
+                <div class="card-header-actions">
+                </div>
+              </div>
+              <div class="card-body">
+                <div class="card-body">
+                  <form action="" method="post" enctype="multipart/form-data" class="form-horizontal" [formGroup]="sendForm">
+                     <div class="form-group row">
+                      <label class="col-md-3 col-form-label">Collection</label>
+                      <div class="col-md-9">
+                        <input type="text" id="text-input" name="text-input" class="form-control" placeholder="Enter Collection"
+                          formControlName="collection">
+                        <span class="help-block">This is the collection for the private data</span>
+                      </div>
+                    </div>
+                    <div class="form-group row">
+                      <label class="col-md-3 col-form-label" for="textarea-input">Note</label>
+                      <div class="col-md-9">
+                        <textarea id="textarea-input" name="textarea-input" rows="9" class="form-control" placeholder="You can add some notes..."
+                          formControlName="note"></textarea>
+                      </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-md-3 col-form-label" for="file-input">Invoice Attachement</label>
+                        <div class="col-md-9">
+                          <input type="file" id="file-input" name="file-input" formControlName="invoiceData">
+                        </div>
+                      </div>
+                  </form>
+                </div>
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" (click)="sendModal.hide()">Close</button>
+              <button type="button" class="btn btn-primary" (click)="submitSendData()">Save changes</button>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </div>

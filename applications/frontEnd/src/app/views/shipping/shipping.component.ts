@@ -19,12 +19,13 @@ export class ShippingComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    this.getSupplierId();
-    this.getMaterialIds().then( () => {
+    this.instantiateForm()
+/*     this.getSupplierId();
+    this.getMaterialIds().then(() => {
       this.instantiateForm()
       this.dataLoaded = true
     });
-    this.getShippings().then(() => { });
+    this.getShippings().then(() => { }); */
   }
 
   supplierId;
@@ -78,6 +79,7 @@ export class ShippingComponent implements OnInit {
   shippings = [];
   materials = [];
   shippingForm;
+  sendForm;
 
   instantiateForm() {
     this.shippingForm = new FormGroup({
@@ -87,11 +89,29 @@ export class ShippingComponent implements OnInit {
       quantity: new FormControl(),
       note: new FormControl(),
     });
+
+    this.sendForm = new FormGroup({
+      shippingId: new FormControl(),
+      invoiceId: new FormControl(),
+      invoiceData: new FormControl(),
+      collection: new FormControl("invoiceCollection"),
+      note: new FormControl()
+    });
   }
 
-  submitData() {
+  setSendModal(i) {
+    this.sendForm = new FormGroup({
+      shippingId: new FormControl(),
+      invoiceId: new FormControl(),
+      invoiceData: new FormControl(),
+      collection: new FormControl("invoiceCollection"),
+      note: new FormControl()
+    });
+  }
+
+  submitShippingData() {
     this.shippingForm.value.class = "org.warehousenet.shipping"
-    this.httpService.createShipping(this.shippingForm.value).subscribe(console.log,console.log)
+    this.httpService.createShipping(this.shippingForm.value).subscribe(console.log, console.log)
   }
 
 }
