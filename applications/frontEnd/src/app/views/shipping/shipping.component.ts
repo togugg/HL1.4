@@ -51,6 +51,7 @@ export class ShippingComponent implements OnInit {
   getShippings() {
     return new Promise((resolve, reject) => {
       this.httpService.getAssetsByQuery(JSON.stringify(this.shippingQuery)).subscribe((res) => {
+        this.shippings= [];
         res.forEach(element => {
           if (element.Record.state == 1) {
             element.Record.state = "Sent"
@@ -111,12 +112,16 @@ export class ShippingComponent implements OnInit {
 
   submitCreateshippingData() {
     this.shippingForm.value.class = "org.warehousenet.shipping";
-    this.httpService.createShipping(this.shippingForm.value).subscribe(console.log, console.log);
+    this.httpService.createShipping(this.shippingForm.value).subscribe( ()=>{
+      this.getShippings().then(() => { });
+    }, console.log);
   }
 
   submitSendShippingData() {
     console.log(this.sendShippingForm.value);
-    this.httpService.sendShipping(this.sendShippingForm.value).subscribe(console.log, console.log);
+    this.httpService.sendShipping(this.sendShippingForm.value).subscribe(()=>{
+      this.getShippings().then(() => { });
+    }, console.log);
   }
 
   onFileChange(event) {

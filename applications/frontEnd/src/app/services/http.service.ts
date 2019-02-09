@@ -54,4 +54,8 @@ export class HttpService {
     return this.http.get(this.apiServer + '/invoices/' + id, { headers: { 'accept': 'text' }, withCredentials: true })
   }
 
+  createStock(data): Observable<any> {
+    return this.http.post(this.apiServer + '/stocks/', data, { withCredentials: true })
+  }
+
 }
