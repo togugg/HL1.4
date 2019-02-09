@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { HttpService } from '../../services/http.service';
+import { Router } from '@angular/router';
 
 import { FormGroup, FormControl } from '@angular/forms';
 
@@ -14,24 +15,22 @@ export class HistoryComponent implements OnInit {
 
   constructor(
     private httpService: HttpService,
+    private router: Router
   ) { }
 
   ngOnInit() {
     this.instantiateForm()
     this.getSupplierId();
-    this.getMaterialIds().then(() => {
-      this.instantiateForm()
-      this.dataLoaded = true
-    });
-    this.getShippings().then(() => { });
+    this.instantiateForm()
+    this.getStocks().then(() => { this.dataLoaded = true });
   }
 
   supplierId;
   dataLoaded = false;
-  shippingQuery = {
+  stockQuery = {
     "selector": {
       "class": {
-        "$eq": "org.warehousenet.shipping"
+        "$eq": "org.warehousenet.stock"
       },
       "supplierId": {
         "$eq": ""
@@ -42,95 +41,52 @@ export class HistoryComponent implements OnInit {
   getSupplierId() {
     let user = document.cookie.match(new RegExp('(^| )' + 'userName' + '=([^;]+)'))[2];
     this.supplierId = decodeURIComponent(user).split("@")[1];
-    this.shippingQuery.selector.supplierId = this.supplierId;
-    console.log(this.shippingQuery)
+    this.stockQuery.selector.supplierId = this.supplierId;
+    console.log(this.stockQuery)
   }
 
-  getShippings() {
+  getStocks() {
+    this.stocks = [];
     return new Promise((resolve, reject) => {
-      this.httpService.getAssetsByQuery(JSON.stringify(this.shippingQuery)).subscribe((res) => {
+      this.httpService.getAssetsByQuery(JSON.stringify(this.stockQuery)).subscribe((res) => {
         res.forEach(element => {
-          if (element.Record.state == 1) {
-            element.Record.state = "Sent"
-          }
-          if (element.Record.state == 2) {
-            element.Record.state = "Received"
-          }
-          this.shippings.push(element.Record)
+          if( element.Record.quantity < element.Record.min ) element.Record.status = "red";
+          if( element.Record.quantity > element.Record.min && element.Record.quantity < element.Record.max ) element.Record.status = "green";
+          else element.Record.status = "yellow";
+          this.stocks.push(element.Record);
         });
-        resolve(res)
-      })
-    })
-  }
-
-  getMaterialIds() {
-    return new Promise((resolve, reject) => {
-      this.httpService.getMaterialIds(this.supplierId).subscribe((res) => {
-        this.materials = res;
-        console.log(this.materials);
-        console.log(this.supplierId);
         resolve(res);
       })
     })
   }
 
-  shippings = [];
+
+  stocks = [];
   materials = [];
   stockForm;
-  sendShippingForm;
 
   instantiateForm() {
     this.stockForm = new FormGroup({
-      shippingId: new FormControl(),
-      materialId: new FormControl({ value: this.materials, disabled: false }),
+      materialId: new FormControl(),
       supplierId: new FormControl({ value: this.supplierId, disabled: false }),
       quantity: new FormControl(),
-      note: new FormControl(),
-    });
-
-    this.sendShippingForm = new FormGroup({
-      shippingId: new FormControl(),
-      invoiceId: new FormControl(),
-      invoiceData: new FormControl(),
-      collection: new FormControl("invoiceCollection"),
+      min: new FormControl(),
+      max: new FormControl(),
       note: new FormControl()
     });
   }
 
-  setSendModal(i) {
-    this.sendShippingForm = new FormGroup({
-      shippingId: new FormControl(this.shippings[i].shippingId),
-      invoiceId: new FormControl(),
-      invoiceData: new FormControl(),
-      collection: new FormControl("invoiceCollection"),
-      note: new FormControl()
-    });
-  }
 
   submitCreateStockData() {
     this.stockForm.value.class = "org.warehousenet.stock";
-    this.httpService.createShipping(this.stockForm.value).subscribe(console.log, console.log);
+    this.httpService.createStock(this.stockForm.value).subscribe(console.log, console.log);
   }
 
-  submitSendShippingData() {
-    console.log(this.sendShippingForm.value);
-    this.httpService.sendShipping(this.sendShippingForm.value).subscribe(console.log, console.log);
+  routingToStock(id) {
+    let routingId = this.stocks[id].materialId + ":" + this.stocks[id].supplierId;
+    this.router.navigate(["/history/monthly/"+routingId]);
   }
 
-  onFileChange(event) {
-    let reader = new FileReader();
-    console.log(reader)
-   
-    if(event.target.files && event.target.files.length) {
-      const [file] = event.target.files;
-      reader.readAsDataURL(file);
-    
-      reader.onload = () => {
-        this.sendShippingForm.patchValue({
-          invoiceData: reader.result
-        });
-      };
-    }
-  }
+
 
 }

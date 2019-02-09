@@ -20,11 +20,11 @@ export class MonthlyComponent implements OnInit {
   ngOnInit() {
 
     this.route.params.subscribe(params => {
-      let id = params['id']; // (+) converts string 'id' to a number
-      let materialId = id.split(':')[0];
-      let supplierId = id.split(':')[1];
-      this.getStockHistory(id).then(() => {
-        this.getStockShippings(materialId, supplierId).then(() => {
+      this.stockId = params['id']; // (+) converts string 'id' to a number
+      this.materialId = this.stockId.split(':')[0];
+      this.supplierId = this.stockId.split(':')[1];
+      this.getStockHistory(this.stockId).then(() => {
+        this.getStockShippings(this.materialId, this.supplierId).then(() => {
           this.dataLoaded = true;
         })
       })
@@ -43,6 +43,10 @@ export class MonthlyComponent implements OnInit {
   currentStock;
   shippings = [];
   modalData;
+  stockId;
+  materialId;
+  supplierId;
+
 
   shippingQuery = {
     "selector": {
@@ -59,6 +63,7 @@ export class MonthlyComponent implements OnInit {
   }
 
   getStockShippings(materialId, supplierId) {
+    this.shippings = [];
     this.shippingQuery.selector.materialId = materialId;
     this.shippingQuery.selector.supplierId = supplierId;
     return new Promise((resolve, reject) => {
@@ -78,6 +83,12 @@ export class MonthlyComponent implements OnInit {
       this.httpService.getStockHistory(id).subscribe((res) => {
         try {
           this.data = res;
+          this.lineChartData = [
+            { data: [], label: 'Stock' },
+            { data: [], label: 'Min Stock' },
+            { data: [], label: 'Max Stock' },
+          ];
+          this.lineChartLabels = [];
           this.currentStock = res[res.length - 1].Value;
           res.forEach(element => {
             var dt = new Date(element.Timestamp.seconds.low * 1000);
@@ -103,7 +114,20 @@ export class MonthlyComponent implements OnInit {
   downloadInvoice() {
     this.httpService.getInvoice(this.modalData.invoiceId).subscribe((res) => {
       console.log(res.invoiceData)
-      window.open()
+      window.open(res.invoiceData)
+    })
+  }
+
+  receiveShipping() {
+    let data = {
+      "shippingId": this.modalData.shippingId
+    }
+    this.httpService.receiveShipping(data).subscribe(res => {
+      this.dataLoaded = false;
+      this.getStockHistory(this.stockId).then(() => {
+        this.dataLoaded = true;
+      });
+      this.getStockShippings(this.materialId, this.supplierId).then()
     })
   }
 

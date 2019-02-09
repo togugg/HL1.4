@@ -146,7 +146,7 @@
                       <label class="col-md-3 col-form-label" for="select1">Material ID</label>
                       <div class="col-md-9">
                         <select id="select1" name="select1" class="form-control" formControlName="materialId">
-                          <option *ngFor="let material of materials;let dataIndex=index" [ngValue]="material">{{materials}}
+                          <option *ngFor="let material of materials;let dataIndex=index" [ngValue]="material">{{materials[dataIndex]}}
                           </option>
                         </select>
                       </div>

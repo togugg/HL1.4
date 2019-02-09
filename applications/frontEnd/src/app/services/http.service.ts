@@ -50,6 +50,10 @@ export class HttpService {
     return this.http.put(this.apiServer + '/sendShipping/', data, { withCredentials: true })
   }
 
+  receiveShipping(data): Observable<any> {
+    return this.http.put(this.apiServer + '/receiveShipping/', data, { withCredentials: true })
+  }
+
   getInvoice(id): Observable<any> {
     return this.http.get(this.apiServer + '/invoices/' + id, { headers: { 'accept': 'text' }, withCredentials: true })
   }

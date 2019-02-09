@@ -1,0 +1,14 @@
+table {
+    table-layout:fixed;
+}
+
+table td {
+    max-width: 40px;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+}
+
+.clickable { cursor: pointer;}
+.clickable:active {   transform: translateY(2px);}
+.clickable:hover { background-color: lightblue ;}

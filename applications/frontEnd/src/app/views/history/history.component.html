@@ -19,7 +19,6 @@
             </div>
           </div>
         </div>
-
       </div>
     </div>
   </div>
@@ -29,10 +28,10 @@
       <!-- <div class="card-columns cols-2"> -->
       <div class="card">
         <div class="card-header">
-          Shipping Overview Table
+          Stock Overview Table
           <div class="card-header-actions">
             <button type="submit" (click)="createModal.show()" class="btn btn-sm btn-primary">
-              <i class="fa fa-dot-circle-o"></i> Create Shipping</button>
+              <i class="fa fa-dot-circle-o"></i> Create Stock</button>
           </div>
         </div>
         <div class="d-flex justify-content-center">
@@ -40,36 +39,24 @@
             <table class="table table-sm table-striped">
               <thead class="thead-dark">
                 <tr>
-                  <th>ShippingId</th>
+                  <th>Status</th>
                   <th>MaterialId</th>
                   <th>SupplierId</th>
-                  <!-- <th>CustomerId</th> -->
                   <th>Quantity</th>
-                  <th>Sent on Date</th>
-                  <th>Received on Date</th>
-                  <th>Status</th>
-                  <th>Actions</th>
+                  <th>Min</th>
+                  <th>Max</th>
+                  <th>Note</th>
                 </tr>
               </thead>
               <tbody>
-                <tr *ngFor="let shipping of shippings; let i = index">
-                  <td>{{shipping.shippingId}}</td>
-                  <td>{{shipping.materialId}}</td>
-                  <td>{{shipping.supplierId}}</td>
-                  <!-- <td>{{shipping.customerId}}</td> -->
-                  <td>{{shipping.quantity}}</td>
-                  <td>{{shipping.sentDate}}</td>
-                  <td>{{shipping.receivedDate}}</td>
-                  <td>
-                    <span class="badge badge-warning" *ngIf="!shipping.state">Not sent</span>
-                    <span class="badge badge-warning" *ngIf="shipping.state">{{shipping.state}}</span>
-                  </td>
-                  <td>
-                    <button class="badge badge-success" *ngIf="!shipping.state" (click)="setSendModal(i); sendModal.show()">
-                      Send Shipping
-                    </button>
-                    <span class="badge badge-primary" *ngIf="shipping.state">No action required</span>
-                  </td>
+                <tr class="clickable" *ngFor="let stock of stocks; let i = index" (click)="routingToStock(i)">
+                  <td>{{stock.status}}</td>
+                  <td>{{stock.materialId}}</td>
+                  <td>{{stock.supplierId}}</td>
+                  <td>{{stock.quantity}}</td>
+                  <td>{{stock.min}}</td>
+                  <td>{{stock.max}}</td>
+                  <td>{{stock.note}}</td>
                 </tr>
               </tbody>
             </table>
@@ -160,6 +147,13 @@
                         <span class="help-block">Please enter the maxmimum quantity in stock</span>
                       </div>
                     </div>
+                    <div class="form-group row">
+                      <label class="col-md-3 col-form-label" for="textarea-input">Note</label>
+                      <div class="col-md-9">
+                        <textarea id="textarea-input" name="textarea-input" rows="9" class="form-control" placeholder="You can add some notes..."
+                          formControlName="note"></textarea>
+                      </div>
+                    </div>
                   </form>
                 </div>
               </div>
@@ -176,65 +170,3 @@
 </div>
 
 
-<div bsModal #sendModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-lg" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h4 class="modal-title">Send Shipping</h4>
-        <button type="button" class="close" (click)="sendModal.hide()" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div class="modal-body">
-        <div class="row">
-          <div class="col-sm-12 col-md-12">
-            <div class="card">
-              <div class="card-header">
-                Shipping
-                <div class="card-header-actions">
-                </div>
-              </div>
-              <div class="card-body">
-                <div class="card-body">
-                  <form action="" method="post" enctype="multipart/form-data" class="form-horizontal" [formGroup]="sendShippingForm">
-                    <div class="form-group row">
-                      <label class="col-md-3 col-form-label">Invoice ID</label>
-                      <div class="col-md-9">
-                        <input required type="text" id="text-input" name="text-input" class="form-control" placeholder="Enter Invoice ID" formControlName="invoiceId">
-                        <span class="help-block">Unique identifier of invoice</span>
-                      </div>
-                    </div>
-                    <div class="form-group row">
-                      <label class="col-md-3 col-form-label">Collection</label>
-                      <div class="col-md-9">
-                        <input type="text" id="text-input" name="text-input" class="form-control" placeholder="Enter Collection" formControlName="collection">
-                        <span class="help-block">This is the collection for the private data</span>
-                      </div>
-                    </div>
-                    <div class="form-group row">
-                      <label class="col-md-3 col-form-label" for="textarea-input">Note</label>
-                      <div class="col-md-9">
-                        <textarea id="textarea-input" name="textarea-input" rows="9" class="form-control" placeholder="You can add some notes..."
-                          formControlName="note"></textarea>
-                      </div>
-                    </div>
-                    <div class="form-group row">
-                      <label class="col-md-3 col-form-label" for="file-input">Invoice Attachement</label>
-                      <div class="col-md-9">
-                        <input type="file" id="file-input" name="file-input" (change)="onFileChange($event)">
-                      </div>
-                    </div>
-                  </form>
-                </div>
-              </div>
-            </div>
-            <div class="modal-footer">
-              <button type="button" class="btn btn-secondary" (click)="sendModal.hide()">Close</button>
-              <button type="button" class="btn btn-primary" (click)="submitSendShippingData(); sendModal.hide()">Save changes</button>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
