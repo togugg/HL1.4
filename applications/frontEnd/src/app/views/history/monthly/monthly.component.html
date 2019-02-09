@@ -17,12 +17,72 @@
 
   <div class="row">
     <div class="col-sm-6 col-md-8">
-      <!-- <div class="card-columns cols-2"> -->
-      <div class="card">
+
+
+
+
+
+      <div class="card animated fadeIn" *ngIf="cardSelecter == 'forecast'">
+        <div class="card-header">
+          Forecast Table
+          <div class="card-header-actions">
+            <button type="button" class="btn btn-primary" (click)="changeCard('history')">History</button>
+          </div>
+        </div>
+        <div class="d-flex justify-content-center">
+          <div class="card-body col-sm-12 col-md-12">
+            <table class="table table-sm table-striped">
+              <thead class="thead-dark">
+                <tr>
+                  <th>Month</th>
+                  <th>Demand</th>
+                  <th>MU</th>
+                  <th>Status</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let forecast of forecasts; let i = index" (click)="routingToStock(i)">
+                  <td>{{forecast.month}}</td>
+                  <td>{{forecast.demand}}</td>
+                  <td>Unit</td>
+                  <td>{{forecast.state}}</td>
+                  <td>
+                      <button class="badge badge-primary" *ngIf="forecast.state =='1'">Approve</button>
+                      <button class="badge badge-warning" *ngIf="forecast.state =='1'">Decline</button>
+                      <span class="badge badge-secondary" *ngIf="forecast.state !='1'">No Action Required</span>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      <div class="card animated fadeIn" *ngIf="cardSelecter == 'history'">
         <div class="card-header">
           Line Chart
           <div class="card-header-actions">
-              <button type="button" class="btn btn-secondary" (click) = "adjustModal.show()">Adjust Stock</button>
+            <button type="button" class="btn btn-secondary" (click)="adjustModal.show()">Adjust Stock</button>
+            <button type="button" class="btn btn-primary" (click)="changeCard('forecast')">Forecast</button>
           </div>
         </div>
         <div class="card-body">
@@ -186,7 +246,8 @@
         <button type="button" class="btn btn-secondary" (click)="largeModal.hide()">Close</button>
         <button type="button" class="btn btn-primary" *ngIf="modalData.sentDate" (click)="downloadInvoice()">Download
           Invoice</button>
-          <button type="button" class="btn btn-warning" *ngIf="modalData.sentDate" (click)="receiveShipping(); largeModal.hide()">Receive Shipping</button>
+        <button type="button" class="btn btn-warning" *ngIf="modalData.sentDate" (click)="receiveShipping(); largeModal.hide()">Receive
+          Shipping</button>
       </div>
     </div><!-- /.modal-content -->
   </div><!-- /.modal-dialog -->
@@ -195,78 +256,71 @@
 
 <div bsModal #adjustModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
   aria-hidden="true">
-  <div class="modal-dialog modal-lg" role="document" *ngIf="modalData">
+  <div class="modal-dialog modal-lg" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h4 class="modal-title">Material Id: {{currentStock.materialId}}</h4>
-        <button type="button" class="close" (click)="largeModal.hide()" aria-label="Close">
+        <h4 class="modal-title">Adjust Stock</h4>
+        <button type="button" class="close" (click)="adjustModal.hide()" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
       <div class="modal-body">
+        <div class="row">
+          <div class="col-sm-12 col-md-12">
+            <div class="card">
+              <div class="card-header">
+                Stock
+                <div class="card-header-actions">
+                </div>
+              </div>
+              <div class="card-body">
+                <div class="card-body">
+                  <form action="" method="post" enctype="multipart/form-data" class="form-horizontal" [formGroup]="stockForm">
 
-        <div class=row>
-          <div class="col">
-            State
-          </div>
-          <div class="col">
-            <span *ngIf="modalData.sentDate; else notSent"><span class="badge badge-warning">Sent</span></span>
-            <ng-template #notSent>
-              <span class="badge badge-warning">Not Sent</span>
-            </ng-template>
-          </div>
-        </div>
 
-        <div *ngIf="modalData.sentDate" class=row>
-          <div class="col">
-            Sent on
-          </div>
-          <div class="col">
-            {{modalData.sentDate}}
-          </div>
-        </div>
-
-        <div class=row>
-          <div class="col">
-            Invoice ID
-          </div>
-          <div class="col">
-            {{modalData.invoiceId}}
-            <div *ngIf="!modalData.invoiceId">
-              No Invoice Available
+                    <div class="form-group row">
+                      <label class="col-md-3 col-form-label" for="disabled-input">New Quantity</label>
+                      <div class="col-md-9">
+                        <input type="number" id="disabled-input" name="disabled-input" class="form-control" placeholder="Enter inital Quantity"
+                          formControlName="quantity">
+                        <span class="help-block">The new quantity in stock</span>
+                      </div>
+                    </div>
+                    <div class="form-group row">
+                      <label class="col-md-3 col-form-label">Min. Stock</label>
+                      <div class="col-md-9">
+                        <input type="number" id="email-input" name="email-input" class="form-control" placeholder="Enter Min"
+                          formControlName="min">
+                        <span class="help-block">Please enter the minimum quantity in stock</span>
+                      </div>
+                    </div>
+                    <div class="form-group row">
+                      <label class="col-md-3 col-form-label">Max. Stock</label>
+                      <div class="col-md-9">
+                        <input type="number" id="email-input" name="email-input" class="form-control" placeholder="Enter Max"
+                          formControlName="max">
+                        <span class="help-block">Please enter the maxmimum quantity in stock</span>
+                      </div>
+                    </div>
+                    <div class="form-group row">
+                      <label class="col-md-3 col-form-label" for="textarea-input">Note</label>
+                      <div class="col-md-9">
+                        <textarea id="textarea-input" name="textarea-input" rows="9" class="form-control" placeholder="You can add some notes..."
+                          formControlName="note"></textarea>
+                      </div>
+                    </div>
+                  </form>
+                </div>
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" (click)="adjustModal.hide()">Close</button>
+              <button type="button" class="btn btn-primary" (click)="submitAdjustStockData(); adjustModal.hide()">Save
+                changes</button>
             </div>
           </div>
         </div>
-
-        <div class=row>
-          <div class="col">
-            Quantity
-          </div>
-          <div class="col">
-            {{modalData.quantity}}
-          </div>
-        </div>
-
-
-
-        <div class=row>
-          <div class="col">
-            Note
-          </div>
-          <div class="col">
-            {{modalData.note}}
-          </div>
-        </div>
-
-
-
       </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" (click)="largeModal.hide()">Close</button>
-        <button type="button" class="btn btn-primary" *ngIf="modalData.sentDate" (click)="downloadInvoice()">Download
-          Invoice</button>
-          <button type="button" class="btn btn-warning" *ngIf="modalData.sentDate" (click)="receiveShipping(); largeModal.hide()">Receive Shipping</button>
-      </div>
-    </div><!-- /.modal-content -->
-  </div><!-- /.modal-dialog -->
-</div><!-- /.modal -->
+    </div>
+  </div>
+</div>

@@ -96,43 +96,43 @@ class WarehouseContract extends Contract {
 
     async addMonthlyForecast(ctx, monthlyForecast) {
         monthlyForecast = JSON.parse(monthlyForecast);
-        try { var forecast = await ctx.assetList.getAsset('org.warehousenet.forecast', monthlyForecast.forecastId) }
-        catch (err) { throw new Error('could not find forecastId') }
-        forecast.addMonthlyForecast(monthlyForecast.data);
-        await ctx.assetList.updateAsset(forecast);
-        return forecast.toBuffer();
+        try { var stock = await ctx.assetList.getAsset('org.warehousenet.stock', monthlyForecast.stockId) }
+        catch (err) { throw new Error('could not find stockId') }
+        stock.addMonthlyForecast(monthlyForecast.data);
+        await ctx.assetList.updateAsset(stock);
+        return stock.toBuffer();
     }
 
     async updateMonthlyForecast(ctx, monthlyForecast) {
         monthlyForecast = JSON.parse(monthlyForecast);
-        let forecast = await ctx.assetList.getAsset('org.warehousenet.forecast', monthlyForecast.forecastId);
-        forecast.updateMonthlyForecast(monthlyForecast.data);
-        await ctx.assetList.updateAsset(forecast);
-        return forecast.toBuffer();
+        let stock = await ctx.assetList.getAsset('org.warehousenet.stock', monthlyForecast.stockId);
+        stock.updateMonthlyForecast(monthlyForecast.data);
+        await ctx.assetList.updateAsset(stock);
+        return stock.toBuffer();
     }
 
     async deleteMonthlyForecast(ctx, data) {
         data = JSON.parse(data);
-        let forecast = await ctx.assetList.getAsset('org.warehousenet.forecast', data.forecastId);
-        forecast.deleteMonthlyForecast(data);
-        await ctx.assetList.updateAsset(forecast);
-        return forecast.toBuffer();
+        let stock = await ctx.assetList.getAsset('org.warehousenet.stock', data.stockId);
+        stock.deleteMonthlyForecast(data);
+        await ctx.assetList.updateAsset(stock);
+        return stock.toBuffer();
     }
 
     async approveMonthlyForecast(ctx, data) {
         data = JSON.parse(data);
-        let forecast = await ctx.assetList.getAsset('org.warehousenet.forecast', data.forecastId);
-        forecast.approveMonthlyForecast(data);
-        await ctx.assetList.updateAsset(forecast);
-        return forecast.toBuffer();
+        let stock = await ctx.assetList.getAsset('org.warehousenet.stock', data.stockId);
+        stock.approveMonthlyForecast(data);
+        await ctx.assetList.updateAsset(stock);
+        return stock.toBuffer();
     }
 
     async declineMonthlyForecast(ctx, data) {
         data = JSON.parse(data);
-        let forecast = await ctx.assetList.getAsset('org.warehousenet.forecast', data.forecastId);
-        forecast.declineMonthlyForecast(data);
-        await ctx.assetList.updateAsset(forecast);
-        return forecast.toBuffer();
+        let stock = await ctx.assetList.getAsset('org.warehousenet.stock', data.stockId);
+        stock.declineMonthlyForecast(data);
+        await ctx.assetList.updateAsset(stock);
+        return stock.toBuffer();
     }
 
     async getIdentity(ctx) {

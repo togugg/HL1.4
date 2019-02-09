@@ -334,153 +334,7 @@ paths:
           schema:
             $ref: "#/definitions/ErrorResponse"
 
-  /forecasts:
-      x-swagger-router-controller: index
-      post:
-        description: Add a new forecast to the list
-        tags:
-          - Forecasts
-        operationId: createForecast
-        parameters:
-          - name: asset
-            description: forecast properties
-            in: body
-            required: true
-            schema:
-              $ref: "#/definitions/Forecast"
-        responses:
-          "201":
-            description: Success
-            schema:
-              $ref: "#/definitions/Forecast"
-          default:
-            description: Error
-            schema:
-              $ref: "#/definitions/ErrorResponse"
-      put:
-        description: Update a forecast
-        tags:
-          - Forecasts
-        operationId: updateForecast
-        parameters:
-          - name: asset
-            description: forecast properties
-            in: body
-            required: true
-            schema:
-              $ref: "#/definitions/Forecast"
-        responses:
-          "201":
-            description: Success
-            schema:
-              $ref: "#/definitions/Forecast"
-          default:
-            description: Error
-            schema:
-              $ref: "#/definitions/ErrorResponse"
-      get:
-        description: Returns a list of all stocks
-        tags:
-          - Forecasts
-        operationId: getAllForecasts
-        parameters:
-          - name: assetClass
-            in: query
-            description: assetClass
-            required: false
-            type: string
-            default: org.warehousenet.forecast
-        responses:
-          "200":
-            description: Success
-            schema:
-              $ref: "#/definitions/Forecasts"
-          default:
-            description: Error
-            schema:
-              $ref: "#/definitions/ErrorResponse"
-  /forecasts/{Id}:    
-    x-swagger-router-controller: index
-    get:
-      description: Returns a specific forecast
-      tags:
-        - Forecasts
-      operationId: getForecastById
-      parameters:
-        - in: path
-          name: Id
-          description: forecastId
-          type: string
-          required: true
-        - name: assetClass
-          in: query
-          description: assetClass
-          required: false
-          type: string
-          default: org.warehousenet.forecast
-      responses:
-        "200":
-          description: Success
-          schema:
-            $ref: "#/definitions/Forecast"
-        default:
-          description: Error
-          schema:
-            $ref: "#/definitions/ErrorResponse"
-    delete:
-      description: Returns a specific forecast
-      operationId: deleteForecastById
-      tags:
-        - Forecasts
-      parameters:
-        - in: path
-          name: Id
-          description: forecastId
-          type: string
-          required: true
-        - name: assetClass
-          in: query
-          description: assetClass
-          required: false
-          type: string
-          default: org.warehousenet.forecast
-      responses:
-        "200":
-          description: Success
-          schema:
-            $ref: "#/definitions/Forecast"
-        default:
-          description: Error
-          schema:
-            $ref: "#/definitions/ErrorResponse"
-  /forecasts/history/{Id}:    
-    x-swagger-router-controller: index
-    get:
-      description: Returns history of a forecast
-      tags:
-        - Forecasts
-      operationId: getForecastHistory
-      parameters:
-        - in: path
-          name: Id
-          description: forecastId
-          type: string
-          required: true
-        - name: assetClass
-          in: query
-          description: assetClass
-          required: false
-          type: string
-          default: org.warehousenet.forecast
-      responses:
-        "200":
-          description: Success
-          schema:
-            $ref: "#/definitions/Forecasts"
-        default:
-          description: Error
-          schema:
-            $ref: "#/definitions/ErrorResponse"
+  
             
   /assets/byquery/{queryString}:    
     x-swagger-router-controller: index
@@ -662,9 +516,9 @@ paths:
           required: true
           schema:
             properties:
-              forecastId:
+              stockId:
                 type: string
-                description: Unique identifier representing a forecast
+                description: Unique identifier representing a stock
               data:
                 $ref: '#/definitions/MonthlyForecast'
       responses:
@@ -691,9 +545,9 @@ paths:
           required: true
           schema:
             properties:
-              forecastId:
+              stockId:
                 type: string
-                description: Unique identifier representing a forecast
+                description: Unique identifier representing a stock
               data:
                 $ref: '#/definitions/MonthlyForecast'
       responses:
@@ -720,9 +574,9 @@ paths:
           required: true
           schema:
             properties:
-              forecastId:
+              stockId:
                 type: string
-                description: Unique identifier representing a forecast
+                description: Unique identifier representing a stock
               month:
                 type: string
                 description: Unique identifier representing a forecast
@@ -753,9 +607,9 @@ paths:
           required: true
           schema:
             properties:
-              forecastId:
+              stockId:
                 type: string
-                description: Unique identifier representing a forecast
+                description: Unique identifier representing a stockId
               month:
                 type: string
                 description: Unique identifier representing a forecast
@@ -786,7 +640,7 @@ paths:
           required: true
           schema:
             properties:
-              forecastId:
+              stockId:
                 type: string
                 description: Unique identifier representing a forecast
               month:
@@ -913,8 +767,8 @@ definitions:
       class:
         type: string
         description: Class representing forecasts
-        example: org.warehousenet.forecast
-      forecastId:
+        example: org.warehousenet.stock
+      stockId:
         type: string
         description: Unique identifier representing a forecast
       materialId:
@@ -927,7 +781,7 @@ definitions:
         type: string
         description: Current quantity of the stock
     required:
-      - forecastId
+      - stockId
       - materialId
       - supplierId
   Forecasts:
@@ -947,10 +801,7 @@ definitions:
         type: string
         description: Unique identifier representing a forecast
 
-  MonthlyForecastArray:
-    type: array
-    items:
-      $ref: '#/definitions/MonthlyForecast'
+ 
       
   Invoice:
       properties:

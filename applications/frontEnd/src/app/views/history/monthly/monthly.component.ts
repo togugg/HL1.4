@@ -3,6 +3,8 @@ import { HttpService } from '../../../services/http.service'
 import { ActivatedRoute } from '@angular/router';
 import { Router } from '@angular/router';
 
+import { FormGroup, FormControl } from '@angular/forms';
+
 
 @Component({
   selector: 'app-monthly',
@@ -25,6 +27,7 @@ export class MonthlyComponent implements OnInit {
       this.supplierId = this.stockId.split(':')[1];
       this.getStockHistory(this.stockId).then(() => {
         this.getStockShippings(this.materialId, this.supplierId).then(() => {
+          this.instantiateForm();
           this.dataLoaded = true;
         })
       })
@@ -42,11 +45,26 @@ export class MonthlyComponent implements OnInit {
   dataLoaded = false;
   currentStock;
   shippings = [];
+  forecasts = [];
   modalData;
   stockId;
   materialId;
   supplierId;
+  cardSelecter = "history";
+  stockForm = new FormGroup({
+    class: new FormControl(),
+    materialId: new FormControl(),
+    supplierId: new FormControl(),
+    quantity: new FormControl(),
+    min: new FormControl(),
+    max: new FormControl(),
+    note: new FormControl(),
+    monthlyForecast: new FormControl(),
+  });
 
+  changeCard(card) {
+    this.cardSelecter = card;
+  }
 
   shippingQuery = {
     "selector": {
@@ -90,6 +108,9 @@ export class MonthlyComponent implements OnInit {
           ];
           this.lineChartLabels = [];
           this.currentStock = res[res.length - 1].Value;
+          this.forecasts = this.currentStock.monthlyForecast;
+          console.log(this.forecasts)
+          console.log(this.currentStock)
           res.forEach(element => {
             var dt = new Date(element.Timestamp.seconds.low * 1000);
             this.lineChartLabels.push(dt.getDate());
@@ -123,6 +144,30 @@ export class MonthlyComponent implements OnInit {
       "shippingId": this.modalData.shippingId
     }
     this.httpService.receiveShipping(data).subscribe(res => {
+      this.dataLoaded = false;
+      this.getStockHistory(this.stockId).then(() => {
+        this.dataLoaded = true;
+      });
+      this.getStockShippings(this.materialId, this.supplierId).then()
+    })
+  }
+
+  instantiateForm() {
+    this.stockForm.patchValue({
+      class: this.currentStock.class,
+      materialId: this.currentStock.materialId,
+      supplierId: this.currentStock.supplierId,
+      min: this.currentStock.min,
+      max: this.currentStock.max,
+      quantity: this.currentStock.quantity,
+      note: this.currentStock.note,
+      monthlyForecast: this.forecasts
+    });
+  }
+
+  submitAdjustStockData() {
+    console.log(this.stockForm)
+    this.httpService.updateStock(this.stockForm.value).subscribe(() => {
       this.dataLoaded = false;
       this.getStockHistory(this.stockId).then(() => {
         this.dataLoaded = true;

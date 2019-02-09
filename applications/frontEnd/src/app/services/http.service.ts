@@ -62,4 +62,8 @@ export class HttpService {
     return this.http.post(this.apiServer + '/stocks/', data, { withCredentials: true })
   }
 
+  updateStock(data): Observable<any> {
+    return this.http.put(this.apiServer + '/stocks/', data, { withCredentials: true })
+  }
+
 }
