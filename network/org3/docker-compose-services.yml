@@ -21,16 +21,19 @@ services:
                 max_attempts: 3
             placement:
                 constraints:
-                    - node.hostname == 
+                    - node.hostname == ubuntu
         image: hyperledger/fabric-ca:latest
         hostname: ca.org3.example.com
         environment:
             - FABRIC_CA_HOME=/etc/hyperledger/fabric-ca-server
             - FABRIC_CA_SERVER_CA_NAME=ca_org3
             - FABRIC_CA_SERVER_CA_CERTFILE=/etc/hyperledger/fabric-ca-server-config/ca.org3.example.com-cert.pem
-            - FABRIC_CA_SERVER_CA_KEYFILE=/etc/hyperledger/fabric-ca-server-config/88b357e79b50c912a621a2b640317a0301af9a4f115444481e31f1db62667bcf_sk
+            - FABRIC_CA_SERVER_CA_KEYFILE=/etc/hyperledger/fabric-ca-server-config/47863f875f9724f90590f179f04f2b56a51d6f26ffd98e7933bdd2ac9b1f99dc_sk
+            - FABRIC_CA_SERVER_TLS_ENABLED=true
+            - FABRIC_CA_SERVER_TLS_CERTFILE=/etc/hyperledger/fabric-ca-server-config/ca.org3.example.com-cert.pem
+            - FABRIC_CA_SERVER_TLS_KEYFILE=/etc/hyperledger/fabric-ca-server-config/47863f875f9724f90590f179f04f2b56a51d6f26ffd98e7933bdd2ac9b1f99dc_sk
         ports:
-            - 9054:7054   
+            - "9054:7054"   
         command: sh -c 'fabric-ca-server start -b admin:adminpw -d'
         volumes:
             - /var/mynetwork/certs/crypto-config/peerOrganizations/org3.example.com/ca/:/etc/hyperledger/fabric-ca-server-config
@@ -44,11 +47,13 @@ services:
                 max_attempts: 3
             placement:
                 constraints:
-                    - node.hostname == 
+                    - node.hostname == ubuntu
         image: hyperledger/fabric-couchdb:latest
         hostname: couchdb0_org3
         networks:
            - skcript
+        ports:
+            - "5986:5984"
 
     couchdb1_org3:
         deploy:
@@ -59,7 +64,7 @@ services:
                 max_attempts: 3
             placement:
                 constraints:
-                    - node.hostname == 
+                    - node.hostname == ubuntu
         image: hyperledger/fabric-couchdb:latest
         hostname: couchdb1_org3
         networks:

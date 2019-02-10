@@ -51,8 +51,8 @@ export class HistoryComponent implements OnInit {
       this.httpService.getAssetsByQuery(JSON.stringify(this.stockQuery)).subscribe((res) => {
         res.forEach(element => {
           if( element.Record.quantity < element.Record.min ) element.Record.status = "red";
-          if( element.Record.quantity > element.Record.min && element.Record.quantity < element.Record.max ) element.Record.status = "green";
-          else element.Record.status = "yellow";
+          if( element.Record.quantity >= element.Record.min && element.Record.quantity <= element.Record.max ) element.Record.status = "green";
+          if( element.Record.quantity > element.Record.max ) element.Record.status = "yellow";
           this.stocks.push(element.Record);
         });
         resolve(res);
@@ -78,8 +78,12 @@ export class HistoryComponent implements OnInit {
 
 
   submitCreateStockData() {
+    
     this.stockForm.value.class = "org.warehousenet.stock";
-    this.httpService.createStock(this.stockForm.value).subscribe(console.log, console.log);
+    this.httpService.createStock(this.stockForm.value).subscribe(()=>{
+      this.dataLoaded = false;
+      this.getStocks().then(() => { this.dataLoaded = true });
+    }, console.log);
   }
 
   routingToStock(id) {

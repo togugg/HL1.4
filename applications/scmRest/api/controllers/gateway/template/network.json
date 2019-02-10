@@ -6,7 +6,8 @@
         "mychannel": {
             "orderers": [
                 "orderer0.example.com",
-                "orderer1.example.com"
+                "orderer1.example.com",
+		"orderer2.example.com"
             ],
             "peers": {
                 "peer0.org1.example.com": {
@@ -15,7 +16,7 @@
                     "eventSource": true
                 },
                 "peer1.org1.example.com": {
-                    "endorsingPeer": true,
+                    "endorsingPeer": false,
                     "chaincodeQuery": true,
                     "eventSource": true
                 },
@@ -25,7 +26,17 @@
                     "eventSource": true
                 },
                 "peer1.org2.example.com": {
+                    "endorsingPeer": false,
+                    "chaincodeQuery": true,
+                    "eventSource": true
+                },
+                "peer0.org3.example.com": {
                     "endorsingPeer": true,
+                    "chaincodeQuery": true,
+                    "eventSource": true
+                },
+                "peer1.org3.example.com": {
+                    "endorsingPeer": false,
                     "chaincodeQuery": true,
                     "eventSource": true
                 }
@@ -52,6 +63,16 @@
             "certificateAuthorities": [
                 "ca_org2"
             ]
+        },
+        "Org3": {
+            "mspid": "Org3MSP",
+            "peers": [
+                "peer0.org3.example.com",
+                "peer1.org3.example.com"
+            ],
+            "certificateAuthorities": [
+                "ca_org3"
+            ]
         }
     },
     "orderers": {
@@ -71,6 +92,15 @@
             },
             "tlsCACerts": {
                 "pem": "INSERT_ORDERER1_CA_CERT"
+            }
+        },
+        "orderer2.example.com": {
+            "url": "grpcs://0.0.0.0:9050",
+            "grpcOptions": {
+                "ssl-target-name-override": "orderer2.example.com"
+            },
+            "tlsCACerts": {
+                "pem": "INSERT_ORDERER2_CA_CERT"
             }
         }
     },
@@ -110,6 +140,24 @@
             "tlsCACerts": {
                 "pem": "INSERT_ORG2_CA_CERT"
             }
+        },
+        "peer0.org3.example.com": {
+            "url": "grpcs://0.0.0.0:11051",
+            "grpcOptions": {
+                "ssl-target-name-override": "peer0.org3.example.com"
+            },
+            "tlsCACerts": {
+                "pem": "INSERT_ORG3_CA_CERT"
+            }
+        },
+        "peer1.org3.example.com": {
+            "url": "grpcs://0.0.0.0:12051",
+            "grpcOptions": {
+                "ssl-target-name-override": "peer1.org3.example.com"
+            },
+            "tlsCACerts": {
+                "pem": "INSERT_ORG3_CA_CERT"
+            }
         }
     },
     "certificateAuthorities": {
@@ -123,6 +171,13 @@
         "ca_org2": {
             "url": "https://0.0.0.0:8054",
             "name": "ca_org2",
+            "httpOptions": {
+                "verify": false
+            }
+        },
+        "ca_org3": {
+            "url": "https://0.0.0.0:9054",
+            "name": "ca_org3",
             "httpOptions": {
                 "verify": false
             }

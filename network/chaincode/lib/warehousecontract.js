@@ -171,17 +171,23 @@ class WarehouseContract extends Contract {
      * @param {Integer} faceValue face value of paper
     */
     async createAsset(ctx, assetData) {
-        let asset = await this.assetClassHandler(JSON.parse(assetData))
+        let cid = new ClientIdentity(ctx.stub);
+        let userMSPID = cid.getMSPID();
+        let submitedMSPID = JSON.parse(assetData).supplierId.split(".")[0] + "MSP";
+        if(userMSPID.toUpperCase() != submitedMSPID.toUpperCase()) {
+            console.log("you are not allowed");
+        };
+        let asset = await this.assetClassHandler(JSON.parse(assetData));
         // Add the paper to the list of all similar commercial papers in the ledger world state
         await ctx.assetList.addAsset(asset);
         // Must return a serialized paper to caller of smart contract
-        ctx.stub.setEvent('shippingEvent', asset.toBuffer())
+        ctx.stub.setEvent('shippingEvent', asset.toBuffer());
         return asset.toBuffer();
     }
 
     async getAsset(ctx, assetClass, assetKey) {
         let asset = await ctx.assetList.getAsset(assetClass, assetKey);
-        return asset.toBuffer()
+        return asset.toBuffer();
     }
 
     async getAllAssetsByClass(ctx, assetClass) {
@@ -190,7 +196,7 @@ class WarehouseContract extends Contract {
     }
 
     async updateAsset(ctx, assetData) {
-        let asset = await this.assetClassHandler(JSON.parse(assetData))
+        let asset = await this.assetClassHandler(JSON.parse(assetData));
         // Add the paper to the list of all similar commercial papers in the ledger world state
         await ctx.assetList.updateAsset(asset);
         // Must return a serialized paper to caller of smart contract
