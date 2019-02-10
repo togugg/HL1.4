@@ -28,6 +28,9 @@ import {MatTableModule} from '@angular/material/table';
   ],
   declarations: [
   MonthlyComponent,
-  HistoryComponent]
+  HistoryComponent],
+  exports: [
+    HistoryComponent
+  ]
 })
 export class HistoryModule { }

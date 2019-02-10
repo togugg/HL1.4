@@ -38,44 +38,31 @@
                   <th>Demand</th>
                   <th>MU</th>
                   <th>Status</th>
+                  <th>Status Note</th>
                   <th>Action</th>
                 </tr>
               </thead>
               <tbody>
-                <tr *ngFor="let forecast of forecasts; let i = index" (click)="routingToStock(i)">
+                <tr *ngFor="let forecast of forecasts; let i = index">
                   <td>{{forecast.month}}</td>
                   <td>{{forecast.demand}}</td>
                   <td>Unit</td>
                   <td>{{forecast.state}}</td>
+                  <td>{{forecast.reason}}</td>
                   <td>
-                      <button class="badge badge-primary" *ngIf="forecast.state =='1'">Approve</button>
-                      <button class="badge badge-warning" *ngIf="forecast.state =='1'">Decline</button>
-                      <span class="badge badge-secondary" *ngIf="forecast.state !='1'">No Action Required</span>
+                    <button class="badge badge-primary" *ngIf="forecast.state =='1'" (click)="approveModal.show(); setForecastMonth(i)">Approve</button>
+                    <button class="badge badge-warning" *ngIf="forecast.state =='1'" (click)="declineModal.show(); setForecastMonth(i)">Decline</button>
+                    <span class="badge badge-secondary" *ngIf="forecast.state !='1'">No Action Required</span>
                   </td>
                 </tr>
               </tbody>
             </table>
           </div>
         </div>
+        <div class="card-footer">
+          <button class="badge badge-primary" (click)="createForecastModal.show()">Add Forecast</button>
+        </div>
       </div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
       <div class="card animated fadeIn" *ngIf="cardSelecter == 'history'">
         <div class="card-header">
@@ -316,6 +303,124 @@
             <div class="modal-footer">
               <button type="button" class="btn btn-secondary" (click)="adjustModal.hide()">Close</button>
               <button type="button" class="btn btn-primary" (click)="submitAdjustStockData(); adjustModal.hide()">Save
+                changes</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div bsModal #approveModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+  aria-hidden="true">
+  <div class="modal-dialog modal-warning" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">Approve Forecast</h4>
+        <button type="button" class="close" (click)="approveModal.hide()" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form [formGroup]="statusForm">
+          <label>
+            Please enter any additional information
+          </label>
+          <textarea id="textarea-input" name="textarea-input" rows="4" class="form-control" placeholder="Content.."
+            formControlName="reason"></textarea>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" (click)="approveModal.hide()">Close</button>
+        <button type="button" class="btn btn-primary" (click)="approveForecast(); approveModal.hide()">Approve</button>
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+<div bsModal #declineModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+  aria-hidden="true">
+  <div class="modal-dialog modal-danger" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">Decline Forecast</h4>
+        <button type="button" class="close" (click)="declineModal.hide()" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form [formGroup]="statusForm">
+          <label>
+            Please enter any additional information
+          </label>
+          <textarea id="textarea-input" name="textarea-input" rows="4" class="form-control" placeholder="Content.."
+            formControlName="reason"></textarea>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" (click)="declineModal.hide()">Close</button>
+        <button type="button" class="btn btn-danger" (click)="declineForecast(); declineModal.hide()">Decline</button>
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+
+<div bsModal #createForecastModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+  aria-hidden="true">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">Create Forecast</h4>
+        <button type="button" class="close" (click)="createForecastModal.hide()" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="row">
+          <div class="col-sm-12 col-md-12">
+            <div class="card">
+              <div class="card-header">
+                Stock
+                <div class="card-header-actions">
+                </div>
+              </div>
+              <div class="card-body">
+                <div class="card-body">
+                  <form action="" method="post" enctype="multipart/form-data" class="form-horizontal" [formGroup]="forecastDataForm">
+
+
+                    <div class="form-group row">
+                      <label class="col-md-3 col-form-label" for="disabled-input">Month</label>
+                      <div class="col-md-9">
+                        <input type="text" id="disabled-input" name="disabled-input" class="form-control" placeholder="Enter inital Quantity"
+                          formControlName="month">
+                        <span class="help-block">Please enter forecast month</span>
+                      </div>
+                    </div>
+                    <div class="form-group row">
+                      <label class="col-md-3 col-form-label">Demand</label>
+                      <div class="col-md-9">
+                        <input type="number" id="email-input" name="email-input" class="form-control" placeholder="Enter Min"
+                          formControlName="demand">
+                        <span class="help-block">Please enter demand of the month</span>
+                      </div>
+                    </div>
+                    <div class="form-group row">
+                      <label class="col-md-3 col-form-label" for="textarea-input">Note</label>
+                      <div class="col-md-9">
+                        <textarea id="textarea-input" name="textarea-input" rows="9" class="form-control" placeholder="You can add some notes..."
+                          formControlName="note"></textarea>
+                      </div>
+                    </div>
+                  </form>
+                </div>
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" (click)="createForecastModal.hide()">Close</button>
+              <button type="button" class="btn btn-primary" (click)="submitAddForecastData(); adjustModal.hide()">Save
                 changes</button>
             </div>
           </div>

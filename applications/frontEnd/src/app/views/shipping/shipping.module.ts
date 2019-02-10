@@ -18,6 +18,9 @@ import { CreateShippingComponent } from './create-shipping/create-shipping.compo
     ModalModule.forRoot(),
     FormsModule,
     ReactiveFormsModule
+  ],
+  exports: [
+    ShippingComponent
   ]
 })
 export class ShippingModule { }

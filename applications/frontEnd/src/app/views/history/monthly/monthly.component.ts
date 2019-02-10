@@ -47,6 +47,7 @@ export class MonthlyComponent implements OnInit {
   shippings = [];
   forecasts = [];
   modalData;
+  selectedMonth;
   stockId;
   materialId;
   supplierId;
@@ -60,6 +61,18 @@ export class MonthlyComponent implements OnInit {
     max: new FormControl(),
     note: new FormControl(),
     monthlyForecast: new FormControl(),
+  });
+
+  statusForm = new FormGroup({
+    stockId: new FormControl(),
+    month: new FormControl(),
+    reason: new FormControl(),
+  });
+
+  forecastDataForm = new FormGroup({
+    month: new FormControl(),
+    demand: new FormControl(),
+    note: new FormControl()
   });
 
   changeCard(card) {
@@ -168,6 +181,53 @@ export class MonthlyComponent implements OnInit {
   submitAdjustStockData() {
     console.log(this.stockForm)
     this.httpService.updateStock(this.stockForm.value).subscribe(() => {
+      this.dataLoaded = false;
+      this.getStockHistory(this.stockId).then(() => {
+        this.dataLoaded = true;
+      });
+      this.getStockShippings(this.materialId, this.supplierId).then()
+    });
+  }
+
+  setForecastMonth(id) {
+    this.selectedMonth = this.forecasts[id]
+  }
+
+  approveForecast(){
+    this.statusForm.patchValue({
+      stockId: this.stockId,
+      month: this.selectedMonth.month 
+    })
+    this.httpService.approveForecast(this.statusForm.value).subscribe((res)=>{
+      this.dataLoaded = false;
+      this.getStockHistory(this.stockId).then(() => {
+        this.dataLoaded = true;
+      });
+      this.getStockShippings(this.materialId, this.supplierId).then()
+    })
+  }
+
+  declineForecast(){
+    this.statusForm.patchValue({
+      stockId: this.stockId,
+      month: this.selectedMonth.month 
+    })
+    this.httpService.declineForecast(this.statusForm.value).subscribe((res)=>{
+      this.dataLoaded = false;
+      this.getStockHistory(this.stockId).then(() => {
+        this.dataLoaded = true;
+      });
+      this.getStockShippings(this.materialId, this.supplierId).then()
+    })
+  }
+
+  submitAddForecastData(){
+    let data = {
+      "stockId": this.stockId,
+      "data": this.forecastDataForm.value
+    }
+
+    this.httpService.addForecast(data).subscribe((res)=>{
       this.dataLoaded = false;
       this.getStockHistory(this.stockId).then(() => {
         this.dataLoaded = true;
