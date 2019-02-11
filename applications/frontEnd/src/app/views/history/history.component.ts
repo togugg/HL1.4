@@ -20,14 +20,21 @@ export class HistoryComponent implements OnInit {
 
   ngOnInit() {
     this.instantiateForm()
-    this.getSupplierId();
+    this.getCustomerId();
     this.instantiateForm()
     this.getStocks().then(() => { this.dataLoaded = true });
   }
 
-  supplierId;
+  customerId;
   dataLoaded = false;
   stockQuery = {
+    "selector": {
+      "class": {
+        "$eq": "org.warehousenet.stock"
+      },
+    }
+  }
+  /* stockQuery = {
     "selector": {
       "class": {
         "$eq": "org.warehousenet.stock"
@@ -36,12 +43,12 @@ export class HistoryComponent implements OnInit {
         "$eq": ""
       }
     }
-  }
+  } */
 
-  getSupplierId() {
+  getCustomerId() {
     let user = document.cookie.match(new RegExp('(^| )' + 'userName' + '=([^;]+)'))[2];
-    this.supplierId = decodeURIComponent(user).split("@")[1];
-    this.stockQuery.selector.supplierId = this.supplierId;
+    this.customerId = decodeURIComponent(user).split("@")[1];
+    //this.stockQuery.selector.supplierId = this.supplierId;
     console.log(this.stockQuery)
   }
 
@@ -68,7 +75,8 @@ export class HistoryComponent implements OnInit {
   instantiateForm() {
     this.stockForm = new FormGroup({
       materialId: new FormControl(),
-      supplierId: new FormControl({ value: this.supplierId, disabled: false }),
+      customerId: new FormControl({ value: this.customerId, disabled: false }),
+      supplierId: new FormControl(),
       quantity: new FormControl(),
       min: new FormControl(),
       max: new FormControl(),

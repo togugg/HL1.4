@@ -7,9 +7,9 @@
           <h4>Material: {{currentStock.materialId}}</h4>
         </div>
         <div class="card-body">
-          Supplier: {{currentStock.supplierId}}
+          <b>Customer:</b> {{currentStock.customerId}} <br>
+          <b>Supplier:</b> {{currentStock.supplierId}}
         </div>
-
       </div>
     </div>
   </div>
@@ -74,9 +74,8 @@
         </div>
         <div class="card-body">
           <div class="chart-wrapper">
-            <canvas baseChart class="chart" [datasets]="lineChartData" [labels]="lineChartLabels" [options]="lineChartOptions"
-              [colors]="lineChartColours" [legend]="lineChartLegend" [chartType]="lineChartType" (chartHover)="chartHovered($event)"
-              (chartClick)="chartClicked($event)"></canvas>
+            <canvas baseChart class="chart" [datasets]="lineChartData" [labels]="lineChartLabels" [options]="lineChartOptions" [colors]="lineChartColours"
+              [legend]="lineChartLegend" [chartType]="lineChartType" (chartHover)="chartHovered($event)" (chartClick)="chartClicked($event)"></canvas>
           </div>
         </div>
         <!--  </div> -->
@@ -161,8 +160,7 @@
   </div>
 </div>
 
-<div bsModal #largeModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
-  aria-hidden="true">
+<div bsModal #largeModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-lg" role="document" *ngIf="modalData">
     <div class="modal-content">
       <div class="modal-header">
@@ -178,7 +176,9 @@
             State
           </div>
           <div class="col">
-            <span *ngIf="modalData.sentDate; else notSent"><span class="badge badge-warning">Sent</span></span>
+            <span *ngIf="modalData.sentDate; else notSent">
+              <span class="badge badge-warning">Sent</span>
+            </span>
             <ng-template #notSent>
               <span class="badge badge-warning">Not Sent</span>
             </ng-template>
@@ -231,18 +231,20 @@
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" (click)="largeModal.hide()">Close</button>
-        <button type="button" class="btn btn-primary" *ngIf="modalData.sentDate" (click)="downloadInvoice()">Download
-          Invoice</button>
-        <button type="button" class="btn btn-warning" *ngIf="modalData.sentDate" (click)="receiveShipping(); largeModal.hide()">Receive
-          Shipping</button>
+        <button type="button" class="btn btn-primary" *ngIf="modalData.sentDate" (click)="downloadInvoice()">Download Invoice
+        </button>
+        <button type="button" class="btn btn-warning" *ngIf="modalData.sentDate" (click)="receiveShipping(); largeModal.hide()">Receive Shipping
+        </button>
       </div>
-    </div><!-- /.modal-content -->
-  </div><!-- /.modal-dialog -->
-</div><!-- /.modal -->
+    </div>
+    <!-- /.modal-content -->
+  </div>
+  <!-- /.modal-dialog -->
+</div>
+<!-- /.modal -->
 
 
-<div bsModal #adjustModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
-  aria-hidden="true">
+<div bsModal #adjustModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-lg" role="document">
     <div class="modal-content">
       <div class="modal-header">
@@ -268,24 +270,21 @@
                     <div class="form-group row">
                       <label class="col-md-3 col-form-label" for="disabled-input">New Quantity</label>
                       <div class="col-md-9">
-                        <input type="number" id="disabled-input" name="disabled-input" class="form-control" placeholder="Enter inital Quantity"
-                          formControlName="quantity">
+                        <input type="number" id="disabled-input" name="disabled-input" class="form-control" placeholder="Enter inital Quantity" formControlName="quantity">
                         <span class="help-block">The new quantity in stock</span>
                       </div>
                     </div>
                     <div class="form-group row">
                       <label class="col-md-3 col-form-label">Min. Stock</label>
                       <div class="col-md-9">
-                        <input type="number" id="email-input" name="email-input" class="form-control" placeholder="Enter Min"
-                          formControlName="min">
+                        <input type="number" id="email-input" name="email-input" class="form-control" placeholder="Enter Min" formControlName="min">
                         <span class="help-block">Please enter the minimum quantity in stock</span>
                       </div>
                     </div>
                     <div class="form-group row">
                       <label class="col-md-3 col-form-label">Max. Stock</label>
                       <div class="col-md-9">
-                        <input type="number" id="email-input" name="email-input" class="form-control" placeholder="Enter Max"
-                          formControlName="max">
+                        <input type="number" id="email-input" name="email-input" class="form-control" placeholder="Enter Max" formControlName="max">
                         <span class="help-block">Please enter the maxmimum quantity in stock</span>
                       </div>
                     </div>
@@ -302,8 +301,8 @@
             </div>
             <div class="modal-footer">
               <button type="button" class="btn btn-secondary" (click)="adjustModal.hide()">Close</button>
-              <button type="button" class="btn btn-primary" (click)="submitAdjustStockData(); adjustModal.hide()">Save
-                changes</button>
+              <button type="button" class="btn btn-primary" (click)="submitAdjustStockData(); adjustModal.hide()">Save changes
+              </button>
             </div>
           </div>
         </div>
@@ -312,8 +311,7 @@
   </div>
 </div>
 
-<div bsModal #approveModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
-  aria-hidden="true">
+<div bsModal #approveModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-warning" role="document">
     <div class="modal-content">
       <div class="modal-header">
@@ -327,20 +325,21 @@
           <label>
             Please enter any additional information
           </label>
-          <textarea id="textarea-input" name="textarea-input" rows="4" class="form-control" placeholder="Content.."
-            formControlName="reason"></textarea>
+          <textarea id="textarea-input" name="textarea-input" rows="4" class="form-control" placeholder="Content.." formControlName="reason"></textarea>
         </form>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" (click)="approveModal.hide()">Close</button>
         <button type="button" class="btn btn-primary" (click)="approveForecast(); approveModal.hide()">Approve</button>
       </div>
-    </div><!-- /.modal-content -->
-  </div><!-- /.modal-dialog -->
-</div><!-- /.modal -->
+    </div>
+    <!-- /.modal-content -->
+  </div>
+  <!-- /.modal-dialog -->
+</div>
+<!-- /.modal -->
 
-<div bsModal #declineModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
-  aria-hidden="true">
+<div bsModal #declineModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-danger" role="document">
     <div class="modal-content">
       <div class="modal-header">
@@ -354,17 +353,19 @@
           <label>
             Please enter any additional information
           </label>
-          <textarea id="textarea-input" name="textarea-input" rows="4" class="form-control" placeholder="Content.."
-            formControlName="reason"></textarea>
+          <textarea id="textarea-input" name="textarea-input" rows="4" class="form-control" placeholder="Content.." formControlName="reason"></textarea>
         </form>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" (click)="declineModal.hide()">Close</button>
         <button type="button" class="btn btn-danger" (click)="declineForecast(); declineModal.hide()">Decline</button>
       </div>
-    </div><!-- /.modal-content -->
-  </div><!-- /.modal-dialog -->
-</div><!-- /.modal -->
+    </div>
+    <!-- /.modal-content -->
+  </div>
+  <!-- /.modal-dialog -->
+</div>
+<!-- /.modal -->
 
 
 <div bsModal #createForecastModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
@@ -394,16 +395,14 @@
                     <div class="form-group row">
                       <label class="col-md-3 col-form-label" for="disabled-input">Month</label>
                       <div class="col-md-9">
-                        <input type="text" id="disabled-input" name="disabled-input" class="form-control" placeholder="Enter inital Quantity"
-                          formControlName="month">
+                        <input type="text" id="disabled-input" name="disabled-input" class="form-control" placeholder="Enter inital Quantity" formControlName="month">
                         <span class="help-block">Please enter forecast month</span>
                       </div>
                     </div>
                     <div class="form-group row">
                       <label class="col-md-3 col-form-label">Demand</label>
                       <div class="col-md-9">
-                        <input type="number" id="email-input" name="email-input" class="form-control" placeholder="Enter Min"
-                          formControlName="demand">
+                        <input type="number" id="email-input" name="email-input" class="form-control" placeholder="Enter Min" formControlName="demand">
                         <span class="help-block">Please enter demand of the month</span>
                       </div>
                     </div>
@@ -420,8 +419,8 @@
             </div>
             <div class="modal-footer">
               <button type="button" class="btn btn-secondary" (click)="createForecastModal.hide()">Close</button>
-              <button type="button" class="btn btn-primary" (click)="submitAddForecastData(); adjustModal.hide()">Save
-                changes</button>
+              <button type="button" class="btn btn-primary" (click)="submitAddForecastData(); adjustModal.hide()">Save changes
+              </button>
             </div>
           </div>
         </div>

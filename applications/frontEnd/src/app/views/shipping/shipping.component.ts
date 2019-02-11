@@ -35,16 +35,23 @@ export class ShippingComponent implements OnInit {
       "class": {
         "$eq": "org.warehousenet.shipping"
       },
+    }
+  }
+ /*  shippingQuery = {
+    "selector": {
+      "class": {
+        "$eq": "org.warehousenet.shipping"
+      },
       "supplierId": {
         "$eq": ""
       }
     }
-  }
+  } */
 
   getSupplierId() {
     let user = document.cookie.match(new RegExp('(^| )' + 'userName' + '=([^;]+)'))[2];
     this.supplierId = decodeURIComponent(user).split("@")[1];
-    this.shippingQuery.selector.supplierId = this.supplierId;
+    //this.shippingQuery.selector.supplierId = this.supplierId;
     console.log(this.shippingQuery)
   }
 

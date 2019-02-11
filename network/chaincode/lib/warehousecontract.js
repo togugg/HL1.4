@@ -68,7 +68,13 @@ class WarehouseContract extends Contract {
         invoiceData = JSON.parse(invoiceData);
         let shippingKey = Shipping.makeKey([invoiceData.shippingId]);
         try { var shipping = await ctx.assetList.getAsset("org.warehousenet.shipping", shippingKey) }
-        catch (err) { throw new Error('could not find shippingId') }
+        catch (err) { throw new Error('could not find shippingId') };
+        let cid = new ClientIdentity(ctx.stub);
+        let userMSPID = cid.getMSPID();
+        let submitedMSPID = shipping.supplierId.split(".")[0] + "MSP";
+        if (userMSPID.toUpperCase() != submitedMSPID.toUpperCase()) {
+            throw new Error('SupplierId not fitting your MSPID');
+        };
         let now = ctx.stub.getSignedProposal().proposal.header.channel_header.timestamp.nanos;
         let invoice = Invoice.createInstance(invoiceData);
         await ctx.invoiceList.addInvoice(invoice);
@@ -146,12 +152,24 @@ class WarehouseContract extends Contract {
 
     /** Standard seters and geters */
 
-    async assetClassHandler(assetData) {
+    async assetClassHandler(ctx, assetData) {
         switch (assetData.class) {
             case 'org.warehousenet.stock': {
+                let cid = new ClientIdentity(ctx.stub);
+                let userMSPID = cid.getMSPID();
+                let submitedMSPID = assetData.customerId.split(".")[0] + "MSP";
+                if (userMSPID.toUpperCase() != submitedMSPID.toUpperCase()) {
+                    throw new Error('CustomerId not fitting your MSPID');
+                };
                 return Stock.createInstance(assetData);
             };
             case 'org.warehousenet.shipping': {
+                let cid = new ClientIdentity(ctx.stub);
+                let userMSPID = cid.getMSPID();
+                let submitedMSPID = assetData.supplierId.split(".")[0] + "MSP";
+                if (userMSPID.toUpperCase() != submitedMSPID.toUpperCase()) {
+                    throw new Error('SupplierId not fitting your MSPID');
+                };
                 return Shipping.createInstance(assetData);
             };
             case 'org.warehousenet.forecast': {
@@ -171,13 +189,7 @@ class WarehouseContract extends Contract {
      * @param {Integer} faceValue face value of paper
     */
     async createAsset(ctx, assetData) {
-        let cid = new ClientIdentity(ctx.stub);
-        let userMSPID = cid.getMSPID();
-        let submitedMSPID = JSON.parse(assetData).supplierId.split(".")[0] + "MSP";
-        if(userMSPID.toUpperCase() != submitedMSPID.toUpperCase()) {
-            console.log("you are not allowed");
-        };
-        let asset = await this.assetClassHandler(JSON.parse(assetData));
+        let asset = await this.assetClassHandler(ctx, JSON.parse(assetData));
         // Add the paper to the list of all similar commercial papers in the ledger world state
         await ctx.assetList.addAsset(asset);
         // Must return a serialized paper to caller of smart contract
@@ -196,7 +208,7 @@ class WarehouseContract extends Contract {
     }
 
     async updateAsset(ctx, assetData) {
-        let asset = await this.assetClassHandler(JSON.parse(assetData));
+        let asset = await this.assetClassHandler(ctx, JSON.parse(assetData));
         // Add the paper to the list of all similar commercial papers in the ledger world state
         await ctx.assetList.updateAsset(asset);
         // Must return a serialized paper to caller of smart contract

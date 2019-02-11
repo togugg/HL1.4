@@ -20,6 +20,7 @@
             <tr>
               <th>Status</th>
               <th>MaterialId</th>
+              <th>CustomerId</th>
               <th>SupplierId</th>
               <th>Quantity</th>
               <th>Min</th>
@@ -31,6 +32,7 @@
             <tr class="clickable" *ngFor="let stock of stocks; let i = index" (click)="routingToStock(i)">
               <td>{{stock.status}}</td>
               <td>{{stock.materialId}}</td>
+              <td>{{stock.customerId}}</td>
               <td>{{stock.supplierId}}</td>
               <td>{{stock.quantity}}</td>
               <td>{{stock.min}}</td>
@@ -98,6 +100,14 @@
                           <input required type="text" id="text-input" name="text-input" class="form-control"
                             placeholder="Enter Material ID" formControlName="materialId">
                           <span class="help-block">Please enter the unique identifier of the Material</span>
+                        </div>
+                      </div>
+                      <div class="form-group row">
+                        <label class="col-md-3 col-form-label" for="disabled-input">Customer ID</label>
+                        <div class="col-md-9">
+                          <input type="text" id="disabled-input" name="disabled-input" class="form-control"
+                            formControlName="customerId">
+                          <span class="help-block">The ID of the Customer</span>
                         </div>
                       </div>
                       <div class="form-group row">

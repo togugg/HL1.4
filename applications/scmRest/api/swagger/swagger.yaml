@@ -742,6 +742,9 @@ definitions:
       materialId:
         type: string
         description: Unique identifier representing a material
+      customerId:
+        type: string
+        description: Unique identifier representing a supplier        
       supplierId:
         type: string
         description: Unique identifier representing a supplier
