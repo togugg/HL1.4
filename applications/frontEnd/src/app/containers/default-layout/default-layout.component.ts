@@ -10,6 +10,7 @@ import { Router } from '@angular/router';
   templateUrl: './default-layout.component.html'
 })
 export class DefaultLayoutComponent implements OnDestroy {
+  customerId;
   public navItems = navItems;
   public sidebarMinimized = true;
   private changes: MutationObserver;
@@ -28,10 +29,17 @@ export class DefaultLayoutComponent implements OnDestroy {
       attributes: true,
       attributeFilter: ['class']
     });
+    this.getCustomerId();
   }
 
   ngOnDestroy(): void {
     this.changes.disconnect();
+  }
+
+  getCustomerId() {
+    let user = document.cookie.match(new RegExp('(^| )' + 'userName' + '=([^;]+)'))[2];
+    this.customerId = decodeURIComponent(user).split("@")[1];
+    //this.stockQuery.selector.supplierId = this.supplierId;
   }
 
   logOut() {

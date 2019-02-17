@@ -256,7 +256,7 @@ paths:
             $ref: "#/definitions/ErrorResponse"
     delete:
       description: Returns a specific stock
-      operationId: deketeStockById
+      operationId: deleteStockById
       tags:
         - Stocks
       parameters:
@@ -433,6 +433,43 @@ paths:
           description: Success
           schema:
             $ref: "#/definitions/Invoice"
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+            
+  /createCreditNote:    
+    x-swagger-router-controller: index
+    put:
+      description: txData
+      tags:
+        - Transactions
+      operationId: createCreditNote
+      parameters:
+        - name: txData
+          description: transaction data
+          in: body
+          required: true
+          schema:
+            properties:
+              stockId:
+                type: string
+                description: Unique identifier representing the correspinding stock
+              creditNoteId:
+                type: string
+                description: Unique identifier representing a creditNoteId
+              price:
+                type: string
+                description: Unit price
+              collection:
+                type: string
+                description: collection for private data
+                example: invoiceCollection
+      responses:
+        "200":
+          description: Success
+          schema:
+            $ref: "#/definitions/Stock"
         default:
           description: Error
           schema:
@@ -714,6 +751,9 @@ definitions:
       materialId:
         type: string
         description: Unique identifier representing a material
+      cutomerId:
+        type: string
+        description: Unique identifier representing a shipping  
       supplierId:
         type: string
         description: Unique identifier representing a supplier
@@ -787,10 +827,7 @@ definitions:
       - stockId
       - materialId
       - supplierId
-  Forecasts:
-    type: array
-    items:
-      $ref: '#/definitions/Forecast'
+
       
   MonthlyForecast:
     properties:

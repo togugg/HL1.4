@@ -12,3 +12,12 @@ table td {
 .clickable { cursor: pointer;}
 .clickable:active {   transform: translateY(2px);}
 .clickable:hover { background-color: lightblue ;}
+
+table {
+    width: 100%;
+  }
+  
+  .mat-form-field {
+    font-size: 14px;
+    width: 100%;
+  }

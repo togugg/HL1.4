@@ -37,6 +37,7 @@ module.exports = {
   signIn: signIn,
   signOut: signOut,
 
+  createCreditNote: createCreditNote,
   sendShipping: sendShipping,
   addMonthlyForecast: addMonthlyForecast,
   updateMonthlyForecast: updateMonthlyForecast,
@@ -127,6 +128,12 @@ function signOut (req, res) {
     'description': 'Signed out'
   }
   res.status(200).send(x)
+}
+
+function createCreditNote (req, res) {
+  let data = req.swagger.params.txData.value
+  const args = ['createCreditNote', JSON.stringify(data)]
+  connector.submit(getUserName(req), args).then(result => { res.status(200).json(result) }).catch(err => { res.send(err) })
 }
 
 function sendShipping (req, res) {

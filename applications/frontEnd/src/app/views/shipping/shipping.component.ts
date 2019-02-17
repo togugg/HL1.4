@@ -93,6 +93,7 @@ export class ShippingComponent implements OnInit {
     this.shippingForm = new FormGroup({
       shippingId: new FormControl(),
       materialId: new FormControl({ value: this.materials, disabled: false }),
+      customerId: new FormControl({ value: "org1.example.com", disabled: false }),
       supplierId: new FormControl({ value: this.supplierId, disabled: false }),
       quantity: new FormControl(),
       note: new FormControl(),

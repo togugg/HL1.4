@@ -12,6 +12,7 @@ import { HistoryComponent } from './history.component';
 
 
 import {MatTableModule} from '@angular/material/table'; 
+import { MatInputModule, MatSortModule, } from '@angular/material'
 
 
 // Angular
@@ -24,7 +25,9 @@ import {MatTableModule} from '@angular/material/table';
     ChartsModule,
     ModalModule.forRoot(),
     ReactiveFormsModule,
-    MatTableModule
+    MatTableModule,
+    MatInputModule,
+    MatSortModule
   ],
   declarations: [
   MonthlyComponent,

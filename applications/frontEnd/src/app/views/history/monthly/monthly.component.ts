@@ -27,6 +27,7 @@ export class MonthlyComponent implements OnInit {
       this.supplierId = this.stockId.split(':')[1];
       this.getStockHistory(this.stockId).then(() => {
         this.getStockShippings(this.materialId, this.supplierId).then(() => {
+          this.getUserId();
           this.instantiateForm();
           this.dataLoaded = true;
         })
@@ -55,6 +56,7 @@ export class MonthlyComponent implements OnInit {
   stockForm = new FormGroup({
     class: new FormControl(),
     materialId: new FormControl(),
+    customerId: new FormControl(),
     supplierId: new FormControl(),
     quantity: new FormControl(),
     min: new FormControl(),
@@ -152,6 +154,14 @@ export class MonthlyComponent implements OnInit {
     })
   }
 
+  userId;
+
+  getUserId() {
+    let user = document.cookie.match(new RegExp('(^| )' + 'userName' + '=([^;]+)'))[2];
+    this.userId = decodeURIComponent(user).split("@")[1];
+    //this.stockQuery.selector.supplierId = this.supplierId;
+  }
+
   receiveShipping() {
     let data = {
       "shippingId": this.modalData.shippingId
@@ -169,6 +179,7 @@ export class MonthlyComponent implements OnInit {
     this.stockForm.patchValue({
       class: this.currentStock.class,
       materialId: this.currentStock.materialId,
+      customerId: this.userId,
       supplierId: this.currentStock.supplierId,
       min: this.currentStock.min,
       max: this.currentStock.max,

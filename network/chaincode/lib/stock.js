@@ -71,6 +71,12 @@ class Stock extends State {
     this.monthlyForecast.splice(i, 1)
   }
 
+  createCreditPerdiod(now) {
+    this.creditPerdiod.start = now
+    this.this.creditPerdiod.end = ""
+    this.creditHistory.push
+  }
+
   toBuffer () {
     return Buffer.from(JSON.stringify(this))
   }
@@ -78,9 +84,20 @@ class Stock extends State {
   /**
        * Factory method to create a commercial paper object
        */
-  static createInstance (assetData) {
+  static createInstance (assetData, now) {
     if (!assetData.monthlyForecast) {
       assetData.monthlyForecast = []
+    }
+    if (!assetData.creditHistory) {
+      assetData.creditNoteHistory = []
+      let creditNotePerdiod = {
+        startDate: now,
+        startQuantity: assetData.quantity,
+        endDate: "",
+        endQuantity: "",
+        issued: false
+      }
+      assetData.creditNoteHistory.push(creditPerdiod)
     }
     return new Stock(assetData)
   }
