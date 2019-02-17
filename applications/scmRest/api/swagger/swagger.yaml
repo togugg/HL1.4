@@ -438,6 +438,36 @@ paths:
           schema:
             $ref: "#/definitions/ErrorResponse"
             
+  /withdrawStock:    
+    x-swagger-router-controller: index
+    put:
+      description: txData
+      tags:
+        - Transactions
+      operationId: withdrawStock
+      parameters:
+        - name: txData
+          description: transaction data
+          in: body
+          required: true
+          schema:
+            properties:
+              stockId:
+                type: string
+                description: Unique identifier representing the correspinding stock
+              withdrawal:
+                type: string
+                description: Quantity that is withdrawed
+      responses:
+        "200":
+          description: Success
+          schema:
+            $ref: "#/definitions/Stock"
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+            
   /createCreditNote:    
     x-swagger-router-controller: index
     put:

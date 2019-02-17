@@ -91,8 +91,8 @@ class WarehouseContract extends Contract {
   async withdrawStock(ctx, data) {
     data = JSON.parse(data)
     try { var stock = await ctx.assetList.getAsset('org.warehousenet.stock', data.stockId) } catch (err) { throw new Error('could not find stockId') };
-    stock.quantity -= data.withdrawal
-    stock.withdrawal += data.withdrawal
+    stock.quantity = ((+stock.quantity) - (+data.withdrawal)).toString()
+    stock.withdrawal = ((+stock.withdrawal) + (+data.withdrawal)).toString()
     await ctx.assetList.updateAsset(stock)
     return stock.toBuffer()
   }
