@@ -65,7 +65,19 @@ class WarehouseContract extends Contract {
   async createCreditNote(ctx, data) {
     data = JSON.parse(data)
     try { var stock = await ctx.assetList.getAsset('org.warehousenet.stock', data.stockId) } catch (err) { throw new Error('could not find stockId') };
-    let creditNotePeriod = stock.creditHistory[stock.creditHistory.length - 1]
+    
+    if (stock.withdrawal == 0) {
+      throw new Error('No withdrawal within this period')
+    }
+
+    let cid = new ClientIdentity(ctx.stub)
+    let userMSPID = cid.getMSPID()
+    let submitedMSPID = stock.customerId.split('.')[0] + 'MSP'
+    if (userMSPID.toUpperCase() != submitedMSPID.toUpperCase()) {
+      throw new Error('CustomerId not fitting your MSPID')
+    }
+    
+    let creditNotePeriod = stock.creditNoteHistory[stock.creditNoteHistory.length - 1]
     let now = ctx.stub.getSignedProposal().proposal.header.channel_header.timestamp.nanos
     creditNotePeriod.endDate = now
     creditNotePeriod.endQuantity = stock.quantity
@@ -83,17 +95,40 @@ class WarehouseContract extends Contract {
       endQuantity: "",
       issued: false
     }
-    stock.creditHistory.push(newCreditNotePerdiod)
+    stock.creditNoteHistory.push(newCreditNotePerdiod)
     await ctx.assetList.updateAsset(stock)
+    let eventData = {
+      transaction: 'createCreditNote',
+      data: creditNotePeriod
+    }
+    ctx.stub.setEvent('transactionEvent', Buffer.from(JSON.stringify(eventData)))
     return stock.toBuffer()
   }
 
   async withdrawStock(ctx, data) {
     data = JSON.parse(data)
     try { var stock = await ctx.assetList.getAsset('org.warehousenet.stock', data.stockId) } catch (err) { throw new Error('could not find stockId') };
+    
+    let cid = new ClientIdentity(ctx.stub)
+    let userMSPID = cid.getMSPID()
+    let submitedMSPID = stock.customerId.split('.')[0] + 'MSP'
+    if (userMSPID.toUpperCase() != submitedMSPID.toUpperCase()) {
+      throw new Error('CustomerId not fitting your MSPID')
+    }
+
     stock.quantity = ((+stock.quantity) - (+data.withdrawal)).toString()
     stock.withdrawal = ((+stock.withdrawal) + (+data.withdrawal)).toString()
+    let now = ctx.stub.getSignedProposal().proposal.header.channel_header.timestamp.nanos
+    stock.withdrawalHistory.push({
+      timestamp: now,
+      quantity: data.withdrawal
+    })
     await ctx.assetList.updateAsset(stock)
+    let eventData = {
+      transaction: 'withdrawStock',
+      data: data
+    }
+    ctx.stub.setEvent('transactionEvent', Buffer.from(JSON.stringify(eventData)))
     return stock.toBuffer()
   }
 
@@ -106,7 +141,7 @@ class WarehouseContract extends Contract {
     let submitedMSPID = shipping.supplierId.split('.')[0] + 'MSP'
     if (userMSPID.toUpperCase() != submitedMSPID.toUpperCase()) {
       throw new Error('SupplierId not fitting your MSPID')
-    };
+    }
     let now = ctx.stub.getSignedProposal().proposal.header.channel_header.timestamp.nanos
     let invoice = Invoice.createInstance(invoiceData)
     await ctx.invoiceList.addInvoice(invoice)

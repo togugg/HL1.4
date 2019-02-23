@@ -97,7 +97,9 @@ class Stock extends State {
         endQuantity: "",
         issued: false
       }
-      assetData.creditNoteHistory.push(creditPerdiod)
+      assetData.creditNoteHistory.push(creditNotePerdiod)
+      assetData.withdrawal = 0
+      assetData.withdrawalHistory = []
     }
     return new Stock(assetData)
   }
