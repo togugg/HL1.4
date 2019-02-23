@@ -468,6 +468,39 @@ paths:
           schema:
             $ref: "#/definitions/ErrorResponse"
             
+  /adjustLimits:    
+    x-swagger-router-controller: index
+    put:
+      description: txData
+      tags:
+        - Transactions
+      operationId: adjustLimits
+      parameters:
+        - name: txData
+          description: transaction data
+          in: body
+          required: true
+          schema:
+            properties:
+              stockId:
+                type: string
+                description: Unique identifier representing the correspinding stock
+              min:
+                type: string
+                description: New min limit
+              max:
+                type: string
+                description: New max limit
+      responses:
+        "200":
+          description: Success
+          schema:
+            $ref: "#/definitions/Stock"
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+            
   /createCreditNote:    
     x-swagger-router-controller: index
     put:

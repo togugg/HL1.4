@@ -66,6 +66,14 @@ export class HttpService {
     return this.http.put(this.apiServer + '/stocks/', data, { withCredentials: true })
   }
 
+  adjustLimits(data): Observable<any> {
+    return this.http.put(this.apiServer + '/adjustLimits/', data, { withCredentials: true })
+  }
+
+  withdrawStock(data): Observable<any> {
+    return this.http.put(this.apiServer + '/withdrawStock/', data, { withCredentials: true })
+  }
+
   approveForecast(data): Observable<any> {
     return this.http.put(this.apiServer + '/approveMonthlyForecast/', data, { withCredentials: true })
   }

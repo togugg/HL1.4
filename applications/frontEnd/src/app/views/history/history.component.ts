@@ -111,7 +111,6 @@ export class HistoryComponent implements OnInit {
   routingToStock(stock) {
     //let routingId = this.stocks[id].materialId + ":" + this.stocks[id].supplierId;
     this.router.navigate(["/history/monthly/" + stock.key]);
-
   }
 
 

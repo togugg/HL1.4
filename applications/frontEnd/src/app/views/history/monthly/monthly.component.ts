@@ -77,6 +77,17 @@ export class MonthlyComponent implements OnInit {
     note: new FormControl()
   });
 
+  adjustLimitsForm = new FormGroup({
+    stockId: new FormControl(),
+    min: new FormControl(),
+    max: new FormControl()
+  });
+
+  withdrawStockForm = new FormGroup({
+    stockId: new FormControl(),
+    withdrawal: new FormControl()
+  });
+
   changeCard(card) {
     this.cardSelecter = card;
   }
@@ -186,7 +197,15 @@ export class MonthlyComponent implements OnInit {
       quantity: this.currentStock.quantity,
       note: this.currentStock.note,
       monthlyForecast: this.forecasts
-    });
+    })
+    this.adjustLimitsForm.patchValue({
+      stockId: this.stockId,
+      min: this.currentStock.min,
+      max: this.currentStock.max
+    })
+    this.withdrawStockForm.patchValue({
+      stockId: this.stockId
+    })
   }
 
   submitAdjustStockData() {
@@ -200,16 +219,37 @@ export class MonthlyComponent implements OnInit {
     });
   }
 
+  submitAdjustLimitsData() {
+    this.httpService.adjustLimits(this.adjustLimitsForm.value).subscribe(() => {
+      this.dataLoaded = false;
+      this.getStockHistory(this.stockId).then(() => {
+        this.dataLoaded = true;
+      });
+      this.getStockShippings(this.materialId, this.supplierId).then()
+    });
+  }
+
+  submitWithdrawStockData() {
+    this.httpService.withdrawStock(this.withdrawStockForm.value).subscribe(() => {
+      this.dataLoaded = false;
+      this.getStockHistory(this.stockId).then(() => {
+        this.dataLoaded = true;
+      });
+      this.getStockShippings(this.materialId, this.supplierId).then()
+    });
+  }
+
+  
   setForecastMonth(id) {
     this.selectedMonth = this.forecasts[id]
   }
 
-  approveForecast(){
+  approveForecast() {
     this.statusForm.patchValue({
       stockId: this.stockId,
-      month: this.selectedMonth.month 
+      month: this.selectedMonth.month
     })
-    this.httpService.approveForecast(this.statusForm.value).subscribe((res)=>{
+    this.httpService.approveForecast(this.statusForm.value).subscribe((res) => {
       this.dataLoaded = false;
       this.getStockHistory(this.stockId).then(() => {
         this.dataLoaded = true;
@@ -218,12 +258,12 @@ export class MonthlyComponent implements OnInit {
     })
   }
 
-  declineForecast(){
+  declineForecast() {
     this.statusForm.patchValue({
       stockId: this.stockId,
-      month: this.selectedMonth.month 
+      month: this.selectedMonth.month
     })
-    this.httpService.declineForecast(this.statusForm.value).subscribe((res)=>{
+    this.httpService.declineForecast(this.statusForm.value).subscribe((res) => {
       this.dataLoaded = false;
       this.getStockHistory(this.stockId).then(() => {
         this.dataLoaded = true;
@@ -232,13 +272,12 @@ export class MonthlyComponent implements OnInit {
     })
   }
 
-  submitAddForecastData(){
+  submitAddForecastData() {
     let data = {
       "stockId": this.stockId,
       "data": this.forecastDataForm.value
     }
-
-    this.httpService.addForecast(data).subscribe((res)=>{
+    this.httpService.addForecast(data).subscribe((res) => {
       this.dataLoaded = false;
       this.getStockHistory(this.stockId).then(() => {
         this.dataLoaded = true;

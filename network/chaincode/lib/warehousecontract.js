@@ -17,6 +17,7 @@ const Stock = require('./stock.js')
 const Shipping = require('./shipping.js')
 const Invoice = require('./invoice.js')
 const CreditNote = require('./creditnote.js')
+const PdfMaker = require('./pdfMaker.js')
 
 const AssetList = require('./assetlist.js')
 const PrivateAssetList = require('./privateassetlist.js')
@@ -79,6 +80,7 @@ class WarehouseContract extends Contract {
     
     let creditNotePeriod = stock.creditNoteHistory[stock.creditNoteHistory.length - 1]
     let now = ctx.stub.getSignedProposal().proposal.header.channel_header.timestamp.nanos
+    creditNotePeriod.issued = true
     creditNotePeriod.endDate = now
     creditNotePeriod.endQuantity = stock.quantity
     creditNotePeriod.creditNoteId = data.creditNoteId
@@ -86,6 +88,8 @@ class WarehouseContract extends Contract {
     stock.withdrawal = 0
     data.creditNotePeriod = creditNotePeriod
     let creditNote = CreditNote.createInstance(data)
+    creditNote.pdf = await PdfMaker.makePDf(['Product', 'Qty', 'Price', 'Total'])
+    console.log(creditNote.pdf)
     await ctx.privateAssetList.addAsset(creditNote)
     creditNotePeriod.issued = true
     let newCreditNotePerdiod = {
@@ -116,6 +120,8 @@ class WarehouseContract extends Contract {
       throw new Error('CustomerId not fitting your MSPID')
     }
 
+    if(stock.quantity < data.withdrawal) { throw new Error('you cannot withdrawh more than there is on stock') }
+
     stock.quantity = ((+stock.quantity) - (+data.withdrawal)).toString()
     stock.withdrawal = ((+stock.withdrawal) + (+data.withdrawal)).toString()
     let now = ctx.stub.getSignedProposal().proposal.header.channel_header.timestamp.nanos
@@ -126,6 +132,29 @@ class WarehouseContract extends Contract {
     await ctx.assetList.updateAsset(stock)
     let eventData = {
       transaction: 'withdrawStock',
+      data: data
+    }
+    ctx.stub.setEvent('transactionEvent', Buffer.from(JSON.stringify(eventData)))
+    return stock.toBuffer()
+  }
+
+  async adjustLimits(ctx, data) {
+    data = JSON.parse(data)
+    try { var stock = await ctx.assetList.getAsset('org.warehousenet.stock', data.stockId) } catch (err) { throw new Error('could not find stockId') };
+    
+    let cid = new ClientIdentity(ctx.stub)
+    let userMSPID = cid.getMSPID()
+    let submitedMSPID = stock.customerId.split('.')[0] + 'MSP'
+    if (userMSPID.toUpperCase() != submitedMSPID.toUpperCase()) {
+      throw new Error('CustomerId not fitting your MSPID')
+    }
+
+    stock.min = data.min
+    stock.max = data.max
+
+    await ctx.assetList.updateAsset(stock)
+    let eventData = {
+      transaction: 'adjustLimits',
       data: data
     }
     ctx.stub.setEvent('transactionEvent', Buffer.from(JSON.stringify(eventData)))

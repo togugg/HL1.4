@@ -38,6 +38,7 @@ module.exports = {
   signOut: signOut,
 
   withdrawStock: withdrawStock,
+  adjustLimits: adjustLimits,
   createCreditNote: createCreditNote,
   sendShipping: sendShipping,
   addMonthlyForecast: addMonthlyForecast,
@@ -134,6 +135,12 @@ function signOut (req, res) {
 function withdrawStock (req, res) {
   let data = req.swagger.params.txData.value
   const args = ['withdrawStock', JSON.stringify(data)]
+  connector.submit(getUserName(req), args).then(result => { res.status(200).json(result) }).catch(err => { res.send(err) })
+}
+
+function adjustLimits (req, res) {
+  let data = req.swagger.params.txData.value
+  const args = ['adjustLimits', JSON.stringify(data)]
   connector.submit(getUserName(req), args).then(result => { res.status(200).json(result) }).catch(err => { res.send(err) })
 }
 

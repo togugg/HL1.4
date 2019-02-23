@@ -17,7 +17,7 @@
                 },
                 "peer1.org1.example.com": {
                     "endorsingPeer": false,
-                    "chaincodeQuery": true,
+                    "chaincodeQuery": false,
                     "eventSource": true
                 },
                 "peer0.org2.example.com": {
@@ -27,12 +27,12 @@
                 },
                 "peer1.org2.example.com": {
                     "endorsingPeer": false,
-                    "chaincodeQuery": true,
+                    "chaincodeQuery": false,
                     "eventSource": true
                 },
                 "peer0.org3.example.com": {
                     "endorsingPeer": true,
-                    "chaincodeQuery": true,
+                    "chaincodeQuery": false,
                     "eventSource": true
                 },
                 "peer1.org3.example.com": {
