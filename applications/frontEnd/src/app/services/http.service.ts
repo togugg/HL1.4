@@ -58,6 +58,10 @@ export class HttpService {
     return this.http.get(this.apiServer + '/invoices/' + id, { headers: { 'accept': 'text' }, withCredentials: true })
   }
 
+  getCreditNote(id): Observable<any> {
+    return this.http.get(this.apiServer + '/creditNotes/' + id, { headers: { 'accept': 'text' }, withCredentials: true })
+  }
+
   createStock(data): Observable<any> {
     return this.http.post(this.apiServer + '/stocks/', data, { withCredentials: true })
   }
@@ -72,6 +76,10 @@ export class HttpService {
 
   withdrawStock(data): Observable<any> {
     return this.http.put(this.apiServer + '/withdrawStock/', data, { withCredentials: true })
+  }
+
+  createCreditNote(data): Observable<any> {
+    return this.http.put(this.apiServer + '/createCreditNote/', data, { withCredentials: true })
   }
 
   approveForecast(data): Observable<any> {

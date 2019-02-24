@@ -19,8 +19,7 @@
     "license": "Apache-2.0",
     "dependencies": {
         "fabric-contract-api": "~1.4.0",
-        "fabric-shim": "~1.4.0",
-	"pdfmake": "0.1.53"
+        "fabric-shim": "~1.4.0"
     },
     "devDependencies": {
         "chai": "^4.1.2",

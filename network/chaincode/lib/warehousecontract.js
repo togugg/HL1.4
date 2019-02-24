@@ -17,7 +17,6 @@ const Stock = require('./stock.js')
 const Shipping = require('./shipping.js')
 const Invoice = require('./invoice.js')
 const CreditNote = require('./creditnote.js')
-const PdfMaker = require('./pdfMaker.js')
 
 const AssetList = require('./assetlist.js')
 const PrivateAssetList = require('./privateassetlist.js')
@@ -66,7 +65,7 @@ class WarehouseContract extends Contract {
   async createCreditNote(ctx, data) {
     data = JSON.parse(data)
     try { var stock = await ctx.assetList.getAsset('org.warehousenet.stock', data.stockId) } catch (err) { throw new Error('could not find stockId') };
-    
+
     if (stock.withdrawal == 0) {
       throw new Error('No withdrawal within this period')
     }
@@ -77,7 +76,7 @@ class WarehouseContract extends Contract {
     if (userMSPID.toUpperCase() != submitedMSPID.toUpperCase()) {
       throw new Error('CustomerId not fitting your MSPID')
     }
-    
+
     let creditNotePeriod = stock.creditNoteHistory[stock.creditNoteHistory.length - 1]
     let now = ctx.stub.getSignedProposal().proposal.header.channel_header.timestamp.nanos
     creditNotePeriod.issued = true
@@ -87,9 +86,22 @@ class WarehouseContract extends Contract {
     creditNotePeriod.totalWithdrawal = stock.withdrawal
     stock.withdrawal = 0
     data.creditNotePeriod = creditNotePeriod
+    var creditNoteExists = false
+
+    try {
+      creditNoteExists = await ctx.privateAssetList.getAsset('org.warehousenet.creditNote', data.creditNoteId, data.collection)
+      console.log(creditNoteExists)
+
+      creditNoteExists = true
+    }
+    catch (err) {
+      console.log('could not find creditNote, create new one')
+    }
+    console.log(creditNoteExists)
+    if (creditNoteExists) { throw new Error('creditNoteId already exists') }
+
+
     let creditNote = CreditNote.createInstance(data)
-    creditNote.pdf = await PdfMaker.makePDf(['Product', 'Qty', 'Price', 'Total'])
-    console.log(creditNote.pdf)
     await ctx.privateAssetList.addAsset(creditNote)
     creditNotePeriod.issued = true
     let newCreditNotePerdiod = {
@@ -112,7 +124,7 @@ class WarehouseContract extends Contract {
   async withdrawStock(ctx, data) {
     data = JSON.parse(data)
     try { var stock = await ctx.assetList.getAsset('org.warehousenet.stock', data.stockId) } catch (err) { throw new Error('could not find stockId') };
-    
+
     let cid = new ClientIdentity(ctx.stub)
     let userMSPID = cid.getMSPID()
     let submitedMSPID = stock.customerId.split('.')[0] + 'MSP'
@@ -120,7 +132,7 @@ class WarehouseContract extends Contract {
       throw new Error('CustomerId not fitting your MSPID')
     }
 
-    if(stock.quantity < data.withdrawal) { throw new Error('you cannot withdrawh more than there is on stock') }
+    if (stock.quantity < data.withdrawal) { throw new Error('you cannot withdrawh more than there is on stock') }
 
     stock.quantity = ((+stock.quantity) - (+data.withdrawal)).toString()
     stock.withdrawal = ((+stock.withdrawal) + (+data.withdrawal)).toString()
@@ -141,7 +153,7 @@ class WarehouseContract extends Contract {
   async adjustLimits(ctx, data) {
     data = JSON.parse(data)
     try { var stock = await ctx.assetList.getAsset('org.warehousenet.stock', data.stockId) } catch (err) { throw new Error('could not find stockId') };
-    
+
     let cid = new ClientIdentity(ctx.stub)
     let userMSPID = cid.getMSPID()
     let submitedMSPID = stock.customerId.split('.')[0] + 'MSP'

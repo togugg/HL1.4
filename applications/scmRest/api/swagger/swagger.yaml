@@ -413,7 +413,7 @@ paths:
       parameters:
         - in: path
           name: Id
-          description: stockId
+          description: invoiceId
           type: string
           required: true
         - name: assetClass
@@ -422,6 +422,41 @@ paths:
           required: false
           type: string
           default: org.warehousenet.invoice
+        - name: collection
+          in: query
+          description: collection for private data
+          required: false
+          type: string
+          default: invoiceCollection
+      responses:
+        "200":
+          description: Success
+          schema:
+            $ref: "#/definitions/Invoice"
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+  
+  /creditnotes/{Id}:    
+    x-swagger-router-controller: index
+    get:
+      description: Returns a specific invoice
+      tags:
+        - CreditNotes
+      operationId: getCreditNoteById
+      parameters:
+        - in: path
+          name: Id
+          description: creditNoteId
+          type: string
+          required: true
+        - name: assetClass
+          in: query
+          description: assetClass
+          required: false
+          type: string
+          default: org.warehousenet.creditNote
         - name: collection
           in: query
           description: collection for private data

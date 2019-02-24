@@ -34,6 +34,8 @@ module.exports = {
   createInvoice: createPrivateAsset,
   getInvoiceById: getPrivateAssetById,
 
+  getCreditNoteById: getPrivateAssetById,
+
   signIn: signIn,
   signOut: signOut,
 

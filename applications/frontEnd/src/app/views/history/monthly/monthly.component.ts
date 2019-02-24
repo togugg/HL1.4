@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { HttpService } from '../../../services/http.service'
+import { PdfMakerService } from '../../../services/pdf-maker.service'
 import { ActivatedRoute } from '@angular/router';
 import { Router } from '@angular/router';
 
@@ -15,6 +16,7 @@ export class MonthlyComponent implements OnInit {
 
   constructor(
     private httpService: HttpService,
+    private pdfMakerService: PdfMakerService,
     private route: ActivatedRoute,
     private router: Router
   ) { }
@@ -69,6 +71,13 @@ export class MonthlyComponent implements OnInit {
     stockId: new FormControl(),
     month: new FormControl(),
     reason: new FormControl(),
+  });
+
+  createCreditNoteForm = new FormGroup({
+    stockId: new FormControl(),
+    creditNoteId: new FormControl(),
+    price: new FormControl(),
+    collection: new FormControl(),
   });
 
   forecastDataForm = new FormGroup({
@@ -206,6 +215,10 @@ export class MonthlyComponent implements OnInit {
     this.withdrawStockForm.patchValue({
       stockId: this.stockId
     })
+    this.createCreditNoteForm.patchValue({
+      stockId: this.stockId,
+      collection: "invoiceCollection"
+    })
   }
 
   submitAdjustStockData() {
@@ -239,7 +252,7 @@ export class MonthlyComponent implements OnInit {
     });
   }
 
-  
+
   setForecastMonth(id) {
     this.selectedMonth = this.forecasts[id]
   }
@@ -272,6 +285,16 @@ export class MonthlyComponent implements OnInit {
     })
   }
 
+  submitCreateCreditNoteData() {
+    this.httpService.createCreditNote(this.createCreditNoteForm.value).subscribe(() => {
+      this.dataLoaded = false;
+      this.getStockHistory(this.stockId).then(() => {
+        this.dataLoaded = true;
+      });
+      this.getStockShippings(this.materialId, this.supplierId).then()
+    });
+  }
+
   submitAddForecastData() {
     let data = {
       "stockId": this.stockId,
@@ -284,6 +307,15 @@ export class MonthlyComponent implements OnInit {
       });
       this.getStockShippings(this.materialId, this.supplierId).then()
     })
+  }
+
+
+  createPdf(id){
+    this.httpService.getCreditNote(this.currentStock.creditNoteHistory[id].creditNoteId).subscribe((res) => {
+      console.log(res)
+      this.pdfMakerService.createPdf([this.currentStock.materialId, res.creditNotePeriod.totalWithdrawal, res.price, +res.creditNotePeriod.totalWithdrawal* +res.price])
+    })
+    
   }
 
   public lineChartOptions: any = {
