@@ -1,5 +1,6 @@
 /*
 SPDX-License-Identifier: Apache-2.0
+Adapted from: https://github.com/hyperledger/fabric-samples/blob/master/commercial-paper/organization/magnetocorp/contract/lib/paper.js
 */
 
 'use strict';
@@ -8,7 +9,7 @@ SPDX-License-Identifier: Apache-2.0
 const State = require('./../ledger-api/state.js');
 
 /**
- * CommercialPaper class extends State class
+ * CreditNote class extends State class
  * Class will be used by application and smart contract to define a paper
  */
 class CreditNote extends State {
@@ -27,7 +28,7 @@ class CreditNote extends State {
     }
 
     /**
-     * Deserialize a state data to commercial paper
+     * Deserialize a state data to CreditNote
      * @param {Buffer} data to form back into the object
      */
     static deserialize(data) {
@@ -35,7 +36,7 @@ class CreditNote extends State {
     }
 
     /**
-     * Factory method to create a commercial paper object
+     * Factory method to create a cCreditNote object
      */
     static createInstance( creditNoteData ) {
         return new CreditNote( creditNoteData );

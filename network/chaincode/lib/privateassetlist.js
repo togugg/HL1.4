@@ -1,10 +1,11 @@
 /*
 SPDX-License-Identifier: Apache-2.0
+Adapted from: https://github.com/hyperledger/fabric-samples/blob/master/commercial-paper/organization/magnetocorp/contract/lib/paperlist.js
 */
 
 'use strict';
 
-// Utility class for collections of ledger states --  a state list
+// Utility class for collections of private ledger states --  a state list
 const StateList = require('./../ledger-api/statelist.js');
 
 const Invoice = require('./invoice.js');
@@ -15,6 +16,7 @@ class PrivateAssetList extends StateList {
 
     constructor(ctx) {
         super(ctx, 'org.warehousenet.privateassetlist');
+        // Registers classes
         this.use(Invoice);
         this.use(CreditNote);
     }
@@ -27,29 +29,6 @@ class PrivateAssetList extends StateList {
         return this.getPrivateData(assetClass, assetKey, collection);
     }
 
-/*     async getAsset(assetClass, assetKey) {
-        return this.getState(assetClass, assetKey);
-    }
-
-    async updateAsset(asset) {
-        return this.updateState(asset);
-    }
-
-    async deleteAsset(assetClass, assetKey) {
-        return this.deleteState(assetClass, assetKey);
-    }
-
-    async getAssetsByQuery(queryString) {
-        return this.getStatesByQuery(queryString);
-    }
-
-    async getAssetHistory(assetClass, assetKey) {
-        return this.getStateHistory(assetClass, assetKey);
-    }
-
-    async getAllAssetsByClass(assetClass) {
-        return this.getAllStatesByClass(assetClass);
-    } */
 }
 
 

@@ -1,9 +1,10 @@
 /*
 SPDX-License-Identifier: Apache-2.0
+Adapted from: https://github.com/hyperledger/fabric-samples/blob/master/commercial-paper/organization/magnetocorp/contract/ledger-api/statelist.js
 */
 
-'use strict';
-const State = require('./state.js');
+'use strict'
+const State = require('./state.js')
 
 /**
  * StateList provides a named virtual container for a set of ledger states.
@@ -17,9 +18,9 @@ class StateList {
    * Store Fabric context for subsequent API access, and name of list
    */
   constructor(ctx, listName) {
-    this.ctx = ctx;
-    this.name = listName;
-    this.supportedClasses = {};
+    this.ctx = ctx
+    this.name = listName
+    this.supportedClasses = {}
   }
 
   /**
@@ -29,11 +30,16 @@ class StateList {
    */
   async addState(state) {
     console.log(state.getClass())
-    let key = this.ctx.stub.createCompositeKey(state.getClass(), state.getSplitKey());
-    let data = State.serialize(state);
-    await this.ctx.stub.putState(key, data);
+    let key = this.ctx.stub.createCompositeKey(state.getClass(), state.getSplitKey())
+    let data = State.serialize(state)
+    await this.ctx.stub.putState(key, data)
   }
 
+  /**
+   * Add a private state to the list. Creates a new state in worldstate with
+   * appropriate composite key.  Note that state defines its own key.
+   * State object is serialized before writing.
+   */
   async addPrivateData(state) {
     let key = this.ctx.stub.createCompositeKey(state.getClass(), state.getSplitKey());
     let data = State.serialize(state);
@@ -41,27 +47,31 @@ class StateList {
   }
 
   /**
-   * Get a state from the list using supplied keys. Form composite
+   * Get a state from the list using supplied class and key. Form composite
    * keys to retrieve state from world state. State data is deserialized
    * into JSON object before being returned.
    */
   async getState(assetClass, key) {
-      let ledgerKey = this.ctx.stub.createCompositeKey(assetClass, State.splitKey(key));
-      let data = await this.ctx.stub.getState(ledgerKey);
-      let state = State.deserialize(data, this.supportedClasses);
-      return state;
+    let ledgerKey = this.ctx.stub.createCompositeKey(assetClass, State.splitKey(key));
+    let data = await this.ctx.stub.getState(ledgerKey);
+    let state = State.deserialize(data, this.supportedClasses);
+    return state;
   }
 
+  /**
+   * Get all states from the list using supplied class. 
+   * State data is deserialized into JSON object before being returned.
+   */
   async getAllStatesByClass(assetClass) {
-    let queryString = {"selector": {"class": {"$eq": assetClass}}};
+    let queryString = { "selector": { "class": { "$eq": assetClass } } };
     let data = await this.ctx.stub.getQueryResult(JSON.stringify(queryString));
     let results = await this.getAllResults(data);
     return results;
   }
 
   /**
- * Delete a state in the list.
- */
+   * Delete a state in the list.
+   */
   async deleteState(assetClass, key) {
     let result = await this.getState(assetClass, key);
     let ledgerKey = this.ctx.stub.createCompositeKey(assetClass, State.splitKey(key));
@@ -69,6 +79,11 @@ class StateList {
     return result
   }
 
+  /**
+   * Get a private state from the list using supplied class and key. Form composite
+   * keys to retrieve state from world state. State data is deserialized
+   * into JSON object before being returned.
+   */
   async getPrivateData(assetClass, assetKey, collection) {
     let ledgerKey = this.ctx.stub.createCompositeKey(assetClass, State.splitKey(assetKey));
     console.log(ledgerKey)
@@ -78,7 +93,11 @@ class StateList {
     return state;
   }
 
-
+  /**
+   * Get a private state from the list using supplied class and key. Form composite
+   * keys to retrieve state from world state. State data is deserialized
+   * into JSON object before being returned.
+   */
   async getStateHistory(assetClass, key) {
     let ledgerKey = this.ctx.stub.createCompositeKey(assetClass, State.splitKey(key));
     let data = await this.ctx.stub.getHistoryForKey(ledgerKey);
@@ -96,17 +115,6 @@ class StateList {
     let results = await this.getAllResults(data);
     return results;
   }
-
-
-  /*   async getAllStates(key) {
-      let data = await this.ctx.stub.getStateByPartialCompositeKey(this.name, State.splitKey(key));
-      let results = await this.getAllResults(data);
-      //return Buffer.from(JSON.stringify(results));
-      return results;
-    } */
-
-
-
 
   /**
    * Update a state in the list. Puts the new state in world state with
@@ -132,7 +140,6 @@ class StateList {
     let allResults = [];
     while (true) {
       let res = await iterator.next();
-
       if (res.value && res.value.value.toString()) {
         let jsonRes = {};
         console.log(res.value.value.toString('utf8'));

@@ -313,7 +313,7 @@ export class MonthlyComponent implements OnInit {
   createPdf(id){
     this.httpService.getCreditNote(this.currentStock.creditNoteHistory[id].creditNoteId).subscribe((res) => {
       console.log(res)
-      this.pdfMakerService.createPdf([this.currentStock.materialId, res.creditNotePeriod.totalWithdrawal, res.price, +res.creditNotePeriod.totalWithdrawal* +res.price])
+      this.pdfMakerService.createPdf([[this.currentStock.materialId, res.creditNotePeriod.totalWithdrawal, res.price, +res.creditNotePeriod.totalWithdrawal* +res.price],res.creditNotePeriod.creditNoteId, res.creditNotePeriod.endDate])
     })
     
   }

@@ -46,7 +46,8 @@ async function main () {
     console.log(err)
     process.exit()
   })
-
+  
+  console.log('Listening for events')
   process.on('exit', function () {
     eventHub.disconnect()
   })

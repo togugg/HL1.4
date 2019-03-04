@@ -1,5 +1,6 @@
 /*
 SPDX-License-Identifier: Apache-2.0
+Adapted from: https://github.com/hyperledger/fabric-samples/blob/master/commercial-paper/organization/magnetocorp/contract/ledger-api/state.js
 */
 
 'use strict';

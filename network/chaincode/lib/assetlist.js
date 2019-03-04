@@ -1,5 +1,6 @@
 /*
 SPDX-License-Identifier: Apache-2.0
+Adapted from: https://github.com/hyperledger/fabric-samples/blob/master/commercial-paper/organization/magnetocorp/contract/lib/paperlist.js
 */
 
 'use strict'
@@ -13,6 +14,7 @@ const Stock = require('./stock.js')
 class AssetList extends StateList {
   constructor (ctx) {
     super(ctx, 'org.warehousenet.assetlist')
+    // Registers classes
     this.use(Shipping)
     this.use(Stock)
   }
