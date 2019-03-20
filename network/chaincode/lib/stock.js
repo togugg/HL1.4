@@ -58,7 +58,7 @@ class Stock extends State {
     // Get index of the slected forecast
     let i = this.monthlyForecast.findIndex(obj => obj.month == monthlyForecastData.month)
     // Check for right state
-    if (this.monthlyForecast[i].state == cpState.NOT_APPROVED) {
+    if (this.monthlyForecast[i].state != cpState.NOT_APPROVED) {
       throw new Error('forecast already approved/ declined')
     }
     // Decline forecast
