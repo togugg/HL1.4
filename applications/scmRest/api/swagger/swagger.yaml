@@ -2,7 +2,7 @@ swagger: "2.0"
 info:
   version: "0.0.1"
   title: Warehouse
-host: localhost:8080
+host: 195.128.101.122:8080
 basePath: /
 #
 schemes:
