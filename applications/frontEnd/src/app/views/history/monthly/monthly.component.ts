@@ -30,8 +30,8 @@ export class MonthlyComponent implements OnInit {
       this.getStockHistory(this.stockId).then(() => {
         this.getStockShippings(this.materialId, this.supplierId).then(() => {
           this.getUserId();
-          this.instantiateForm();
           this.getCollection();
+          this.instantiateForm();
           this.dataLoaded = true;
         })
       })
@@ -77,7 +77,7 @@ export class MonthlyComponent implements OnInit {
 
   createCreditNoteForm = new FormGroup({
     stockId: new FormControl(),
-    creditNoteId: new FormControl(this.collection),
+    creditNoteId: new FormControl(),
     price: new FormControl(),
     collection: new FormControl(),
   });
