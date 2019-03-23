@@ -194,7 +194,8 @@ export class MonthlyComponent implements OnInit {
   downloadInvoice() {
     this.httpService.getInvoice(this.modalData.invoiceId, this.collection).subscribe((res) => {
       console.log(res.invoiceData)
-      window.open(res.invoiceData)
+      let pdfWindow = window.open("")
+      pdfWindow.document.write("<iframe width='100%' height='100%' src='" + res.invoiceData + "'></iframe>")
     })
   }
 
