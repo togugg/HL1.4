@@ -77,7 +77,7 @@ export class MonthlyComponent implements OnInit {
 
   createCreditNoteForm = new FormGroup({
     stockId: new FormControl(),
-    creditNoteId: new FormControl(),
+    creditNoteId: new FormControl(this.collection),
     price: new FormControl(),
     collection: new FormControl(),
   });
