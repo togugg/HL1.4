@@ -7,11 +7,11 @@ import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-dashboard',
-  templateUrl: './default-layout.component.html'
+  templateUrl: './default-layout.component.html',
+  styleUrls: ['./default-layout.css']
 })
 export class DefaultLayoutComponent implements OnDestroy {
   customerId;
-  public navItems = navItems;
   public sidebarMinimized = true;
   private changes: MutationObserver;
   public element: HTMLElement;
