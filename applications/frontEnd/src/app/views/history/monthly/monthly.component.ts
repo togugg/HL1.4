@@ -31,6 +31,7 @@ export class MonthlyComponent implements OnInit {
         this.getStockShippings(this.materialId, this.supplierId).then(() => {
           this.getUserId();
           this.instantiateForm();
+          this.getCollection();
           this.dataLoaded = true;
         })
       })
@@ -38,6 +39,7 @@ export class MonthlyComponent implements OnInit {
   }
 
   public largeModal;
+  collection;
   data: Array<any>;
   lineChartLabels = [];
   lineChartData: Array<any> = [
@@ -115,6 +117,28 @@ export class MonthlyComponent implements OnInit {
     }
   }
 
+  getCollection(){
+    if(this.currentStock.customerId == "org1.example.com"){
+      if (this.currentStock.supplierId == "org2.example.com"){
+        this.collection = "Org1-Org2Collection"
+      }
+      else {this.collection = "Org1-Org3Collection"}
+    }
+    if(this.currentStock.customerId == "org2.example.com"){
+      if (this.currentStock.supplierId == "org1.example.com"){
+        this.collection = "Org1-Org2Collection"
+      }
+      else {this.collection = "Org2-Org3Collection"}
+    }
+    if(this.currentStock.customerId == "org3.example.com"){
+      if (this.currentStock.supplierId == "org1.example.com"){
+        this.collection = "Org1-Org3Collection"
+      }
+      else {this.collection = "Org2-Org3Collection"}
+    }
+
+  }
+
   getStockShippings(materialId, supplierId) {
     this.shippings = [];
     this.shippingQuery.selector.materialId = materialId;
@@ -168,7 +192,7 @@ export class MonthlyComponent implements OnInit {
   }
 
   downloadInvoice() {
-    this.httpService.getInvoice(this.modalData.invoiceId).subscribe((res) => {
+    this.httpService.getInvoice(this.modalData.invoiceId, this.collection).subscribe((res) => {
       console.log(res.invoiceData)
       window.open(res.invoiceData)
     })
@@ -217,7 +241,7 @@ export class MonthlyComponent implements OnInit {
     })
     this.createCreditNoteForm.patchValue({
       stockId: this.stockId,
-      collection: "invoiceCollection"
+      collection: this.collection
     })
   }
 
@@ -311,7 +335,7 @@ export class MonthlyComponent implements OnInit {
 
 
   createPdf(id){
-    this.httpService.getCreditNote(this.currentStock.creditNoteHistory[id].creditNoteId).subscribe((res) => {
+    this.httpService.getCreditNote(this.currentStock.creditNoteHistory[id].creditNoteId, this.collection).subscribe((res) => {
       console.log(res)
       this.pdfMakerService.createPdf([[this.currentStock.materialId, res.creditNotePeriod.totalWithdrawal, res.price, +res.creditNotePeriod.totalWithdrawal* +res.price],res.creditNotePeriod.creditNoteId, res.creditNotePeriod.endDate])
     })

@@ -54,12 +54,12 @@ export class HttpService {
     return this.http.put(this.apiServer + '/receiveShipping/', data, { withCredentials: true })
   }
 
-  getInvoice(id): Observable<any> {
-    return this.http.get(this.apiServer + '/invoices/' + id, { headers: { 'accept': 'text' }, withCredentials: true })
+  getInvoice(id, collection): Observable<any> {
+    return this.http.get(this.apiServer + '/invoices/' + id + '&collection=' + collection, { headers: { 'accept': 'text' }, withCredentials: true })
   }
 
-  getCreditNote(id): Observable<any> {
-    return this.http.get(this.apiServer + '/creditNotes/' + id, { headers: { 'accept': 'text' }, withCredentials: true })
+  getCreditNote(id, collection): Observable<any> {
+    return this.http.get(this.apiServer + '/creditNotes/' + id + '&collection=' + collection, { headers: { 'accept': 'text' }, withCredentials: true })
   }
 
   createStock(data): Observable<any> {
