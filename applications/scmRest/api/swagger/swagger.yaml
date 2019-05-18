@@ -427,7 +427,7 @@ paths:
           description: collection for private data
           required: false
           type: string
-          default: invoiceCollection
+          default: Org1-Org2Collection
       responses:
         "200":
           description: Success
