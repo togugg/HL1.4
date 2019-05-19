@@ -122,15 +122,15 @@ Orderer: &OrdererDefaults
     Addresses:
           - orderer0.example.com:7050
           - orderer1.example.com:7050
-
+          - orderer3.example.com:7050
     # Batch Timeout: The amount of time to wait before creating a batch
-    BatchTimeout: 2s
+    BatchTimeout: 0.2s
 
     # Batch Size: Controls the number of messages batched into a block
     BatchSize:
 
         # Max Message Count: The maximum number of messages to permit in a batch
-        MaxMessageCount: 200
+        MaxMessageCount: 5
 
         # Absolute Max Bytes: The absolute maximum number of bytes allowed for
         # the serialized messages in a batch.
