@@ -187,23 +187,23 @@
 
       <div class="card">
         <div class="card-header">
-          Shippings in transit
+          Shipments in transit
         </div>
         <div class="card-body">
           <table class="table table-sm table-striped">
             <thead>
               <tr>
-                <th>ShippingId</th>
+                <th>ShipmentId</th>
                 <th>Quantity</th>
                 <th>Sent on</th>
               </tr>
             </thead>
             <tbody>
-              <tr *ngFor="let shipping of shippings; let i = index" (click)="setModalData(i); largeModal.show()" class="clickable">
-                <td>{{shipping.shippingId}}</td>
-                <td>{{shipping.quantity}}</td>
+              <tr *ngFor="let shipment of shipments; let i = index" (click)="setModalData(i); largeModal.show()" class="clickable">
+                <td>{{shipment.shipmentId}}</td>
+                <td>{{shipment.quantity}}</td>
                 <td>
-                  <span *ngIf="shipping.sentDate; else notSent">{{shipping.sentDate}}</span>
+                  <span *ngIf="shipment.sentDate; else notSent">{{shipment.sentDate}}</span>
                   <ng-template #notSent>
                     <span class="badge badge-warning">Not Sent</span>
                   </ng-template>
@@ -221,7 +221,7 @@
   <div class="modal-dialog modal-lg" role="document" *ngIf="modalData">
     <div class="modal-content">
       <div class="modal-header">
-        <h4 class="modal-title">Shipping ID: {{modalData.shippingId}}</h4>
+        <h4 class="modal-title">Shipment ID: {{modalData.shipmentId}}</h4>
         <button type="button" class="close" (click)="largeModal.hide()" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
@@ -290,7 +290,7 @@
         <button type="button" class="btn btn-secondary" (click)="largeModal.hide()">Close</button>
         <button type="button" class="btn btn-primary" *ngIf="modalData.sentDate" (click)="downloadInvoice()">Download Invoice
         </button>
-        <button type="button" class="btn btn-warning" *ngIf="modalData.sentDate" (click)="receiveShipping(); largeModal.hide()">Receive Shipping
+        <button type="button" class="btn btn-warning" *ngIf="modalData.sentDate" (click)="receiveShipment(); largeModal.hide()">Receive Shipment
         </button>
       </div>
     </div>

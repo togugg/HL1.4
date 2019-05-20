@@ -28,7 +28,7 @@ export class MonthlyComponent implements OnInit {
       this.materialId = this.stockId.split(':')[0];
       this.supplierId = this.stockId.split(':')[1];
       this.getStockHistory(this.stockId).then(() => {
-        this.getStockShippings(this.materialId, this.supplierId).then(() => {
+        this.getStockShipments(this.materialId, this.supplierId).then(() => {
           this.getUserId();
           this.getCollection();
           this.instantiateForm();
@@ -49,7 +49,7 @@ export class MonthlyComponent implements OnInit {
   ]
   dataLoaded = false;
   currentStock;
-  shippings = [];
+  shipments = [];
   forecasts = [];
   modalData;
   selectedMonth;
@@ -103,10 +103,10 @@ export class MonthlyComponent implements OnInit {
     this.cardSelecter = card;
   }
 
-  shippingQuery = {
+  shipmentQuery = {
     "selector": {
       "class": {
-        "$eq": "org.warehousenet.shipping"
+        "$eq": "org.warehousenet.shipment"
       },
       "supplierId": {
         "$eq": ""
@@ -139,15 +139,15 @@ export class MonthlyComponent implements OnInit {
 
   }
 
-  getStockShippings(materialId, supplierId) {
-    this.shippings = [];
-    this.shippingQuery.selector.materialId = materialId;
-    this.shippingQuery.selector.supplierId = supplierId;
+  getStockShipments(materialId, supplierId) {
+    this.shipments = [];
+    this.shipmentQuery.selector.materialId = materialId;
+    this.shipmentQuery.selector.supplierId = supplierId;
     return new Promise((resolve, reject) => {
-      this.httpService.getAssetsByQuery(JSON.stringify(this.shippingQuery)).subscribe((res) => {
+      this.httpService.getAssetsByQuery(JSON.stringify(this.shipmentQuery)).subscribe((res) => {
         res.forEach(element => {
           if (element.Record.state != 2) {
-            this.shippings.push(element.Record)
+            this.shipments.push(element.Record)
           }
         });
         resolve(res)
@@ -187,7 +187,7 @@ export class MonthlyComponent implements OnInit {
   }
 
   setModalData(i) {
-    this.modalData = this.shippings[i];
+    this.modalData = this.shipments[i];
     console.log(this.modalData)
   }
 
@@ -207,16 +207,16 @@ export class MonthlyComponent implements OnInit {
     //this.stockQuery.selector.supplierId = this.supplierId;
   }
 
-  receiveShipping() {
+  receiveShipment() {
     let data = {
-      "shippingId": this.modalData.shippingId
+      "shipmentId": this.modalData.shipmentId
     }
-    this.httpService.receiveShipping(data).subscribe(res => {
+    this.httpService.receiveShipment(data).subscribe(res => {
       this.dataLoaded = false;
       this.getStockHistory(this.stockId).then(() => {
         this.dataLoaded = true;
       });
-      this.getStockShippings(this.materialId, this.supplierId).then()
+      this.getStockShipments(this.materialId, this.supplierId).then()
     })
   }
 
@@ -253,7 +253,7 @@ export class MonthlyComponent implements OnInit {
       this.getStockHistory(this.stockId).then(() => {
         this.dataLoaded = true;
       });
-      this.getStockShippings(this.materialId, this.supplierId).then()
+      this.getStockShipments(this.materialId, this.supplierId).then()
     });
   }
 
@@ -263,7 +263,7 @@ export class MonthlyComponent implements OnInit {
       this.getStockHistory(this.stockId).then(() => {
         this.dataLoaded = true;
       });
-      this.getStockShippings(this.materialId, this.supplierId).then()
+      this.getStockShipments(this.materialId, this.supplierId).then()
     });
   }
 
@@ -273,7 +273,7 @@ export class MonthlyComponent implements OnInit {
       this.getStockHistory(this.stockId).then(() => {
         this.dataLoaded = true;
       });
-      this.getStockShippings(this.materialId, this.supplierId).then()
+      this.getStockShipments(this.materialId, this.supplierId).then()
     });
   }
 
@@ -292,7 +292,7 @@ export class MonthlyComponent implements OnInit {
       this.getStockHistory(this.stockId).then(() => {
         this.dataLoaded = true;
       });
-      this.getStockShippings(this.materialId, this.supplierId).then()
+      this.getStockShipments(this.materialId, this.supplierId).then()
     })
   }
 
@@ -306,7 +306,7 @@ export class MonthlyComponent implements OnInit {
       this.getStockHistory(this.stockId).then(() => {
         this.dataLoaded = true;
       });
-      this.getStockShippings(this.materialId, this.supplierId).then()
+      this.getStockShipments(this.materialId, this.supplierId).then()
     })
   }
 
@@ -316,7 +316,7 @@ export class MonthlyComponent implements OnInit {
       this.getStockHistory(this.stockId).then(() => {
         this.dataLoaded = true;
       });
-      this.getStockShippings(this.materialId, this.supplierId).then()
+      this.getStockShipments(this.materialId, this.supplierId).then()
     });
   }
 
@@ -330,7 +330,7 @@ export class MonthlyComponent implements OnInit {
       this.getStockHistory(this.stockId).then(() => {
         this.dataLoaded = true;
       });
-      this.getStockShippings(this.materialId, this.supplierId).then()
+      this.getStockShipments(this.materialId, this.supplierId).then()
     })
   }
 

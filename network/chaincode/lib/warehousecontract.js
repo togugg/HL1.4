@@ -15,7 +15,7 @@ const { Contract, Context } = require('fabric-contract-api')
 
 // SupplyNet specifc classes
 const Stock = require('./stock.js')
-const Shipping = require('./shipping.js')
+const Shipment = require('./shipment.js')
 const Invoice = require('./invoice.js')
 const CreditNote = require('./creditnote.js')
 
@@ -215,88 +215,88 @@ class WarehouseContract extends Contract {
     return stock.toBuffer()
   }
 
-  /** Transactions for shippings */
+  /** Transactions for shipments */
 
   /**
-   * Transaction for sending shipping
+   * Transaction for sending shipment
    * 
    * @param {Context} ctx the transaction context
-   * @param {String} shippingData data for shipping and invoice creation
+   * @param {String} shipmentData data for shipment and invoice creation
    */
-  async sendShipping(ctx, shippingData) {
+  async sendShipment(ctx, shipmentData) {
     // String must be parsed
-    shippingData = JSON.parse(shippingData)
-    // Create key for shipping
-    let shippingKey = Shipping.makeKey([shippingData.shippingId])
-    // Check whether asset with shippingId exists
-    try { var shipping = await ctx.assetList.getAsset('org.warehousenet.shipping', shippingKey) } catch (err) { throw new Error('could not find shippingId') }
+    shipmentData = JSON.parse(shipmentData)
+    // Create key for shipment
+    let shipmentKey = Shipment.makeKey([shipmentData.shipmentId])
+    // Check whether asset with shipmentId exists
+    try { var shipment = await ctx.assetList.getAsset('org.warehousenet.shipment', shipmentKey) } catch (err) { throw new Error('could not find shipmentId') }
     // Get clientIdentity and compare with supplierId, throw error if no match
     let cid = new ClientIdentity(ctx.stub)
     let userMSPID = cid.getMSPID()
-    let submitedMSPID = shipping.supplierId.split('.')[0] + 'MSP'
+    let submitedMSPID = shipment.supplierId.split('.')[0] + 'MSP'
     if (userMSPID.toUpperCase() != submitedMSPID.toUpperCase()) {
       throw new Error('SupplierId not fitting your MSPID')
     }
     // Get timestamp from transaction
     let now = ctx.stub.getSignedProposal().proposal.header.channel_header.timestamp.nanos
-    // Create invoice based on shipping information
-    let invoice = Invoice.createInstance(shippingData)
+    // Create invoice based on shipment information
+    let invoice = Invoice.createInstance(shipmentData)
     // Add private asset in the in the private ledger world state
     await ctx.privateAssetList.addAsset(invoice)
-    // Set shipping as sent
-    shipping.setSent(now, invoice.invoiceId)
+    // Set shipment as sent
+    shipment.setSent(now, invoice.invoiceId)
     // Update asset in the in the ledger world state
-    await ctx.assetList.updateAsset(shipping)
+    await ctx.assetList.updateAsset(shipment)
     let eventData = {
-      transaction: 'sendShipping',
-      data: shippingData.shippingId
+      transaction: 'sendShipment',
+      data: shipmentData.shipmentId
     }
     // Emit an event
     ctx.stub.setEvent('transactionEvent', Buffer.from(JSON.stringify(eventData)))
     // Must return a serialized asset to caller of smart contract
-    return shipping.toBuffer()
+    return shipment.toBuffer()
   }
 
   /**
-   * Transaction for receiving shipping
+   * Transaction for receiving shipment
    * 
    * @param {Context} ctx the transaction context
-   * @param {String} shippingId Id of the shipping to receive
+   * @param {String} shipmentId Id of the shipment to receive
    */
-  async receiveShipping(ctx, shippingId) {
-    // Check whether asset with shippingId exists
-    try { var shipping = await ctx.assetList.getAsset('org.warehousenet.shipping', shippingId) } catch (err) { throw new Error('could not find shippingId') }
+  async receiveShipment(ctx, shipmentId) {
+    // Check whether asset with shipmentId exists
+    try { var shipment = await ctx.assetList.getAsset('org.warehousenet.shipment', shipmentId) } catch (err) { throw new Error('could not find shipmentId') }
 
     // Get clientIdentity and compare with customerId, throw error if no match
     let cid = new ClientIdentity(ctx.stub)
     let userMSPID = cid.getMSPID()
-    let submitedMSPID = shipping.customerId.split('.')[0] + 'MSP'
+    let submitedMSPID = shipment.customerId.split('.')[0] + 'MSP'
     if (userMSPID.toUpperCase() != submitedMSPID.toUpperCase()) {
       throw new Error('CustomerId not fitting your MSPID')
     }
 
     // Get timestamp from transaction
     let now = ctx.stub.getSignedProposal().proposal.header.channel_header.timestamp.nanos
-    // Set shipping as receive
-    shipping.setReceived(now)
+    // Set shipment as receive
+    shipment.setReceived(now)
     // update stock in the in the ledger world state
-    await ctx.assetList.updateAsset(shipping)
+    await ctx.assetList.updateAsset(shipment)
     // Create key for stock query
-    let stockKey = Stock.makeKey([shipping.materialId, shipping.supplierId])
+    let stockKey = Stock.makeKey([shipment.materialId, shipment.supplierId])
     // Get stock from the ledger world state
     let stock = await ctx.assetList.getAsset('org.warehousenet.stock', stockKey)
-    // Add quantity from the shipping to the stock
-    stock.addQuantity(shipping.quantity)
+    // Add quantity from the shipment to the stock
+    stock.addQuantity(shipment.quantity)
     // Update stock in the in the ledger world state
     await ctx.assetList.updateAsset(stock)
     let eventData = {
-      transaction: 'receiveShipping',
-      data: shippingId
+      transaction: 'receiveShipment',
+      data: shipmentId
     }
     // Emit an event
     ctx.stub.setEvent('transactionEvent', Buffer.from(JSON.stringify(eventData)))
     // Must return a serialized asset to caller of smart contract
-    return shipping.toBuffer()
+    return shipment.toBuffer()
   }
 
   /** Transactions for monthlyForecasts */
@@ -486,7 +486,7 @@ class WarehouseContract extends Contract {
         // Return asset object
         return Stock.createInstance(assetData, now)
       }
-      case 'org.warehousenet.shipping': {
+      case 'org.warehousenet.shipment': {
         // Get clientIdentity and compare with supplierId, throw error if no match
         let cid = new ClientIdentity(ctx.stub)
         let userMSPID = cid.getMSPID()
@@ -495,7 +495,7 @@ class WarehouseContract extends Contract {
           throw new Error('SupplierId not fitting your MSPID')
         }
         // Return asset object
-        return Shipping.createInstance(assetData)
+        return Shipment.createInstance(assetData)
       }
     }
   }

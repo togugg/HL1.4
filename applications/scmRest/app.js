@@ -26,7 +26,7 @@ swagger.initializeMiddleware(swaggerObject, function (middleware) {
   app.use(express.urlencoded({limit: '50mb'}));
 
   app.use(cors({
-    "origin": "http://195.128.101.122:4200",
+    "origin": "http://localhost:4200",
     "credentials": true
   }));
 

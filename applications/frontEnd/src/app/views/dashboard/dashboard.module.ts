@@ -8,7 +8,7 @@ import { DashboardComponent } from './dashboard.component';
 import { DashboardRoutingModule } from './dashboard-routing.module';
 
 import { HistoryModule } from '../history/history.module';
-import { ShippingModule } from '../shipping/shipping.module'
+import { ShipmentModule } from '../shipment/shipment.module'
 
 @NgModule({
   imports: [
@@ -18,7 +18,7 @@ import { ShippingModule } from '../shipping/shipping.module'
     BsDropdownModule,
     ButtonsModule.forRoot(),
     HistoryModule,
-    ShippingModule
+    ShipmentModule
   ],
   declarations: [ DashboardComponent ]
 })

@@ -8,14 +8,14 @@ Adapted from: https://github.com/hyperledger/fabric-samples/blob/master/commerci
 // Utility class for collections of ledger states --  a state list
 const StateList = require('./../ledger-api/statelist.js')
 
-const Shipping = require('./shipping.js')
+const Shipment = require('./shipment.js')
 const Stock = require('./stock.js')
 
 class AssetList extends StateList {
   constructor (ctx) {
     super(ctx, 'org.warehousenet.assetlist')
     // Registers classes
-    this.use(Shipping)
+    this.use(Shipment)
     this.use(Stock)
   }
 

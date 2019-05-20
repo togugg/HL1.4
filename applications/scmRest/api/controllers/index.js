@@ -5,27 +5,27 @@ const connector = require(path.join(__dirname, '/lib/connector'))
 // const userName = 'User1@org1.example.com';
 
 module.exports = {
-  getShippingById: getAssetById,
+  getShipmentById: getAssetById,
   getStockById: getAssetById,
   getForecastById: getAssetById,
 
-  createShipping: createAsset,
+  createShipment: createAsset,
   createStock: createAsset,
   createForecast: createAsset,
 
-  updateShipping: updateAsset,
+  updateShipment: updateAsset,
   updateStock: updateAsset,
   updateForecast: updateAsset,
 
-  deleteShippingbyId: deleteAsset,
+  deleteShipmentbyId: deleteAsset,
   deleteStockById: deleteAsset,
   deleteForecastById: deleteAsset,
 
-  getAllShippings: getAllAssetsByClass,
+  getAllShipments: getAllAssetsByClass,
   getAllStocks: getAllAssetsByClass,
   getAllForecasts: getAllAssetsByClass,
 
-  getShippingHistory: getAssetHistory,
+  getShipmentHistory: getAssetHistory,
   getStockHistory: getAssetHistory,
   getForecastHistory: getAssetHistory,
 
@@ -42,13 +42,13 @@ module.exports = {
   withdrawStock: withdrawStock,
   adjustLimits: adjustLimits,
   createCreditNote: createCreditNote,
-  sendShipping: sendShipping,
+  sendShipment: sendShipment,
   addMonthlyForecast: addMonthlyForecast,
   updateMonthlyForecast: updateMonthlyForecast,
   deleteMonthlyForecast: deleteMonthlyForecast,
   approveMonthlyForecast: approveMonthlyForecast,
   declineMonthlyForecast: declineMonthlyForecast,
-  receiveShipping: receiveShipping,
+  receiveShipment: receiveShipment,
 
   getAllMaterials: getAllMaterials
 }
@@ -152,15 +152,15 @@ function createCreditNote (req, res) {
   connector.submit(getUserName(req), args).then(result => { res.status(200).json(result) }).catch(err => { res.send(err) })
 }
 
-function sendShipping (req, res) {
+function sendShipment (req, res) {
   let data = req.swagger.params.txData.value
-  const args = ['sendShipping', JSON.stringify(data)]
+  const args = ['sendShipment', JSON.stringify(data)]
   connector.submit(getUserName(req), args).then(result => { res.status(200).json(result) }).catch(err => { res.send(err) })
 }
 
-function receiveShipping (req, res) {
+function receiveShipment (req, res) {
   let data = req.swagger.params.txData.value
-  const args = ['receiveShipping', data.shippingId]
+  const args = ['receiveShipment', data.shipmentId]
   connector.submit(getUserName(req), args).then(result => { res.status(200).json(result) }).catch(err => { res.send(err) })
 }
 

@@ -91,8 +91,8 @@ export const routes: Routes = [
         loadChildren: './views/forecast/forecast.module#ForecastModule'
       },
       {
-        path: 'shipping',
-        loadChildren: './views/shipping/shipping.module#ShippingModule'
+        path: 'shipment',
+        loadChildren: './views/shipment/shipment.module#ShipmentModule'
       }
     ]
   },

@@ -30,12 +30,12 @@ export class HttpService {
     return this.http.get(this.apiServer + '/assets/byquery/' + queryString, { headers: { 'accept': 'text' }, withCredentials: true })
   }
 
-  getShippings(): Observable<any> {
-    return this.http.get(this.apiServer + '/shippings/', { headers: { 'accept': 'text' }, withCredentials: true })
+  getShipments(): Observable<any> {
+    return this.http.get(this.apiServer + '/shipments/', { headers: { 'accept': 'text' }, withCredentials: true })
   }
 
-  createShipping(data): Observable<any> {
-    return this.http.post(this.apiServer + '/shippings/', data, { withCredentials: true })
+  createShipment(data): Observable<any> {
+    return this.http.post(this.apiServer + '/shipments/', data, { withCredentials: true })
   }
 
   getForecast(id): Observable<any> {
@@ -46,12 +46,12 @@ export class HttpService {
     return this.http.get(this.apiServer + '/stocks/materials/' + supplierId, { headers: { 'accept': 'text' }, withCredentials: true })
   }
 
-  sendShipping(data): Observable<any> {
-    return this.http.put(this.apiServer + '/sendShipping/', data, { withCredentials: true })
+  sendShipment(data): Observable<any> {
+    return this.http.put(this.apiServer + '/sendShipment/', data, { withCredentials: true })
   }
 
-  receiveShipping(data): Observable<any> {
-    return this.http.put(this.apiServer + '/receiveShipping/', data, { withCredentials: true })
+  receiveShipment(data): Observable<any> {
+    return this.http.put(this.apiServer + '/receiveShipment/', data, { withCredentials: true })
   }
 
   getInvoice(id, collection): Observable<any> {
