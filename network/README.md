@@ -11,7 +11,7 @@
 ./move_crypto
 ```
 - Make sure the hostname is ubuntu or adjust the Docker composer files accordingly
-- Ctart network
+- Start network
 ```
 ./start_all.sh
 ```

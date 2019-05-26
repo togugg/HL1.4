@@ -3,12 +3,12 @@ This repository holds the source code for the blockchain-based supply chain prot
 - Please see the applications folder for the web GUI and the REST API
 - Please see the network folder for the Hyperledger Fabric network, including the chaincode
 
-## install Docker
+## Install Docker
 ```
 ./install-docker.sh
 ```
 
-## download Docker images
+## Download Docker images
 ```
 ./get-docker-images.sh
 ```

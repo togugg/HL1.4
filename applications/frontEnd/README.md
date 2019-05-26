@@ -14,7 +14,7 @@ npm install -g @angular/cli
 ng build --prod
 ```
 
-- Hist the website on a http server
+- Host the website on an http server
 
 
 
