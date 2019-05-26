@@ -1,4 +1,4 @@
-## hlf-multichannel-docker-swarm
+## Hyperledger Network - Docker Swarm
 
 - Create the swarm and network
 ```
@@ -6,37 +6,23 @@
 ./create_network.sh
 ```
 
-- After Joining, in compose file, update the node hostnames.
-- Deploy Kafka
+- Move crypto material
 ```
-./deploy_services.sh
+./move_crypto
 ```
-- Deploy the services for respective hostname. Example
+- Make sure the hostname is ubuntu or adjust the Docker composer files accordingly
+- Ctart network
 ```
-./scripts/ch/network/deploy_services_machine1.sh
+./start_all.sh
 ```
-- Repeat above until all services are deployed
-- Install the channels. Example
-```
-./scripts/ch/channel/create_and_join_ch.sh
-```
-- Fetch and Join the channel from an other node
-```
-./scripts/state/channel/fetch_and_join_ch.sh
-```
-- Repeat all until channels are configured
-- Install the chaincodes. Example
-```
-./scripts/ch/chaincode/install_ch_cc.sh
-```
-- Install the same in corresponding org
-```
-./scripts/state/chaincode/install_ch_cc.sh
-```
-- Repeat until all done
 
+- Create channel
+```
+./scripts/create_channel.sh
+```
 
-Changes:
-- Update Peer for auto election!
-- Update tx for Orderer
-- Update composer
+- Install chaincode
+```
+./scripts/install_chaincode.sh instantiate 0
+```
+
