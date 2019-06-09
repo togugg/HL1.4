@@ -8,7 +8,7 @@
 
 - Move crypto material
 ```
-./move_crypto
+./move_crypto.sh
 ```
 - Make sure the hostname is ubuntu or adjust the Docker composer files accordingly
 - Start network
