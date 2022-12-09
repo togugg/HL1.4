@@ -10,7 +10,7 @@
   "dependencies": {
     "cookie-parser": "^1.4.3",
     "cors": "^2.8.5",
-    "express": "^4.12.3",
+    "express": "^4.17.3",
     "express-session": "^1.15.6",
     "fabric-network": "^1.4.0",
     "swagger-express-mw": "^0.7.0",
